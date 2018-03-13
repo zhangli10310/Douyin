@@ -2,6 +2,8 @@ package com.zl.core
 
 import android.app.Application
 import android.util.Log
+import com.zl.core.db.AppDatabase
+import com.zl.core.db.user.User
 
 /**
  *
@@ -12,13 +14,13 @@ import android.util.Log
 class MainApp: Application() {
 
     var currentUserId: Int = 0
-//    var user: User? = null
-//        set(value) {
-//            field = value
-//            if (value != null) {
-//                AppDatabase.getInstance().userDao().insertUser(value)
-//            }
-//        }
+    var user: User? = null
+        set(value) {
+            field = value
+            if (value != null) {
+                AppDatabase.getInstance().userDao().insertUser(value)
+            }
+        }
 
     companion object {
         lateinit var instance: MainApp

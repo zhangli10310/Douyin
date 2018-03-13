@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="bg">#222</color>
+
+    <color name="txt_unselected">#bbb</color>
+    <color name="white">#fff</color>
 </resources>

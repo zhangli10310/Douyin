@@ -1,9 +1,11 @@
 package com.zl.douyin.ui.splash
 
+import android.animation.ObjectAnimator
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import com.zl.core.base.ModeActivity
 import com.zl.douyin.BuildConfig
 import com.zl.douyin.R
@@ -36,11 +38,13 @@ class SplashActivity : ModeActivity() {
 //                BackgroundDownloadService.start(this, "", "")
 //            }
 //        })
-        //fixme 内存泄漏
-        mHandler.postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }, 2000)
+
+        ObjectAnimator.ofFloat(launchImg, View.ALPHA, 0f, 1f)
+                .setDuration(1500)
+                .start()
+
+
+        viewModel.countDown()
     }
 
     override fun setListener() {
@@ -69,6 +73,13 @@ class SplashActivity : ModeActivity() {
         viewModel.errorMsg.observe(this, Observer {
             if (it?.msg != null) {
                 showToastSafe(it.msg!!)
+            }
+        })
+
+        viewModel.jump.observe(this, Observer {
+            if (it != null && it) {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
             }
         })
     }

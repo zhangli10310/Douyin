@@ -5,8 +5,123 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg"
     tools:context="com.zl.douyin.ui.main.MainActivity">
 
+    <android.support.constraint.Guideline
+        android:id="@+id/bottomLayoutTopGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/bottom_layout_height" />
 
+    <TextView
+        android:id="@+id/mainPageText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="首页"
+        android:textColor="@color/txt_unselected"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/followText"
+        app:layout_constraintTop_toTopOf="@+id/bottomLayoutTopGuideline" />
+
+    <ImageView
+        android:id="@+id/mainPageImg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_line_selected"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/mainPageText"
+        app:layout_constraintRight_toRightOf="@+id/mainPageText" />
+
+    <TextView
+        android:id="@+id/followText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="关注"
+        android:textColor="@color/txt_unselected"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/mainPageText"
+        app:layout_constraintRight_toLeftOf="@+id/addContentImg"
+        app:layout_constraintTop_toTopOf="@+id/bottomLayoutTopGuideline" />
+
+    <ImageView
+        android:id="@+id/followImg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_line_selected"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/followText"
+        app:layout_constraintRight_toRightOf="@+id/followText" />
+
+
+    <ImageView
+        android:id="@+id/addContentImg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@mipmap/ic_add_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/followText"
+        app:layout_constraintRight_toLeftOf="@+id/messageText"
+        app:layout_constraintTop_toTopOf="@+id/bottomLayoutTopGuideline" />
+
+    <TextView
+        android:id="@+id/messageText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="消息"
+        android:textColor="@color/txt_unselected"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/addContentImg"
+        app:layout_constraintRight_toLeftOf="@+id/mineText"
+        app:layout_constraintTop_toTopOf="@+id/bottomLayoutTopGuideline" />
+
+    <ImageView
+        android:id="@+id/messageImg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_line_selected"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/messageText"
+        app:layout_constraintRight_toRightOf="@+id/messageText" />
+
+    <TextView
+        android:id="@+id/mineText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="我"
+        android:textColor="@color/txt_unselected"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/messageText"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bottomLayoutTopGuideline" />
+
+    <ImageView
+        android:id="@+id/mineImg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_line_selected"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/mineText"
+        app:layout_constraintRight_toRightOf="@+id/mineText" />
 
 </android.support.constraint.ConstraintLayout>

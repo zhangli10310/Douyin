@@ -18,7 +18,8 @@
 
         <activity android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"/>
-        <activity android:name=".ui.splash.SplashActivity">
+        <activity android:name=".ui.splash.SplashActivity"
+            android:theme="@style/LaunchTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
