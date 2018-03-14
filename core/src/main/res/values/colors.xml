@@ -8,4 +8,5 @@
 
     <color name="txt_unselected">#bbb</color>
     <color name="white">#fff</color>
+    <color name="link">#fa1</color>
 </resources>

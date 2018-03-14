@@ -5,6 +5,7 @@ import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.meicai.lib.extend.addTextChangedListener
 import com.zl.douyin.R
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -30,10 +31,46 @@ class LoginDialogFragment : DialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        init()
         setListener()
     }
 
+    private fun init() {
+
+    }
+
     private fun setListener() {
+
+        phoneEdit.addTextChangedListener {
+            if (it.isEmpty()) {
+                if (otherLoginText.visibility != View.VISIBLE) {
+                    otherLoginText.visibility = View.VISIBLE
+                }
+                if (loginWechatImg.visibility != View.VISIBLE) {
+                    loginWechatImg.visibility = View.VISIBLE
+                }
+                if (agreementText.visibility == View.VISIBLE) {
+                    agreementText.visibility = View.GONE
+                }
+                if (nextImg.visibility == View.VISIBLE) {
+                    nextImg.visibility = View.GONE
+                }
+            } else {
+                if (otherLoginText.visibility == View.VISIBLE) {
+                    otherLoginText.visibility = View.INVISIBLE
+                }
+                if (loginWechatImg.visibility == View.VISIBLE) {
+                    loginWechatImg.visibility = View.INVISIBLE
+                }
+                if (agreementText.visibility != View.VISIBLE) {
+                    agreementText.visibility = View.VISIBLE
+                }
+                if (nextImg.visibility != View.VISIBLE) {
+                    nextImg.visibility = View.VISIBLE
+                }
+            }
+        }
 
         cancelText.setOnClickListener {
             dismiss()
