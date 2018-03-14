@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 
 /**
  * Created by zhangli<br/>
@@ -20,7 +21,14 @@ abstract class ModeFragment : BaseFragment() {
         initView(savedInstanceState)
         observe()
         setListener()
-        afterView()
+
+        activity.window.decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                afterView()
+                activity.window.decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+
+        })
     }
 
     abstract protected fun layoutId(): Int

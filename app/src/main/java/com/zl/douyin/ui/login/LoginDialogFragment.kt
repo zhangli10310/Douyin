@@ -2,12 +2,20 @@ package com.zl.douyin.ui.login
 
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.meicai.lib.extend.addTextChangedListener
 import com.zl.douyin.R
 import kotlinx.android.synthetic.main.fragment_login.*
+import android.text.Spanned
+import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.widget.Toast
+
 
 /**
  *
@@ -38,6 +46,18 @@ class LoginDialogFragment : DialogFragment() {
 
     private fun init() {
 
+        val spannableInfo = SpannableString("继续表示你同意抖音用户协议")
+        spannableInfo.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                Toast.makeText(activity, "必须同意", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                ds.color = ContextCompat.getColor(activity, com.zl.core.R.color.link)
+            }
+        }, 7, 13, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        agreementText.text = spannableInfo
+        agreementText.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun setListener() {

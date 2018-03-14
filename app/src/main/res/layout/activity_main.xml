@@ -8,6 +8,18 @@
     android:background="@color/bg"
     tools:context="com.zl.douyin.ui.main.MainActivity">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/frameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#8f0f"
+            app:cardCornerRadius="8dp" />
+    </FrameLayout>
+
     <android.support.constraint.Guideline
         android:id="@+id/bottomLayoutTopGuideline"
         android:layout_width="wrap_content"

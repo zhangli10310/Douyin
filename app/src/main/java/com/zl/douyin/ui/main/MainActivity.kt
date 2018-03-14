@@ -5,14 +5,19 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.view.View
 import com.zl.core.MainApp
+import com.zl.core.base.BaseFragment
 import com.zl.core.base.ModeActivity
 import com.zl.douyin.R
 import com.zl.douyin.ui.login.LoginDialogFragment
+import com.zl.douyin.ui.mainpage.MainPageFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : ModeActivity() {
 
     private var selectItem = 0
+
+    private var currentFragment: BaseFragment? = null
+    private var mainPageFragment: BaseFragment? = null
 
     private var loginFragment: LoginDialogFragment? = null
 
@@ -109,7 +114,12 @@ class MainActivity : ModeActivity() {
 
     private fun clickMain() {
         if (changeSelectItem(1)) {
-
+            (mainPageFragment as MainPageFragment).refresh()
+        } else {
+            if (mainPageFragment == null) {
+                mainPageFragment = MainPageFragment()
+            }
+            showFragment(mainPageFragment!!)
         }
     }
 
@@ -148,6 +158,26 @@ class MainActivity : ModeActivity() {
             changeSelectItem(4)
         }
 
+    }
+
+    private fun showFragment(fragment: BaseFragment) {
+
+        if (fragment != currentFragment) {
+            val transaction = supportFragmentManager.beginTransaction()
+
+            val fragmentByTag = supportFragmentManager.findFragmentByTag(fragment::class.java.simpleName)
+            if (fragmentByTag != null) {
+                transaction.show(fragmentByTag)
+            } else {
+                transaction.add(R.id.frameLayout, fragment, fragment::class.java.simpleName)
+            }
+            if (currentFragment != null) {
+                transaction.hide(currentFragment)
+            }
+
+            transaction.commit()
+            currentFragment = fragment
+        }
     }
 
     private fun showLoginFragment() {
