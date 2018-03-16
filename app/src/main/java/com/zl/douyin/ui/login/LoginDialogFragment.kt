@@ -14,7 +14,10 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.widget.Toast
+import com.zl.core.MainApp
+import com.zl.core.db.user.User
 import com.zl.core.extend.addTextChangedListener
+import kotlin.concurrent.thread
 
 
 /**
@@ -94,6 +97,15 @@ class LoginDialogFragment : DialogFragment() {
 
         cancelText.setOnClickListener {
             dismiss()
+        }
+
+        nextImg.setOnClickListener {
+            thread {
+                MainApp.instance.user = User(0)
+                activity.runOnUiThread {
+                    dismiss()
+                }
+            }
         }
     }
 }

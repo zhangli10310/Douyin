@@ -71,4 +71,12 @@ class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
     override fun onFragmentChange(item: Int) {
         checkViewPagerScroll()
     }
+
+    override fun onBackPressed() {
+        if (viewPager.currentItem == 2) {
+            viewPager.currentItem = 1
+        } else {
+            super.onBackPressed()
+        }
+    }
 }
