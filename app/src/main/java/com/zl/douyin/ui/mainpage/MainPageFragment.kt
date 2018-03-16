@@ -15,6 +15,8 @@ import kotlinx.android.synthetic.main.fragment_main_page.*
  */
 class MainPageFragment : ModeFragment() {
 
+    private val TAG = MainPageFragment::class.java.simpleName
+
     private lateinit var mAdapter: MainPageVideoAdapter
 
     override fun layoutId() = R.layout.fragment_main_page
@@ -29,6 +31,7 @@ class MainPageFragment : ModeFragment() {
 
     override fun setListener() {
 
+
     }
 
     override fun observe() {
@@ -40,6 +43,7 @@ class MainPageFragment : ModeFragment() {
     }
 
     fun refresh() {
-
+        swipeRefreshLayout.isRefreshing = true
     }
+
 }

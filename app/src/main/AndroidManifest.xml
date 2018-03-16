@@ -17,6 +17,8 @@
         <service android:name=".update.BackgroundDownloadService"/>
 
         <activity android:name=".ui.main.MainActivity"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:launchMode="singleTask"/>
         <activity android:name=".ui.splash.SplashActivity"
             android:theme="@style/LaunchTheme">

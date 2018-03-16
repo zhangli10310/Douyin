@@ -25,6 +25,7 @@ import kotlin.collections.HashSet
 import android.view.WindowManager
 import android.os.Build
 import android.support.v4.content.ContextCompat
+import android.view.MotionEvent
 import com.zl.core.R
 
 
@@ -46,6 +47,7 @@ open class BaseActivity : AppCompatActivity() {
 
     protected val mDisposable = CompositeDisposable()
     protected val mDialogSet = HashSet<Dialog>()
+    private val onTouchListenerList: MutableList<OnTouchListener> = mutableListOf()
 
     protected val mHandler = Handler()
 
@@ -234,4 +236,22 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
+    fun registerOnTouchListener(listener: OnTouchListener) {
+        onTouchListenerList.add(listener)
+    }
+
+    fun removeOnTouchListener(listener: OnTouchListener) {
+        onTouchListenerList.remove(listener)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        onTouchListenerList.forEach {
+            it.onTouchEvent(event = ev)
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
+    interface OnTouchListener {
+        public fun onTouchEvent(event: MotionEvent)
+    }
 }
