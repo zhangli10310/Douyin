@@ -1,105 +1,61 @@
 package com.zl.douyin.ui.main
 
-import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.view.View
+import android.support.v4.view.ViewPager
 import com.zl.core.MainApp
-import com.zl.core.base.BaseFragment
 import com.zl.core.base.ModeActivity
 import com.zl.douyin.R
-import com.zl.douyin.ui.login.LoginDialogFragment
-import com.zl.douyin.ui.mainpage.MainPageFragment
+import com.zl.douyin.ui.user.UserFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : ModeActivity() {
+class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
 
-    private var selectItem = 0
-
-    private var currentFragment: BaseFragment? = null
-    private var mainPageFragment: BaseFragment? = null
-
-    private var loginFragment: LoginDialogFragment? = null
+    private val mainFragment: MainFragment = MainFragment()
+    private lateinit var mAdapter: MainPagerAdapter
 
     override fun initView(savedInstanceState: Bundle?) {
 
+        //fixme MainFragment()
+        mAdapter = MainPagerAdapter(arrayListOf(MainFragment(), mainFragment, UserFragment()), supportFragmentManager)
+        viewPager.adapter = mAdapter
+        viewPager.currentItem = 1
+
+        checkViewPagerScroll()
     }
 
     override fun setListener() {
 
-        mainPageText.setOnClickListener {
-            clickMain()
-        }
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
 
-        followText.setOnClickListener {
-            clickFollow()
-        }
+            }
 
-        addContentImg.setOnClickListener {
-            clickAddContent()
-        }
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
-        messageText.setOnClickListener {
-            clickMessage()
-        }
+            }
 
-        mineText.setOnClickListener {
-            clickMine()
-        }
+            override fun onPageSelected(position: Int) {
+                checkViewPagerScroll()
+            }
+
+        })
     }
 
-    private fun changeSelectItem(i: Int): Boolean {
-        if (i == selectItem) {
-            return true
-        } else {
-            when (selectItem) {
-                1 -> {
-                    mainPageText.textSize = 18f
-                    mainPageText.setTextColor(ContextCompat.getColor(this, com.zl.core.R.color.txt_unselected))
-                    mainPageImg.visibility = View.GONE
-                }
-                2 -> {
-                    followText.textSize = 18f
-                    followText.setTextColor(ContextCompat.getColor(this, com.zl.core.R.color.txt_unselected))
-                    followImg.visibility = View.GONE
-                }
-                3 -> {
-                    messageText.textSize = 18f
-                    messageText.setTextColor(ContextCompat.getColor(this, com.zl.core.R.color.txt_unselected))
-                    messageImg.visibility = View.GONE
-                }
-                4 -> {
-                    mineText.textSize = 18f
-                    mineText.setTextColor(ContextCompat.getColor(this, com.zl.core.R.color.txt_unselected))
-                    mineImg.visibility = View.GONE
-                }
+    private fun checkViewPagerScroll() {
+        when {
+            mainFragment.selectItem != 1 -> {
+                viewPager.forbidToLeft = true
+                viewPager.forbidToRight = true
             }
-            when (i) {
-                1 -> {
-                    mainPageText.textSize = 20f
-                    mainPageText.setTextColor(Color.WHITE)
-                    mainPageImg.visibility = View.VISIBLE
-                }
-                2 -> {
-                    followText.textSize = 20f
-                    followText.setTextColor(Color.WHITE)
-                    followImg.visibility = View.VISIBLE
-                }
-                3 -> {
-                    messageText.textSize = 20f
-                    messageText.setTextColor(Color.WHITE)
-                    messageImg.visibility = View.VISIBLE
-                }
-                4 -> {
-                    mineText.textSize = 20f
-                    mineText.setTextColor(Color.WHITE)
-                    mineImg.visibility = View.VISIBLE
-                }
+            MainApp.instance.user == null -> {
+                viewPager.forbidToLeft = true
+                viewPager.forbidToRight = false
             }
-            selectItem = i
-            return false
+            else -> {
+                viewPager.forbidToLeft = false
+                viewPager.forbidToRight = false
+            }
         }
-
     }
 
     override fun observe() {
@@ -107,84 +63,12 @@ class MainActivity : ModeActivity() {
     }
 
     override fun afterView() {
-        clickMain()
+
     }
 
     override fun layoutId() = R.layout.activity_main
 
-    private fun clickMain() {
-        if (changeSelectItem(1)) {
-            (mainPageFragment as MainPageFragment).refresh()
-        } else {
-            if (mainPageFragment == null) {
-                mainPageFragment = MainPageFragment()
-            }
-            showFragment(mainPageFragment!!)
-        }
+    override fun onFragmentChange(item: Int) {
+        checkViewPagerScroll()
     }
-
-    private fun clickFollow() {
-
-        if (MainApp.instance.user == null) { //未登陆
-            showLoginFragment()
-        } else {
-            changeSelectItem(2)
-        }
-    }
-
-    private fun clickAddContent() {
-
-        if (MainApp.instance.user == null) { //未登陆
-            showLoginFragment()
-        }
-
-    }
-
-    private fun clickMessage() {
-
-        if (MainApp.instance.user == null) { //未登陆
-            showLoginFragment()
-        } else {
-            changeSelectItem(3)
-        }
-
-    }
-
-    private fun clickMine() {
-
-        if (MainApp.instance.user == null) { //未登陆
-            showLoginFragment()
-        } else {
-            changeSelectItem(4)
-        }
-
-    }
-
-    private fun showFragment(fragment: BaseFragment) {
-
-        if (fragment != currentFragment) {
-            val transaction = supportFragmentManager.beginTransaction()
-
-            val fragmentByTag = supportFragmentManager.findFragmentByTag(fragment::class.java.simpleName)
-            if (fragmentByTag != null) {
-                transaction.show(fragmentByTag)
-            } else {
-                transaction.add(R.id.frameLayout, fragment, fragment::class.java.simpleName)
-            }
-            if (currentFragment != null) {
-                transaction.hide(currentFragment)
-            }
-
-            transaction.commit()
-            currentFragment = fragment
-        }
-    }
-
-    private fun showLoginFragment() {
-        if (loginFragment == null) {
-            loginFragment = LoginDialogFragment()
-        }
-        loginFragment!!.show(supportFragmentManager, "login")
-    }
-
 }

@@ -3,7 +3,7 @@ package com.zl.douyin.ui.mainpage
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.meicai.lib.extend.inflate
+import com.zl.core.extend.inflate
 import com.zl.douyin.R
 
 /**

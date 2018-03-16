@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.meicai.lib.extend.addTextChangedListener
 import com.zl.douyin.R
 import kotlinx.android.synthetic.main.fragment_login.*
 import android.text.Spanned
@@ -15,6 +14,7 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.widget.Toast
+import com.zl.core.extend.addTextChangedListener
 
 
 /**

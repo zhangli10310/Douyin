@@ -6,16 +6,23 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_login">
 
+    <android.support.constraint.Guideline
+        android:id="@+id/topGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/top_status_bar_height" />
+
     <TextView
         android:id="@+id/cancelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:padding="10dp"
         android:text="取消"
         android:textColor="@color/white"
         android:textSize="18sp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/topGuideline" />
 
     <TextView
         android:id="@+id/tipText"
