@@ -47,7 +47,7 @@ class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
                 viewPager.forbidToLeft = true
                 viewPager.forbidToRight = true
             }
-            MainApp.instance.user == null -> {
+            viewPager.currentItem == 1 && MainApp.instance.user == null -> {
                 viewPager.forbidToLeft = true
                 viewPager.forbidToRight = false
             }

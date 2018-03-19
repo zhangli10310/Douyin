@@ -66,4 +66,7 @@ dependencies {
     api "android.arch.paging:runtime:$pagingVersion"
     kapt "android.arch.lifecycle:compiler:$lifecycleVersion"
     kapt "android.arch.persistence.room:compiler:$roomVersion"
+
+    api 'de.hdodenhof:circleimageview:2.2.0'
+    api 'com.wingjay:blurimageviewlib:2.0.1'
 }
