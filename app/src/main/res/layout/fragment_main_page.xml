@@ -50,7 +50,7 @@
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="@+id/verticalCenterGuideline"
+        app:layout_constraintRight_toLeftOf="@+id/verticalCenterGuideline"
         app:layout_constraintTop_toTopOf="@+id/topGuideline" />
 
     <TextView
@@ -63,7 +63,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/recommendText"
-        app:layout_constraintLeft_toLeftOf="@+id/verticalCenterGuideline" />
+        app:layout_constraintLeft_toRightOf="@+id/verticalCenterGuideline" />
 
     <ImageView
         android:id="@+id/searchImg"
