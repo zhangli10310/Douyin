@@ -17,6 +17,7 @@ class MainPageFragment : ModeFragment() {
 
     private val TAG = MainPageFragment::class.java.simpleName
 
+    private var list: MutableList<VideoEntity> = mutableListOf()
     private lateinit var mAdapter: MainPageVideoAdapter
 
     override fun layoutId() = R.layout.fragment_main_page
@@ -25,12 +26,11 @@ class MainPageFragment : ModeFragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(activity)
         PagerSnapHelper().attachToRecyclerView(recyclerView)
-        mAdapter = MainPageVideoAdapter()
+        mAdapter = MainPageVideoAdapter(list)
         recyclerView.adapter = mAdapter
     }
 
     override fun setListener() {
-
 
     }
 
@@ -39,7 +39,11 @@ class MainPageFragment : ModeFragment() {
     }
 
     override fun afterView() {
-
+        list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=cb04291f17fd423daa6a81f42fe41d76&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
+        list.add(VideoEntity("https://api.amemv.com/aweme/v1/play/?video_id=cb04291f17fd423daa6a81f42fe41d76&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
+        list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=cb04291f17fd423daa6a81f42fe41d76&line=1&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
+        list.add(VideoEntity("https://api.amemv.com/aweme/v1/play/?video_id=cb04291f17fd423daa6a81f42fe41d76&line=1&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
+        mAdapter.notifyDataSetChanged()
     }
 
     fun refresh() {
