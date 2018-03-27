@@ -1,10 +1,12 @@
 package com.zl.douyin.ui.mainpage
 
+import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import com.zl.core.extend.inflate
 import com.zl.douyin.R
+import kotlinx.android.synthetic.main.item_main_video.view.*
 
 /**
  *
@@ -21,6 +23,10 @@ class MainPageVideoAdapter(private var list: MutableList<VideoEntity>) : Recycle
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val url = list[position].url
 
+        holder.itemView.videoView.setVideoURI(Uri.parse(url))
+        holder.itemView.videoView.setOnPreparedListener {
+            holder.itemView.videoView.start()
+        }
         viewClick?.invoke(holder)
     }
 

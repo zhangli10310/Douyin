@@ -5,6 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <android.support.constraint.Guideline
         android:id="@+id/bottomGuideline"
         android:layout_width="wrap_content"

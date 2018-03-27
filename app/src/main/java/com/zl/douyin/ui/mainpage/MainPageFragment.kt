@@ -8,13 +8,11 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
-import android.widget.ImageView
 import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.RVGestureDetector
