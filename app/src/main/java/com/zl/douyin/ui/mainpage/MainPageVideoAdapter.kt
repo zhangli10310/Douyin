@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.zl.core.extend.inflate
 import com.zl.douyin.R
 import kotlinx.android.synthetic.main.item_main_video.view.*
+import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 /**
  *
@@ -21,13 +22,14 @@ class MainPageVideoAdapter(private var list: MutableList<VideoEntity>) : Recycle
     private var viewClick: ((ViewHolder) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val url = list[position].url
-
-        holder.itemView.videoView.setVideoURI(Uri.parse(url))
-        holder.itemView.videoView.setOnPreparedListener {
-            holder.itemView.videoView.start()
-        }
         viewClick?.invoke(holder)
+
+        val url = list[position].url
+//fixme
+        IjkMediaPlayer.loadLibrariesOnce(null);
+        IjkMediaPlayer.native_profileBegin("libijkplayer.so");
+        holder.itemView.videoView.setVideoURI(Uri.parse(url))
+        holder.itemView.videoView.start()
     }
 
     fun registerViewClick(viewClick: ((ViewHolder) -> Unit)) {
