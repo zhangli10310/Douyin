@@ -1,16 +1,22 @@
 package com.zl.douyin.ui.mainpage
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.util.Log
 import android.view.*
+import android.view.animation.AccelerateInterpolator
+import android.widget.ImageView
 import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
-import com.zl.core.view.LikeHeartView
 import com.zl.core.view.RVGestureDetector
 import com.zl.douyin.R
 import kotlinx.android.synthetic.main.fragment_main_page.*
@@ -50,6 +56,7 @@ class MainPageFragment : ModeFragment() {
         val gestureDetector = RVGestureDetector(activity, object : RVGestureDetector.RVOnGestureListener() {
 
             var lastClickTime = 0L
+            var firstDoubleTap = true
 
             override fun onDown(e: MotionEvent?): Boolean {
                 return true
@@ -60,14 +67,27 @@ class MainPageFragment : ModeFragment() {
                 Log.i(TAG, "不喜欢?")
             }
 
-            override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-                if (System.currentTimeMillis() - lastClickTime > 500) {
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                if (System.currentTimeMillis() - lastClickTime > 400) {
                     Log.i(TAG, "暂停")
+                } else {
+                    showLikeHeart(e.x, e.y)
                 }
                 return true
             }
 
+            override fun onDoubleTap(e: MotionEvent?): Boolean {
+                if (System.currentTimeMillis() - lastClickTime > 400) {
+                    firstDoubleTap = true
+                }
+                return super.onDoubleTap(e)
+            }
+
             override fun onDoubleTapEvent(e: MotionEvent): Boolean {
+                if (firstDoubleTap) {
+                    firstDoubleTap = false
+                    return true
+                }
                 showLikeHeart(e.x, e.y)
                 lastClickTime = System.currentTimeMillis()
                 return true
@@ -77,37 +97,54 @@ class MainPageFragment : ModeFragment() {
 
         mAdapter.registerViewClick {
             it.itemView.setOnTouchListener { _, event ->
-                gestureDetector.onTouchEvent(event, it)
+                return@setOnTouchListener gestureDetector.onTouchEvent(event, it)
             }
         }
     }
 
-    private val likeHeartRecycler: Queue<LikeHeartView> = ArrayDeque()
+//    private val likeHeartRecycler: Queue<View> = ArrayDeque()
     private fun showLikeHeart(x: Float, y: Float) {
         val v = view
         if (v is ConstraintLayout) {
-            Log.i(TAG, "showLikeHeart: ${likeHeartRecycler.size}")
-            var heartView = likeHeartRecycler.poll()
-            val params: ConstraintLayout.LayoutParams
-            if (heartView == null) {
-                heartView = LikeHeartView(activity)
-                params = ConstraintLayout.LayoutParams(DisplayUtils.dp2px(activity, 100f).toInt(), DisplayUtils.dp2px(activity, 140f).toInt())
-                params.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
-                params.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-                heartView.layoutParams = params
-            } else {
-                heartView.reset()
-                params = heartView.layoutParams as ConstraintLayout.LayoutParams
-            }
-            params.leftMargin = x.toInt() - DisplayUtils.dp2px(activity, 50f).toInt()
-            params.topMargin = y.toInt() - DisplayUtils.dp2px(activity, 70f).toInt()
+
+            val width = DisplayUtils.dp2px(activity, 120f).toInt()
+            val height = DisplayUtils.dp2px(activity, 120f).toInt()
+
+            val heartView = View(activity)
+            heartView.setBackgroundResource(com.zl.core.R.mipmap.ic_heart)
+            val params = ConstraintLayout.LayoutParams(width, height)
+            params.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
+            params.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+            params.leftMargin = x.toInt() - width / 2
+            params.topMargin = y.toInt() - height
+            heartView.layoutParams = params
+            heartView.rotation = (System.currentTimeMillis() % 40 - 20).toFloat()
             v.addView(heartView)
 
-            heartView.anim({
-                v.removeView(it)
-                likeHeartRecycler.offer(it)
-            })
+            anim(heartView, v)
         }
+    }
+
+    private fun anim(heartView: View, v: ConstraintLayout) {
+        val set = AnimatorSet()
+        val random = Random()
+        val ran = DisplayUtils.dp2px(context, random.nextInt(60).toFloat())
+        set.playTogether(ObjectAnimator.ofFloat(heartView, View.ALPHA, 1f, 0.3f),
+                ObjectAnimator.ofFloat(heartView, View.TRANSLATION_X, 0f, (ran - DisplayUtils.dp2px(context, 30f)) * 2),
+                ObjectAnimator.ofFloat(heartView, View.TRANSLATION_Y, 0f, -ran),
+                ObjectAnimator.ofFloat(heartView, View.SCALE_X, 1f, 1.4f),
+                ObjectAnimator.ofFloat(heartView, View.SCALE_Y, 1f, 1.4f)
+        )
+        set.interpolator = AccelerateInterpolator()
+        set.addListener(object : AnimatorListenerAdapter() {
+
+            override fun onAnimationEnd(animation: Animator?) {
+                v.removeView(heartView)
+//                likeHeartRecycler.offer(heartView)
+            }
+        })
+        set.startDelay = 200L
+        set.start()
     }
 
     override fun observe() {

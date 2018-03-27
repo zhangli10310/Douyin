@@ -5,11 +5,9 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import com.zl.core.utils.DisplayUtils
 import java.util.*
@@ -42,12 +40,12 @@ class LikeHeartView : View {
         super.onDraw(canvas)
         path.reset()
         path.moveTo(width / 2f, height / 4f)
-        path.cubicTo(width * 6f / 7, height / 9f, width * 12f / 13, height * 2f / 5, width / 2f, height * 7f / 12)
+        path.cubicTo(width * 6f / 7, height / 9f, width * 13f / 13, height * 1f / 5, width / 2f, height * 10f / 12)
         canvas.drawPath(path, paint)
 
         path.reset()
         path.moveTo(width / 2f, height / 4f)
-        path.cubicTo(width / 7f, height / 9f, width / 13f, height * 2 / 5f, width / 2f, height * 7f / 12)
+        path.cubicTo(width / 7f, height / 9f, width / 13f, height * 2 / 5f, width / 2f, height * 10f / 12)
         canvas.drawPath(path, paint)
     }
 
@@ -66,8 +64,8 @@ class LikeHeartView : View {
         set.playTogether(ObjectAnimator.ofFloat(this, View.ALPHA, 1f, 0f),
                 ObjectAnimator.ofFloat(this, View.TRANSLATION_X, translationX, translationX + (ran - DisplayUtils.dp2px(context, 15f)) * 2),
                 ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, translationY, translationY - ran),
-                ObjectAnimator.ofFloat(this, View.SCALE_X, 1f, 1.2f),
-                ObjectAnimator.ofFloat(this, View.SCALE_Y, 1f, 1.2f)
+                ObjectAnimator.ofFloat(this, View.SCALE_X, 1f, 1.4f),
+                ObjectAnimator.ofFloat(this, View.SCALE_Y, 1f, 1.4f)
         )
         set.interpolator = AccelerateInterpolator()
         set.addListener(object : AnimatorListenerAdapter() {
@@ -77,6 +75,7 @@ class LikeHeartView : View {
             }
 
         })
+        set.startDelay = 200L
         set.start()
     }
 

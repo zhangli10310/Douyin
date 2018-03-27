@@ -3,6 +3,7 @@ package com.zl.douyin.ui.user
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.GridSpacingItemDecoration
@@ -31,6 +32,7 @@ class UserFragment : ModeFragment() {
 
     override fun setListener() {
         backImg.setOnClickListener {
+            Log.i("9090", "setListener: ${recyclerView.childCount}")
             activity.onBackPressed()
         }
 
