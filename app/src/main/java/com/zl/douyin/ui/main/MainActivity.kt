@@ -3,6 +3,7 @@ package com.zl.douyin.ui.main
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import com.zl.core.MainApp
+import com.zl.core.base.BaseFragment
 import com.zl.core.base.ModeActivity
 import com.zl.douyin.R
 import com.zl.douyin.ui.user.UserFragment
@@ -15,8 +16,8 @@ class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
 
     override fun initView(savedInstanceState: Bundle?) {
 
-        //fixme MainFragment()
-        mAdapter = MainPagerAdapter(arrayListOf(MainFragment(), mainFragment, UserFragment()), supportFragmentManager)
+        //fixme BaseFragment()
+        mAdapter = MainPagerAdapter(arrayListOf(BaseFragment(), mainFragment, UserFragment()), supportFragmentManager)
         viewPager.adapter = mAdapter
         viewPager.currentItem = 1
 

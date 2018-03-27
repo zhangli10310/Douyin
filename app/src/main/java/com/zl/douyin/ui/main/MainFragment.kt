@@ -3,6 +3,7 @@ package com.zl.douyin.ui.main
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.View
 import com.zl.core.MainApp
 import com.zl.core.base.BaseFragment
@@ -169,7 +170,6 @@ class MainFragment : ModeFragment() {
     }
 
     private fun showFragment(fragment: BaseFragment) {
-
         if (fragment != currentFragment) {
             val transaction = childFragmentManager.beginTransaction()
 

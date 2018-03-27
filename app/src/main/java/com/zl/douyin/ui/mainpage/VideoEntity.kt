@@ -8,9 +8,11 @@ package com.zl.douyin.ui.mainpage
  */
 class VideoEntity {
 
-    constructor(url: String?) {
+    constructor(url: String?, headUrl: String? = null) {
         this.url = url
+        this.headUrl = headUrl
     }
 
     var url: String? = null
+    var headUrl: String? = null
 }

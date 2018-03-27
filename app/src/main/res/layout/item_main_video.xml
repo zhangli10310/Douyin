@@ -6,12 +6,29 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.Guideline
-        android:id="@+id/bottomLayoutTopGuideline"
+        android:id="@+id/bottomGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_end="@dimen/bottom_layout_height" />
 
+    <ImageView
+        android:id="@+id/musicIconImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="20dp"
+        android:src="@mipmap/ic_music_white"
+        app:layout_constraintBottom_toTopOf="@+id/bottomGuideline"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
+    <com.zl.core.view.FocusedTextView
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:text="jkljlkjhiohbjkhljlkjlkjlkjghgjhghjjhvjhvhjvhjjh"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/musicIconImg"
+        app:layout_constraintLeft_toRightOf="@+id/musicIconImg" />
 
 </android.support.constraint.ConstraintLayout>

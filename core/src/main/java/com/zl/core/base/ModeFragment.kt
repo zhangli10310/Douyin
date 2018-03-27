@@ -1,6 +1,7 @@
 package com.zl.core.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,10 +23,10 @@ abstract class ModeFragment : BaseFragment() {
         observe()
         setListener()
 
-        activity.window.decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        view?.viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 afterView()
-                activity.window.decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                view?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
             }
 
         })
