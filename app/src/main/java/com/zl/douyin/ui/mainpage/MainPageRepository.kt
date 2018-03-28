@@ -32,10 +32,12 @@ class MainPageRepository private constructor() {
     fun loadRecommendVideo(): Observable<BaseResponse<MutableList<VideoEntity>>> {
         //fixme
         val list = mutableListOf<VideoEntity>()
+        list.add(VideoEntity("http://cdn-fms.rbs.com.br/vod/hls_sample1_manifest.m3u8"))
         list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=cb04291f17fd423daa6a81f42fe41d76&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
         list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=92a76d5253cd40469ecaf765302bc335&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
         list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=f660eced34864bd6babe7448f46a5356&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
         list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=2f16b886877c44a589fc0d1f169581fd&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
+        list.add(VideoEntity("http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8"))
         return Observable.just(BaseResponse(list, 0, null))
                 .map {
                     Thread.sleep(2000)

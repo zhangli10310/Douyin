@@ -4,6 +4,7 @@ buildscript {
 
     ext {
         kotlin_version = '1.2.30'
+        ijk_version = '0.8.8'
         compileSdkVersion = 26
         minSdkVersion = 16
         targetSdkVersion = 26

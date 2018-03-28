@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
@@ -18,6 +19,7 @@ import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.RVGestureDetector
 import com.zl.douyin.R
 import kotlinx.android.synthetic.main.fragment_main_page.*
+import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
 
 /**
@@ -98,9 +100,29 @@ class MainPageFragment : ModeFragment() {
                 return@setOnTouchListener gestureDetector.onTouchEvent(event, it)
             }
         }
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                when (newState) {
+                    RecyclerView.SCROLL_STATE_IDLE -> { //当屏幕停止滚动
+
+                    }
+
+                    RecyclerView.SCROLL_STATE_DRAGGING -> {//当屏幕滚动且用户使用的触碰或手指还在屏幕上
+
+                    }
+
+                    RecyclerView.SCROLL_STATE_SETTLING -> {//由于用户的操作，屏幕产生惯性滑动
+
+                    }
+
+                }
+            }
+        })
     }
 
-//    private val likeHeartRecycler: Queue<View> = ArrayDeque()
+    //    private val likeHeartRecycler: Queue<View> = ArrayDeque()
     private fun showLikeHeart(x: Float, y: Float) {
         val v = view
         if (v is ConstraintLayout) {
@@ -201,6 +223,17 @@ class MainPageFragment : ModeFragment() {
 
     override fun afterView() {
         viewModel.loadRecommendVideo()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        IjkMediaPlayer.loadLibrariesOnce(null)
+        IjkMediaPlayer.native_profileBegin("libijkplayer.so")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        IjkMediaPlayer.native_profileEnd()
     }
 
     fun refresh() {

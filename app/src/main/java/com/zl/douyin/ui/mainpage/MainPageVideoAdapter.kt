@@ -2,10 +2,12 @@ package com.zl.douyin.ui.mainpage
 
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.zl.core.extend.inflate
 import com.zl.douyin.R
+import com.zl.ijk.media.IMediaController
 import kotlinx.android.synthetic.main.item_main_video.view.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
@@ -25,9 +27,15 @@ class MainPageVideoAdapter(private var list: MutableList<VideoEntity>) : Recycle
         viewClick?.invoke(holder)
 
         val url = list[position].url
-//fixme
-        IjkMediaPlayer.loadLibrariesOnce(null);
-        IjkMediaPlayer.native_profileBegin("libijkplayer.so");
+
+        Log.w(TAG, "onBindViewHolder: ${holder.itemView.videoView}")
+        holder.itemView.videoView.setOnPreparedListener {
+            Log.e(TAG, "onBindViewHolder: OnPrepared")
+        }
+        holder.itemView.videoView.setOnInfoListener { iMediaPlayer, i, j ->
+            Log.e(TAG, "onBindViewHolder: ${iMediaPlayer.videoHeight}, ${iMediaPlayer.videoWidth}, $i, $j")
+            return@setOnInfoListener true
+        }
         holder.itemView.videoView.setVideoURI(Uri.parse(url))
         holder.itemView.videoView.start()
     }
