@@ -42,7 +42,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     api "tv.danmaku.ijk.media:ijkplayer-java:$ijk_version"
-    api "tv.danmaku.ijk.media:ijkplayer-armv7a:$ijk_version"
+//    api "tv.danmaku.ijk.media:ijkplayer-armv7a:$ijk_version"
     api "tv.danmaku.ijk.media:ijkplayer-exo:$ijk_version"
 //    api "tv.danmaku.ijk.media:ijkplayer-armv5:$ijk_version"
 //    api "tv.danmaku.ijk.media:ijkplayer-arm64:$ijk_version"
