@@ -12,13 +12,15 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.*
+import android.view.MotionEvent
+import android.view.View
 import android.view.animation.AccelerateInterpolator
 import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.RVGestureDetector
 import com.zl.douyin.R
 import kotlinx.android.synthetic.main.fragment_main_page.*
+import kotlinx.android.synthetic.main.item_main_video.view.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
 
@@ -69,7 +71,13 @@ class MainPageFragment : ModeFragment() {
 
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                 if (System.currentTimeMillis() - lastClickTime > 400) {
-                    Log.i(TAG, "暂停")
+                    val holder = viewHolder as MainPageVideoAdapter.ViewHolder
+                    if (holder.itemView.videoView.isPlaying) {
+                        pauseCurrent(holder)
+                    } else {
+                        holder.itemView.videoView.start()
+                        holder.itemView.pauseImg.visibility = View.GONE
+                    }
                 } else {
                     showLikeHeart(e.x, e.y)
                 }
@@ -217,6 +225,17 @@ class MainPageFragment : ModeFragment() {
                 }
             }
         })
+    }
+
+    fun pauseCurrent(viewHolder: MainPageVideoAdapter.ViewHolder) {
+        viewHolder.itemView.videoView.pause()
+        viewHolder.itemView.pauseImg.visibility = View.VISIBLE
+        val set = AnimatorSet()
+        set.playTogether(
+                ObjectAnimator.ofFloat(viewHolder.itemView.pauseImg, View.SCALE_X, 1.2f, 1.0f),
+                ObjectAnimator.ofFloat(viewHolder.itemView.pauseImg, View.SCALE_Y, 1.2f, 1.0f)
+        )
+        set.start()
     }
 
     override fun loadingProgressBarId() = R.id.loadingBar
