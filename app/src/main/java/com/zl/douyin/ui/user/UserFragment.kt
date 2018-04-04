@@ -25,16 +25,16 @@ class UserFragment : ModeFragment() {
         recyclerView.layoutManager = GridLayoutManager(activity, 3)
         recyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount = 3, space = DisplayUtils.dp2px(activity, 1f).toInt(), includeEdge = false))
         recyclerView.adapter = UserVideoAdapter()
-        recyclerView.setHasFixedSize(true)
-        recyclerView.isNestedScrollingEnabled = false
+//        recyclerView.setHasFixedSize(true)
+//        recyclerView.isNestedScrollingEnabled = false
 
     }
 
     override fun setListener() {
-        backImg.setOnClickListener {
-            Log.i("9090", "setListener: ${recyclerView.childCount}")
-            activity.onBackPressed()
-        }
+//        backImg.setOnClickListener {
+//            Log.i("9090", "setListener: ${recyclerView.childCount}")
+//            activity.onBackPressed()
+//        }
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -76,5 +76,5 @@ class UserFragment : ModeFragment() {
 
     }
 
-    override fun layoutId() = R.layout.fragment_user
+    override fun layoutId() = R.layout.fragment_user_tmp
 }

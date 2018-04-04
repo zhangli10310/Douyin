@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-
+    buildToolsVersion rootProject.buildToolsVersion
     flavorDimensions rootProject.flavorDimensions
 
     defaultConfig {

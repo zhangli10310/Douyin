@@ -5,8 +5,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-
     compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
     flavorDimensions rootProject.flavorDimensions
     defaultConfig {
         applicationId "com.zl.douyin"
@@ -16,7 +16,6 @@ android {
         versionName "0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-
     signingConfigs {
 
         config {
@@ -26,7 +25,6 @@ android {
             storePassword 'douyin'
         }
     }
-
     productFlavors {
         local {
 
@@ -35,7 +33,6 @@ android {
 
         }
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -46,11 +43,10 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
     implementation project(':core')
     implementation project(':cpp')
     implementation project(':ijk')
