@@ -1,15 +1,18 @@
 package com.zl.douyin.ui.user
 
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.View
 import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.GridSpacingItemDecoration
 import com.zl.douyin.R
-import kotlinx.android.synthetic.main.fragment_user.*
 import com.bumptech.glide.Glide
+import com.zl.core.view.AppBarStateChangeListener
+import kotlinx.android.synthetic.main.fragment_user.*
 
 
 /**
@@ -19,6 +22,8 @@ import com.bumptech.glide.Glide
  * Created by zhangli on 2018/3/16 18:02.<br/>
  */
 class UserFragment : ModeFragment() {
+
+    private val TAG = UserFragment::class.java.simpleName
 
     override fun initView(savedInstanceState: Bundle?) {
 
@@ -31,10 +36,34 @@ class UserFragment : ModeFragment() {
     }
 
     override fun setListener() {
-//        backImg.setOnClickListener {
-//            Log.i("9090", "setListener: ${recyclerView.childCount}")
-//            activity.onBackPressed()
-//        }
+        backImg.setOnClickListener {
+            activity.onBackPressed()
+        }
+
+        appBarLayout.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
+            override fun onStateChanged(appBarLayout: AppBarLayout, state: Int) {
+                when (state) {
+                    AppBarStateChangeListener.EXPANDED -> {
+                        Log.i(TAG, "onStateChanged: 展开状态")
+                        //展开状态
+                        titleText.visibility = View.GONE
+                        toolbarFocusButton.visibility = View.GONE
+                    }
+                    AppBarStateChangeListener.COLLAPSED -> {
+                        Log.i(TAG, "onStateChanged: 折叠状态")
+                        //折叠状态
+                        titleText.visibility = View.VISIBLE
+                        toolbarFocusButton.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        Log.i(TAG, "onStateChanged: 中间状态")
+                        //中间状态
+                        titleText.visibility = View.GONE
+                        toolbarFocusButton.visibility = View.GONE
+                    }
+                }
+            }
+        })
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -76,5 +105,5 @@ class UserFragment : ModeFragment() {
 
     }
 
-    override fun layoutId() = R.layout.fragment_user_tmp
+    override fun layoutId() = R.layout.fragment_user
 }
