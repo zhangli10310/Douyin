@@ -56,7 +56,7 @@ class LoginDialogFragment : DialogFragment() {
             }
 
             override fun updateDrawState(ds: TextPaint) {
-                ds.color = ContextCompat.getColor(activity, com.zl.core.R.color.link)
+                ds.color = ContextCompat.getColor(activity!!, com.zl.core.R.color.link)
             }
         }, 7, 13, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         agreementText.text = spannableInfo
@@ -102,7 +102,7 @@ class LoginDialogFragment : DialogFragment() {
         nextImg.setOnClickListener {
             thread {
                 MainApp.instance.user = User(0)
-                activity.runOnUiThread {
+                activity!!.runOnUiThread {
                     dismiss()
                 }
             }

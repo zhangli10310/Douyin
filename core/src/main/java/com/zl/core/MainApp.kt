@@ -31,9 +31,9 @@ class MainApp: Application() {
         super.onCreate()
         instance = this
 
-        Thread.setDefaultUncaughtExceptionHandler { t, e ->
-            Log.i("error_by_", "${t.name}, ${e.message}")
-        }
+//        Thread.setDefaultUncaughtExceptionHandler { t, e ->
+//            Log.i("error_by_", "${t.name}, ${e.message}")
+//        }
     }
 
 //    fun gotoLogin() {

@@ -8,6 +8,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
+import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
@@ -19,6 +20,7 @@ import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.RVGestureDetector
 import com.zl.douyin.R
+import com.zl.douyin.ui.comment.CommentDialogFragment
 import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.item_main_video.view.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
@@ -55,7 +57,7 @@ class MainPageFragment : ModeFragment() {
             viewModel.loadRecommendVideo()
         }
 
-        val gestureDetector = RVGestureDetector(activity, object : RVGestureDetector.RVOnGestureListener() {
+        val gestureDetector = RVGestureDetector(activity!!, object : RVGestureDetector.RVOnGestureListener() {
 
             var lastClickTime = 0L
             var firstDoubleTap = true
@@ -107,6 +109,10 @@ class MainPageFragment : ModeFragment() {
             it.itemView.setOnTouchListener { _, event ->
                 return@setOnTouchListener gestureDetector.onTouchEvent(event, it)
             }
+
+            it.itemView.musicIconImg.setOnClickListener {
+                showComment()
+            }
         }
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -130,13 +136,18 @@ class MainPageFragment : ModeFragment() {
         })
     }
 
+    private fun showComment() {
+        val fragment = CommentDialogFragment()
+        fragment.show(fragmentManager, "tag")
+    }
+
     //    private val likeHeartRecycler: Queue<View> = ArrayDeque()
     private fun showLikeHeart(x: Float, y: Float) {
         val v = view
         if (v is ConstraintLayout) {
 
-            val width = DisplayUtils.dp2px(activity, 120f).toInt()
-            val height = DisplayUtils.dp2px(activity, 120f).toInt()
+            val width = DisplayUtils.dp2px(activity!!, 120f).toInt()
+            val height = DisplayUtils.dp2px(activity!!, 120f).toInt()
 
             val heartView = View(activity)
             heartView.setBackgroundResource(com.zl.core.R.mipmap.ic_heart)
@@ -156,9 +167,9 @@ class MainPageFragment : ModeFragment() {
     private fun anim(heartView: View, v: ConstraintLayout) {
         val set = AnimatorSet()
         val random = Random()
-        val ran = DisplayUtils.dp2px(context, random.nextInt(60).toFloat())
+        val ran = DisplayUtils.dp2px(context!!, random.nextInt(60).toFloat())
         set.playTogether(ObjectAnimator.ofFloat(heartView, View.ALPHA, 1f, 0.3f),
-                ObjectAnimator.ofFloat(heartView, View.TRANSLATION_X, 0f, (ran - DisplayUtils.dp2px(context, 30f)) * 2),
+                ObjectAnimator.ofFloat(heartView, View.TRANSLATION_X, 0f, (ran - DisplayUtils.dp2px(context!!, 30f)) * 2),
                 ObjectAnimator.ofFloat(heartView, View.TRANSLATION_Y, 0f, -ran),
                 ObjectAnimator.ofFloat(heartView, View.SCALE_X, 1f, 1.4f),
                 ObjectAnimator.ofFloat(heartView, View.SCALE_Y, 1f, 1.4f)

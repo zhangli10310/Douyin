@@ -59,7 +59,7 @@ class MainFragment : ModeFragment() {
         if (i == selectItem) {
             return true
         } else {
-            val colorUnselected = ContextCompat.getColor(activity, com.zl.core.R.color.txt_unselected)
+            val colorUnselected = ContextCompat.getColor(activity!!, com.zl.core.R.color.txt_unselected)
             when (selectItem) {
                 1 -> {
                     mainPageText.textSize = 18f

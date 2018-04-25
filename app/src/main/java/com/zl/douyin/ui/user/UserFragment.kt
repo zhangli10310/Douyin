@@ -28,7 +28,7 @@ class UserFragment : ModeFragment() {
     override fun initView(savedInstanceState: Bundle?) {
 
         recyclerView.layoutManager = GridLayoutManager(activity, 3)
-        recyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount = 3, space = DisplayUtils.dp2px(activity, 1f).toInt(), includeEdge = false))
+        recyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount = 3, space = DisplayUtils.dp2px(activity!!, 1f).toInt(), includeEdge = false))
         recyclerView.adapter = UserVideoAdapter()
 //        recyclerView.setHasFixedSize(true)
 //        recyclerView.isNestedScrollingEnabled = false
@@ -37,7 +37,7 @@ class UserFragment : ModeFragment() {
 
     override fun setListener() {
         backImg.setOnClickListener {
-            activity.onBackPressed()
+            activity!!.onBackPressed()
         }
 
         appBarLayout.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
