@@ -1,9 +1,13 @@
 package com.zl.core
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
 import com.zl.core.db.AppDatabase
 import com.zl.core.db.user.User
+import com.zl.core.utils.SPUtils
+import com.zl.core.utils.SystemInfoUtils
+import java.util.*
 
 /**
  *
@@ -64,6 +68,21 @@ class MainApp: Application() {
             e.printStackTrace()
             1
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getUUID(): String {
+        var uuid:String? = null
+        try {
+            uuid = SystemInfoUtils.getIMEI(this)
+        } catch (e: Exception){
+            uuid = SPUtils.getString("uuid")
+        }
+        if (uuid == null) {
+            uuid = UUID.randomUUID().toString()
+            SPUtils.saveString("uuid", uuid)
+        }
+        return uuid
     }
 
 }

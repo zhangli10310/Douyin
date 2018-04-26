@@ -43,8 +43,13 @@ class SplashActivity : ModeActivity() {
                 .setDuration(1500)
                 .start()
 
-
-        viewModel.countDown()
+        requestPermission(arrayOf(android.Manifest.permission.READ_PHONE_STATE), {
+            if (it) {
+                viewModel.countDown()
+            } else {
+                finish()
+            }
+        })
     }
 
     override fun setListener() {

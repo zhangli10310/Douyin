@@ -30,7 +30,7 @@ class BaseBottomSheetDialog : AppCompatDialog {
     private var mCanceledOnTouchOutside = true
     private var mCanceledOnTouchOutsideSet: Boolean = false
 
-    public var heightDP = 360f
+    public var heightDP = 460f
 
     constructor(context: Context) : this(context, 0)
 

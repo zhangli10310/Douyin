@@ -1,6 +1,5 @@
 package com.zl.douyin.update
 
-import com.zl.core.base.BaseResponse
 import io.reactivex.Observable
 import retrofit2.http.Body
 import retrofit2.http.Headers
@@ -17,6 +16,6 @@ interface UpdateApi {
 
     @Headers("Env-Domain: wmc-gateway")
     @POST("api/wmcMasterConf/clientVersionService/getUpdataUrl")
-    fun checkUpdate(@Body param: CheckUpdateParam): Observable<BaseResponse<UpdateResult?>>
+    fun checkUpdate(@Body param: CheckUpdateParam): Observable<UpdateResult>
 
 }

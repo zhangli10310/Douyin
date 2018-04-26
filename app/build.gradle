@@ -12,8 +12,8 @@ android {
         applicationId "com.zl.douyin"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 1
-        versionName "0.1"
+        versionCode 179
+        versionName "1.7.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -27,10 +27,12 @@ android {
     }
     productFlavors {
         local {
-
+            applicationId "com.zl.douyin.l"
+            resValue "string", "app_name", "抖音-L"
         }
         product {
-
+            applicationId "com.zl.douyin"
+            resValue "string", "app_name", "抖音"
         }
     }
     buildTypes {

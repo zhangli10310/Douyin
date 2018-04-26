@@ -22,9 +22,11 @@ android {
     productFlavors {
         local {
             buildConfigField "String", "BASE_URL", '"http://192.168.63.66:8089/"'
+            buildConfigField "String", "API_URL", '"http://192.168.63.66:8089/"'
         }
         product {
-            buildConfigField "String", "BASE_URL", '"http://47.52.146.113:8890/"'
+            buildConfigField "String", "BASE_URL", '"https://aweme.snssdk.com/"'
+            buildConfigField "String", "API_URL", '"https://api.amemv.com/"'
         }
     }
 

@@ -33,7 +33,8 @@ class MainPageVideoAdapter(private var list: MutableList<VideoEntity>) : Recycle
             Log.e(TAG, "onBindViewHolder: OnPrepared")
         }
         holder.itemView.videoView.setOnInfoListener { iMediaPlayer, i, j ->
-            Log.e(TAG, "onBindViewHolder: ${iMediaPlayer.videoHeight}, ${iMediaPlayer.videoWidth}, $i, $j")
+            Log.e(TAG, "video: ${iMediaPlayer.videoHeight}, ${iMediaPlayer.videoWidth}, $i, $j")
+            Log.e(TAG, "videoView: ${holder.itemView.videoView.height}, ${holder.itemView.videoView.width}")
             return@setOnInfoListener true
         }
         holder.itemView.videoView.setVideoURI(Uri.parse(url))

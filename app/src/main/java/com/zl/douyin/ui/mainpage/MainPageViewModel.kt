@@ -28,7 +28,7 @@ class MainPageViewModel(private var repository: MainPageRepository) : BaseViewMo
                     loadingRecommendStatus.postValue(1)
                 }
                 .loadingInnerSubscribe(this, {
-                    videoList.postValue(it)
+                    videoList.postValue(it.aweme_list)
                 })
     }
 
@@ -36,7 +36,7 @@ class MainPageViewModel(private var repository: MainPageRepository) : BaseViewMo
         //fixme
         repository.loadRecommendVideo()
                 .noLoadingSubscribe(this, {
-                    moreVideoList.postValue(it)
+                    moreVideoList.postValue(it.aweme_list)
                 })
     }
 

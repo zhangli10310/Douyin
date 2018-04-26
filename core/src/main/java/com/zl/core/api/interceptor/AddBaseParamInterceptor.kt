@@ -24,7 +24,7 @@ class AddBaseParamInterceptor : Interceptor {
 
         val request = chain.request()
         //顺序 先addBodyParam再addHeader
-        val addBodyParamReq = addBodyParam(request)
+        val addBodyParamReq = addBodyParam(addQuery(request))
         val addHeaderReq = addHeader(addBodyParamReq)
         return chain.proceed(addHeaderReq)
     }
@@ -33,6 +33,48 @@ class AddBaseParamInterceptor : Interceptor {
 
         val builder = request.newBuilder()
                 .addHeader("source", "android")
+
+        return builder.build()
+    }
+
+    private fun addQuery(request: Request): Request {
+
+        val httpUrlBuilder = request.url().newBuilder()
+        httpUrlBuilder
+                .addQueryParameter("ts", "${System.currentTimeMillis() / 1000}")
+                .addQueryParameter("app_type", "normal")
+                .addQueryParameter("os_api", SystemInfoUtils.getSystemVersionId().toString())
+                .addQueryParameter("device_type", SystemInfoUtils.getSystemModel())
+                .addQueryParameter("device_platform", "android")
+                .addQueryParameter("ssmix", "a") //fixme
+                .addQueryParameter("iid", "30480248021") //fixme
+                .addQueryParameter("manifest_version_code", "${MainApp.instance.getVersionCode()}")
+                .addQueryParameter("dpi", SystemInfoUtils.getSystemDpi().toString())
+                .addQueryParameter("uuid", MainApp.instance.getUUID())
+                .addQueryParameter("version_code", "${MainApp.instance.getVersionCode()}")
+                .addQueryParameter("app_name", "aweme")
+                .addQueryParameter("version_name", MainApp.instance.getVersion())
+                .addQueryParameter("openudid", SystemInfoUtils.getDeviceCode(MainApp.instance))
+                .addQueryParameter("device_id", "46610181403") //fixme
+                .addQueryParameter("resolution", "${SystemInfoUtils.getScreenWidthAndHeight()[0]}*${SystemInfoUtils.getScreenWidthAndHeight()[1]}")
+                .addQueryParameter("os_version", SystemInfoUtils.getSystemVersion())
+                .addQueryParameter("language", SystemInfoUtils.getSystemLanguage())
+                .addQueryParameter("device_brand", SystemInfoUtils.getDeviceBrand())
+                .addQueryParameter("ac", SystemInfoUtils.getNetState(MainApp.instance))
+                .addQueryParameter("update_version_code", "1792") //fixme
+                .addQueryParameter("aid", "1128") //fixme
+                .addQueryParameter("channel", "update") //fixme
+                .addQueryParameter("_rticket", "${System.currentTimeMillis()}")
+
+//                .addQueryParameter("as", "")
+//                .addQueryParameter("cp", "")
+//                .addQueryParameter("mas", "")
+
+
+//
+
+        val builder = request.newBuilder()
+                .url(httpUrlBuilder.build())
 
         return builder.build()
     }

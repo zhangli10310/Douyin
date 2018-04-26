@@ -2,7 +2,6 @@ package com.zl.douyin.update
 
 import com.zl.core.BuildConfig
 import com.zl.core.api.ServiceGenerator
-import com.zl.core.base.BaseResponse
 import io.reactivex.Observable
 
 /**
@@ -25,7 +24,7 @@ class UpdateRepository {
         val repository = UpdateRepository()
     }
 
-    fun checkUpdate(): Observable<BaseResponse<UpdateResult?>> {
+    fun checkUpdate(): Observable<UpdateResult> {
         val param = CheckUpdateParam()
         return mService.checkUpdate(param)
     }
