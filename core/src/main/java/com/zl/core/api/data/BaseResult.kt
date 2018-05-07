@@ -9,4 +9,5 @@ package com.zl.core.api.data
 open class BaseResult {
     var status_code: Int = -1
     var extra: ExtraResult? = null
+    var status_msg: String? = null
 }

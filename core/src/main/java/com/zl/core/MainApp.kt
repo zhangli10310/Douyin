@@ -2,7 +2,10 @@ package com.zl.core
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Intent
+import android.support.multidex.MultiDexApplication
 import android.util.Log
+import com.ss.android.common.applog.GlobalContext
 import com.zl.core.db.AppDatabase
 import com.zl.core.db.user.User
 import com.zl.core.utils.SPUtils
@@ -15,7 +18,7 @@ import java.util.*
  *
  * Created by zhangli on 2018/3/12 14:09.<br/>
  */
-class MainApp: Application() {
+class MainApp: MultiDexApplication() {
 
     var currentUserId: Int = 0
     var user: User? = null
@@ -33,7 +36,20 @@ class MainApp: Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+//        Hook.hookAMS { proxy, method, args ->
+//            Log.i("hookAMS", "hook: ${method.name}")
+//        }
+
+        Hook.hookPMS(this) { proxy, method, args ->
+            Log.i("hookPMS", method.name)
+            if ("getPackageInfo" == method.name) {
+
+            }
+        }
+
         instance = this
+        GlobalContext.setContext(this)
 
 //        Thread.setDefaultUncaughtExceptionHandler { t, e ->
 //            Log.i("error_by_", "${t.name}, ${e.message}")

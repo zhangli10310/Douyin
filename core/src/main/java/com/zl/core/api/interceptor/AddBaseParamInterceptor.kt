@@ -1,6 +1,7 @@
 package com.zl.core.api.interceptor
 
 import android.util.Log
+import com.ss.android.common.applog.Verify
 import com.zl.core.MainApp
 import com.zl.core.utils.SystemInfoUtils
 import okhttp3.*
@@ -39,15 +40,16 @@ class AddBaseParamInterceptor : Interceptor {
 
     private fun addQuery(request: Request): Request {
 
+        val currentTimeMillis = System.currentTimeMillis()
         val httpUrlBuilder = request.url().newBuilder()
         httpUrlBuilder
-                .addQueryParameter("ts", "${System.currentTimeMillis() / 1000}")
+                .addQueryParameter("ts", "${currentTimeMillis / 1000}")
                 .addQueryParameter("app_type", "normal")
                 .addQueryParameter("os_api", SystemInfoUtils.getSystemVersionId().toString())
                 .addQueryParameter("device_type", SystemInfoUtils.getSystemModel())
                 .addQueryParameter("device_platform", "android")
                 .addQueryParameter("ssmix", "a") //fixme
-                .addQueryParameter("iid", "30480248021") //fixme
+                .addQueryParameter("iid", "31628563673") //fixme
                 .addQueryParameter("manifest_version_code", "${MainApp.instance.getVersionCode()}")
                 .addQueryParameter("dpi", SystemInfoUtils.getSystemDpi().toString())
                 .addQueryParameter("uuid", MainApp.instance.getUUID())
@@ -61,20 +63,22 @@ class AddBaseParamInterceptor : Interceptor {
                 .addQueryParameter("language", SystemInfoUtils.getSystemLanguage())
                 .addQueryParameter("device_brand", SystemInfoUtils.getDeviceBrand())
                 .addQueryParameter("ac", SystemInfoUtils.getNetState(MainApp.instance))
-                .addQueryParameter("update_version_code", "1792") //fixme
+                .addQueryParameter("update_version_code", "1810") //fixme
                 .addQueryParameter("aid", "1128") //fixme
                 .addQueryParameter("channel", "update") //fixme
-                .addQueryParameter("_rticket", "${System.currentTimeMillis()}")
+                .addQueryParameter("_rticket", "$currentTimeMillis")
 
-//                .addQueryParameter("as", "")
-//                .addQueryParameter("cp", "")
+                .addQueryParameter("as", "a1qwert123")
+                .addQueryParameter("cp", "cbfhckdckkde1")
 //                .addQueryParameter("mas", "")
 
+        val httpUrl = httpUrlBuilder.build()
 
+//        Verify.getParam((currentTimeMillis/1000).toInt(), httpUrl.toString())
 //
-
+        Log.i(TAG, "addQuery: ${httpUrl.toString()}")
         val builder = request.newBuilder()
-                .url(httpUrlBuilder.build())
+                .url(httpUrl)
 
         return builder.build()
     }
