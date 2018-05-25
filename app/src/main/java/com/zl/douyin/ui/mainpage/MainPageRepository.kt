@@ -29,29 +29,29 @@ class MainPageRepository private constructor() {
 
     fun loadRecommendVideo(): Observable<FeedData> {
         //fixme
-//        val list = mutableListOf<VideoEntity>()
-//        list.add(VideoEntity("http://v3-dy.ixigua.com/c2288565792acf09f22e3abf0c82136b/5ae18875/video/m/2202010137c793c48af94eff1acc18c7f0311567bb600006bd2b2da6775/"))
-//        list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=cb04291f17fd423daa6a81f42fe41d76&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
-//        list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=92a76d5253cd40469ecaf765302bc335&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
-//        list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=f660eced34864bd6babe7448f46a5356&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
-//        list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=2f16b886877c44a589fc0d1f169581fd&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
-//        val data = FeedData()
-//        data.status_code = 0
-//        data.aweme_list.addAll(list)
-//        return Observable.just(data)
-//                .map {
-//                    Thread.sleep(2000)
-//                    return@map it
-//                }
-        val map = mapOf(
-                Pair("type", "0"),
-                Pair("max_cursor", "0"),
-                Pair("min_cursor", "0"),
-                Pair("count", "6"),
-                Pair("volume", "0.06666666666666667"),
-                Pair("pull_type", "1"),
-                Pair("need_relieve_aweme", "0")
-        )
-        return mService.loadRecommendVideo(url = "${BuildConfig.API_URL}aweme/v1/feed/", map = map)
+        val list = mutableListOf<VideoEntity>()
+        list.add(VideoEntity("rtmp://47.52.146.113:1935/rtmplive/good"))
+        list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=cb04291f17fd423daa6a81f42fe41d76&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
+        list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=92a76d5253cd40469ecaf765302bc335&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
+        list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=f660eced34864bd6babe7448f46a5356&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
+        list.add(VideoEntity("https://aweme.snssdk.com/aweme/v1/play/?video_id=2f16b886877c44a589fc0d1f169581fd&line=0&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
+        val data = FeedData()
+        data.status_code = 0
+        data.aweme_list.addAll(list)
+        return Observable.just(data)
+                .map {
+                    Thread.sleep(2000)
+                    return@map it
+                }
+//        val map = mapOf(
+//                Pair("type", "0"),
+//                Pair("max_cursor", "0"),
+//                Pair("min_cursor", "0"),
+//                Pair("count", "6"),
+//                Pair("volume", "0.06666666666666667"),
+//                Pair("pull_type", "1"),
+//                Pair("need_relieve_aweme", "0")
+//        )
+//        return mService.loadRecommendVideo(url = "${BuildConfig.API_URL}aweme/v1/feed/", map = map)
     }
 }

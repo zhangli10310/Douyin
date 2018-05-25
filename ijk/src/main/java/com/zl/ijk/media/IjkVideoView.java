@@ -930,6 +930,12 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         return mCurrentAspectRatio;
     }
 
+    public void setAspectRatio(int aspectRatio){
+        mCurrentAspectRatio = aspectRatio;
+        if (mRenderView != null)
+            mRenderView.setAspectRatio(aspectRatio);
+    }
+
     //-------------------------
     // Extend: Render
     //-------------------------

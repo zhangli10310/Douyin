@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.zl.core.extend.inflate
 import com.zl.douyin.R
 import com.zl.ijk.media.IMediaController
+import com.zl.ijk.media.IRenderView
 import kotlinx.android.synthetic.main.item_main_video.view.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
@@ -32,9 +33,11 @@ class MainPageVideoAdapter(private var list: MutableList<VideoEntity>) : Recycle
         holder.itemView.videoView.setOnPreparedListener {
             Log.e(TAG, "onBindViewHolder: OnPrepared")
         }
+        holder.itemView.videoView.setAspectRatio(IRenderView.AR_ASPECT_FIT_PARENT)
         holder.itemView.videoView.setOnInfoListener { iMediaPlayer, i, j ->
             Log.e(TAG, "video: ${iMediaPlayer.videoHeight}, ${iMediaPlayer.videoWidth}, $i, $j")
             Log.e(TAG, "videoView: ${holder.itemView.videoView.height}, ${holder.itemView.videoView.width}")
+//            holder.itemView.videoView.toggleAspectRatio()
             return@setOnInfoListener true
         }
         holder.itemView.videoView.setVideoURI(Uri.parse(url))
