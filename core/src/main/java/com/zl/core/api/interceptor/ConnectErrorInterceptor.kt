@@ -36,7 +36,7 @@ class ConnectErrorInterceptor : Interceptor {
                 }
                 throw RuntimeException("未知的域名:" + message!!)
             }
-            throw RuntimeException("网络异常，请检查网络," + e)
+            throw RuntimeException("网络异常，请检查网络,$e")
         }
 
     }

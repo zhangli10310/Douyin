@@ -21,6 +21,7 @@ import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.RVGestureDetector
 import com.zl.douyin.R
 import com.zl.douyin.ui.comment.CommentDialogFragment
+import com.zl.douyin.ui.main.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.item_main_video.view.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
@@ -36,9 +37,10 @@ class MainPageFragment : ModeFragment() {
 
     private val TAG = MainPageFragment::class.java.simpleName
 
+    private lateinit var shareViewModel: SharedViewModel
     private lateinit var viewModel: MainPageViewModel
 
-    private var list: MutableList<VideoEntity> = mutableListOf()
+    private var list: MutableList<FeedItem> = mutableListOf()
     private lateinit var mAdapter: MainPageVideoAdapter
 
     override fun layoutId() = R.layout.fragment_main_page
@@ -110,7 +112,7 @@ class MainPageFragment : ModeFragment() {
                 return@setOnTouchListener gestureDetector.onTouchEvent(event, it)
             }
 
-            it.itemView.musicIconImg.setOnClickListener {
+            it.itemView.commentImg.setOnClickListener {
                 showComment()
             }
         }
@@ -121,6 +123,15 @@ class MainPageFragment : ModeFragment() {
                 when (newState) {
                     RecyclerView.SCROLL_STATE_IDLE -> { //当屏幕停止滚动
 
+                        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                        val first = layoutManager.findFirstVisibleItemPosition()
+                        val last = layoutManager.findLastVisibleItemPosition()
+                        val index = (first + last) / 2
+                        if (index >=0 && index<list.size) {
+                            list[index].author.let {
+                                shareViewModel.currentSelectUser.postValue(it)
+                            }
+                        }
                     }
 
                     RecyclerView.SCROLL_STATE_DRAGGING -> {//当屏幕滚动且用户使用的触碰或手指还在屏幕上
@@ -189,6 +200,8 @@ class MainPageFragment : ModeFragment() {
     override fun observe() {
         viewModel = ViewModelProviders.of(this, MainPageViewModel.Factory(MainPageRepository.get())).get(MainPageViewModel::class.java)
 
+        shareViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+
         viewModel.isLoadingInner.observe(this, Observer {
             if (it != null && it) { //正在加载,不显示弹框
                 loadingInner()
@@ -217,6 +230,11 @@ class MainPageFragment : ModeFragment() {
                 list.clear()
                 list.addAll(it)
                 mAdapter.notifyDataSetChanged()
+                if (!list.isEmpty()) {
+                    list[0].author.let {
+                        shareViewModel.currentSelectUser.postValue(it)
+                    }
+                }
             }
         })
 

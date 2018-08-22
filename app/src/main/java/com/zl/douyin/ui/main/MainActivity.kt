@@ -48,10 +48,6 @@ class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
                 viewPager.forbidToLeft = true
                 viewPager.forbidToRight = true
             }
-            viewPager.currentItem == 1 && MainApp.instance.user == null -> {
-                viewPager.forbidToLeft = true
-                viewPager.forbidToRight = false
-            }
             else -> {
                 viewPager.forbidToLeft = false
                 viewPager.forbidToRight = false
@@ -74,7 +70,7 @@ class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
     }
 
     override fun onBackPressed() {
-        if (viewPager.currentItem == 2) {
+        if (viewPager.currentItem == 2 || viewPager.currentItem == 0) {
             viewPager.currentItem = 1
         } else {
             super.onBackPressed()

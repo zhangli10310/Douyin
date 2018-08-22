@@ -81,7 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="附近"
+        android:text="同城"
         android:textColor="@color/txt_unselected"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:src="@mipmap/ic_search"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/topGuideline" />
 
 </android.support.constraint.ConstraintLayout>

@@ -17,8 +17,8 @@ class MainPageViewModel(private var repository: MainPageRepository) : BaseViewMo
 
     private val TAG = MainPageViewModel::class.java.simpleName
 
-    var videoList: MutableLiveData<MutableList<VideoEntity>> = MutableLiveData()
-    var moreVideoList: MutableLiveData<MutableList<VideoEntity>> = MutableLiveData()
+    var videoList: MutableLiveData<MutableList<FeedItem>> = MutableLiveData()
+    var moreVideoList: MutableLiveData<MutableList<FeedItem>> = MutableLiveData()
     var loadingRecommendStatus: MutableLiveData<Int> = MutableLiveData()
 
     fun loadRecommendVideo() {

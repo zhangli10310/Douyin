@@ -17,8 +17,8 @@ class FocusedTextView : TextView {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
-        setSingleLine();
-        ellipsize = TextUtils.TruncateAt.MARQUEE;
+        setSingleLine()
+        ellipsize = TextUtils.TruncateAt.MARQUEE
     }
 
     override fun isFocused(): Boolean {

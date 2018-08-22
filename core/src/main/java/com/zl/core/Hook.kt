@@ -9,8 +9,9 @@ import java.lang.reflect.Method
 import java.lang.reflect.Proxy
 import java.lang.reflect.AccessibleObject.setAccessible
 import android.content.pm.PackageManager
-
-
+import android.view.View
+import android.view.ViewGroup
+import java.util.ArrayList
 
 
 /**
@@ -90,6 +91,35 @@ object Hook {
         val mPMField = applicationPackageManagerClazz.getDeclaredField("mPM")
         mPMField.isAccessible = true
         mPMField.set(packageManager, pmsProxy)
+
+    }
+
+    fun hookWindowManagerGlobal() {
+
+        try {
+            val windowManagerGlobalClazz = Class.forName("android.view.WindowManagerGlobal")
+            val getInstanceMethod = windowManagerGlobalClazz.getDeclaredMethod("getInstance")
+            getInstanceMethod.isAccessible = true
+            val windowManagerGlobalInstance = getInstanceMethod.invoke(windowManagerGlobalClazz)
+
+
+            val mViewsField = windowManagerGlobalClazz.getDeclaredField("mViews")
+            mViewsField.isAccessible = true
+            val mViews = mViewsField.get(windowManagerGlobalInstance)
+            mViewsField.set(windowManagerGlobalInstance, object : ArrayList<View>() {
+
+                override fun add(element: View): Boolean {
+//                    if (element is ViewGroup) {
+//                        hook(element)
+//                    }
+
+                    return super.add(element)
+                }
+            })
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
     }
 }

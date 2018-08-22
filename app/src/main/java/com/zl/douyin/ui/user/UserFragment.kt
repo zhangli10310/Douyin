@@ -1,5 +1,7 @@
 package com.zl.douyin.ui.user
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.GridLayoutManager
@@ -11,7 +13,9 @@ import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.GridSpacingItemDecoration
 import com.zl.douyin.R
 import com.bumptech.glide.Glide
+import com.zl.core.utils.GlideUtils
 import com.zl.core.view.AppBarStateChangeListener
+import com.zl.douyin.ui.main.SharedViewModel
 import kotlinx.android.synthetic.main.fragment_user.*
 
 
@@ -22,6 +26,8 @@ import kotlinx.android.synthetic.main.fragment_user.*
  * Created by zhangli on 2018/3/16 18:02.<br/>
  */
 class UserFragment : ModeFragment() {
+
+    private lateinit var shareViewModel: SharedViewModel
 
     private val TAG = UserFragment::class.java.simpleName
 
@@ -98,7 +104,19 @@ class UserFragment : ModeFragment() {
     }
 
     override fun observe() {
+        shareViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
+        shareViewModel.currentSelectUser.observe(this, Observer {
+            if (it != null) {
+                it.avatar_thumb?.url_list?.let {
+                    GlideUtils.load(it, headImg)
+                    GlideUtils.load(it, headBlurImg)
+                }
+                douyinCodeText.text = "抖音号:" + it.short_id
+                nameText.text = it.nickname
+                titleText.text = it.nickname
+            }
+        })
     }
 
     override fun afterView() {

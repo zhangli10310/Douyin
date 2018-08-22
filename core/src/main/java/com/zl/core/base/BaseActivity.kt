@@ -165,7 +165,7 @@ open class BaseActivity : AppCompatActivity() {
         if (!grant) {
             val dialog = AlertDialog.Builder(this)
                     .setMessage("请授予权限")
-                    .setPositiveButton("确定", { dialog, which ->
+                    .setPositiveButton("确定", { _, _ ->
                         ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE)
                     })
                     .create()
@@ -184,8 +184,8 @@ open class BaseActivity : AppCompatActivity() {
         val dialog = AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(msg)
-                .setPositiveButton(textPositive, DialogInterface.OnClickListener { dia, _ -> listenerPositive?.invoke(dia) })
-                .setNegativeButton(textNegative, DialogInterface.OnClickListener { dia, _ -> listenerNegative?.invoke(dia) })
+                .setPositiveButton(textPositive, { dia, _ -> listenerPositive?.invoke(dia) })
+                .setNegativeButton(textNegative, { dia, _ -> listenerNegative?.invoke(dia) })
                 .create()
         dialog.setOnCancelListener {
             onCancelListener?.invoke(it)
