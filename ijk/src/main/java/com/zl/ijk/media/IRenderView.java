@@ -34,6 +34,8 @@ public interface IRenderView {
     int AR_16_9_FIT_PARENT = 4;
     int AR_4_3_FIT_PARENT = 5;
 
+    int AR_MATCH_WIDTH = 6;//根据宽度调节高度
+
     View getView();
 
     boolean shouldWaitForResize();

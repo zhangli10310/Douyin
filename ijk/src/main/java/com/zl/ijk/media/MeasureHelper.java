@@ -90,7 +90,10 @@ public final class MeasureHelper {
             int heightSpecMode = View.MeasureSpec.getMode(heightMeasureSpec);
             int heightSpecSize = View.MeasureSpec.getSize(heightMeasureSpec);
 
-            if (widthSpecMode == View.MeasureSpec.AT_MOST && heightSpecMode == View.MeasureSpec.AT_MOST) {
+            if (mCurrentAspectRatio == IRenderView.AR_MATCH_WIDTH) {
+                width = widthSpecSize;
+                height = width * mVideoHeight / mVideoWidth;
+            } else if (widthSpecMode == View.MeasureSpec.AT_MOST && heightSpecMode == View.MeasureSpec.AT_MOST) {
                 float specAspectRatio = (float) widthSpecSize / (float) heightSpecSize;
                 float displayAspectRatio;
                 switch (mCurrentAspectRatio) {

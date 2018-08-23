@@ -9,4 +9,6 @@ class SharedViewModel : ViewModel() {
 
     var currentSelectUser = MutableLiveData<UserEntity>()
 
+    var gotoViewPagerPosition = MutableLiveData<Int>()
+
 }

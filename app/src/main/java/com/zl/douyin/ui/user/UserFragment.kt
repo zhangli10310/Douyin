@@ -13,6 +13,7 @@ import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.GridSpacingItemDecoration
 import com.zl.douyin.R
 import com.bumptech.glide.Glide
+import com.zl.core.utils.DateUtils
 import com.zl.core.utils.GlideUtils
 import com.zl.core.view.AppBarStateChangeListener
 import com.zl.douyin.ui.main.SharedViewModel
@@ -53,19 +54,16 @@ class UserFragment : ModeFragment() {
                         Log.i(TAG, "onStateChanged: 展开状态")
                         //展开状态
                         titleText.visibility = View.GONE
-                        toolbarFocusButton.visibility = View.GONE
                     }
                     AppBarStateChangeListener.COLLAPSED -> {
                         Log.i(TAG, "onStateChanged: 折叠状态")
                         //折叠状态
                         titleText.visibility = View.VISIBLE
-                        toolbarFocusButton.visibility = View.VISIBLE
                     }
                     else -> {
                         Log.i(TAG, "onStateChanged: 中间状态")
                         //中间状态
                         titleText.visibility = View.GONE
-                        toolbarFocusButton.visibility = View.GONE
                     }
                 }
             }
@@ -113,8 +111,30 @@ class UserFragment : ModeFragment() {
                     GlideUtils.load(it, headBlurImg)
                 }
                 douyinCodeText.text = "抖音号:" + it.short_id
-                nameText.text = it.nickname
+                if (it.nickname.isNullOrBlank()) {
+                    nameText.text = "昵称加载中"
+                } else {
+                    nameText.text = it.nickname
+                }
                 titleText.text = it.nickname
+                if (it.signature.isNullOrBlank()) {
+                    describeText.text = "本宝宝暂时还没想到个性的签名"
+                } else {
+                    describeText.text = it.signature
+                }
+
+                var gender = ""
+                val birthday = DateUtils.dateStringToTimeMillis(it.birthday + "")
+                if (it.gender == 1) {
+                    gender = "♂"
+                } else if (it.gender == 2) {
+                    gender = "♀"
+                }
+                if (birthday > 0) {
+                    ageText.text =  "$gender ${(System.currentTimeMillis() - birthday)/1000/60/60/24/365}岁"
+                    starText.text = DateUtils.getConstellation(birthday)
+                }
+
             }
         })
     }

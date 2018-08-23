@@ -723,6 +723,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      */
     public void release(boolean cleartargetstate) {
         if (mMediaPlayer != null) {
+            Log.i(TAG, "release: " + mMediaPlayer);
             mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;

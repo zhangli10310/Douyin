@@ -17,8 +17,10 @@
     <com.zl.ijk.media.IjkVideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline
         android:id="@+id/bottomGuideline"
@@ -151,12 +153,12 @@
     <ImageView
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:layout_marginTop="40dp"
         android:rotation="45"
         android:src="@mipmap/ic_add_follow"
-        android:layout_marginTop="40dp"
-        app:layout_constraintTop_toTopOf="@+id/headImg"
         app:layout_constraintLeft_toLeftOf="@+id/headImg"
-        app:layout_constraintRight_toRightOf="@+id/headImg" />
+        app:layout_constraintRight_toRightOf="@+id/headImg"
+        app:layout_constraintTop_toTopOf="@+id/headImg" />
 
     <ImageView
         android:id="@+id/pauseImg"

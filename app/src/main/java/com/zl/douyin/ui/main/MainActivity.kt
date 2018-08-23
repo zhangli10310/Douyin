@@ -1,5 +1,7 @@
 package com.zl.douyin.ui.main
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import com.zl.core.MainApp
@@ -10,6 +12,9 @@ import com.zl.douyin.ui.user.UserFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
+
+
+    private lateinit var shareViewModel:SharedViewModel
 
     private val mainFragment: MainFragment = MainFragment()
     private lateinit var mAdapter: MainPagerAdapter
@@ -56,7 +61,13 @@ class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
     }
 
     override fun observe() {
+        shareViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
+        shareViewModel.gotoViewPagerPosition.observe(this, Observer {
+            if (it != null) {
+                viewPager.currentItem = it
+            }
+        })
     }
 
     override fun afterView() {

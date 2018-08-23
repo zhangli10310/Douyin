@@ -6,6 +6,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.net.Uri
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomSheetDialogFragment
@@ -22,6 +23,7 @@ import com.zl.core.view.RVGestureDetector
 import com.zl.douyin.R
 import com.zl.douyin.ui.comment.CommentDialogFragment
 import com.zl.douyin.ui.main.SharedViewModel
+import com.zl.ijk.media.IRenderView
 import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.item_main_video.view.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
@@ -115,9 +117,16 @@ class MainPageFragment : ModeFragment() {
             it.itemView.commentImg.setOnClickListener {
                 showComment()
             }
+
+            it.itemView.headImg.setOnClickListener {
+                shareViewModel.gotoViewPagerPosition.postValue(2)
+            }
         }
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            var lastIndex = 0
+
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 when (newState) {
@@ -127,10 +136,31 @@ class MainPageFragment : ModeFragment() {
                         val first = layoutManager.findFirstVisibleItemPosition()
                         val last = layoutManager.findLastVisibleItemPosition()
                         val index = (first + last) / 2
-                        if (index >=0 && index<list.size) {
+                        if (index >= 0 && index < list.size) {
+
+                            if (lastIndex == index) {
+                                return
+                            }
+
                             list[index].author.let {
                                 shareViewModel.currentSelectUser.postValue(it)
                             }
+
+                            val holder = recyclerView.findViewHolderForAdapterPosition(lastIndex)
+                            if (holder != null) {
+                                //fixme 这里有问题，释放的不对
+                                holder.itemView.videoView.release(true)
+                                holder.itemView.videoView.visibility = View.INVISIBLE
+                            }
+
+                            list[index].video?.play_addr?.url_list?.let {
+                                if (it.isEmpty()) {
+                                    return
+                                }
+                                play(index, it)
+                            }
+
+                            lastIndex = index
                         }
                     }
 
@@ -145,6 +175,45 @@ class MainPageFragment : ModeFragment() {
                 }
             }
         })
+
+        searchImg.setOnClickListener {
+            shareViewModel.gotoViewPagerPosition.postValue(0)
+        }
+    }
+
+    private fun play(index: Int, urls: List<String>) {
+        val holder = recyclerView.findViewHolderForAdapterPosition(index)
+        if (holder == null) {
+            Log.i(TAG, "play: holder null")
+            return
+        }
+        var i = 0
+
+        holder.itemView.videoView.setOnPreparedListener {
+            Log.e(TAG, "onBindViewHolder: OnPrepared")
+            holder.itemView.videoView.visibility = View.VISIBLE
+        }
+        holder.itemView.videoView.setAspectRatio(IRenderView.AR_MATCH_WIDTH)
+        holder.itemView.videoView.setOnCompletionListener {
+            Log.i(TAG, "setOnCompletionListener: ")
+            holder.itemView.videoView.start()
+        }
+        holder.itemView.videoView.setOnInfoListener { v1, v2, v3 ->
+            Log.i(TAG, "play: $v1,${v1.isPlaying}, $v2, $v3")
+            true
+        }
+        holder.itemView.videoView.setOnErrorListener { _, _, _ ->
+            i++
+            if (i >= urls.size) {
+                return@setOnErrorListener true
+            }
+            holder.itemView.videoView.setVideoURI(Uri.parse(urls[i]))
+            holder.itemView.videoView.start()
+            true
+        }
+        holder.itemView.videoView.setVideoURI(Uri.parse(urls[i]))
+        holder.itemView.videoView.start()
+        holder.itemView.pauseImg.visibility = View.GONE
     }
 
     private fun showComment() {
@@ -233,6 +302,11 @@ class MainPageFragment : ModeFragment() {
                 if (!list.isEmpty()) {
                     list[0].author.let {
                         shareViewModel.currentSelectUser.postValue(it)
+                    }
+                    recyclerView.post {
+                        list[0].video?.play_addr?.url_list?.let {
+                            play(0, it)
+                        }
                     }
                 }
             }

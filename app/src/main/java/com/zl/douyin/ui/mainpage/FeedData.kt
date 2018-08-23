@@ -33,6 +33,7 @@ class MusicEntity {
 
 class VideoItem {
     var origin_cover: PlayEntity? = null
+    var play_addr: PlayEntity? = null
 }
 
 class StatisticsEntity {

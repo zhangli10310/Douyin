@@ -31,21 +31,21 @@ class MainPageVideoAdapter(private var list: MutableList<FeedItem>) : RecyclerVi
 
         val feedItem = list[position]
 
-//        val url = list[position].url
+//        feedItem.video?.play_addr?.url_list?.let {
+//            val url = it[2]
 //
-//        Log.w(TAG, "onBindViewHolder: ${holder.itemView.videoView}")
-//        holder.itemView.videoView.setOnPreparedListener {
-//            Log.e(TAG, "onBindViewHolder: OnPrepared")
+//            holder.itemView.videoView.setOnPreparedListener {
+//                Log.e(TAG, "onBindViewHolder: OnPrepared")
+//                holder.itemView.videoView.visibility = View.VISIBLE
+//            }
+//            holder.itemView.videoView.setAspectRatio(IRenderView.AR_MATCH_WIDTH)
+//            holder.itemView.videoView.setOnCompletionListener {
+//                Log.i(TAG, "setOnCompletionListener: ")
+//                holder.itemView.videoView.start()
+//            }
+//            holder.itemView.videoView.setVideoURI(Uri.parse(url))
+//            holder.itemView.videoView.start()
 //        }
-//        holder.itemView.videoView.setAspectRatio(IRenderView.AR_ASPECT_FIT_PARENT)
-//        holder.itemView.videoView.setOnInfoListener { iMediaPlayer, i, j ->
-//            Log.e(TAG, "video: ${iMediaPlayer.videoHeight}, ${iMediaPlayer.videoWidth}, $i, $j")
-//            Log.e(TAG, "videoView: ${holder.itemView.videoView.height}, ${holder.itemView.videoView.width}")
-////            holder.itemView.videoView.toggleAspectRatio()
-//            return@setOnInfoListener true
-//        }
-//        holder.itemView.videoView.setVideoURI(Uri.parse(url))
-//        holder.itemView.videoView.start()
 
         feedItem.music?.let {
             holder.itemView.musicText.text = it.title + "-" + it.owner_nickname

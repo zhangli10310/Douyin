@@ -10,4 +10,6 @@ class UserEntity {
     var avatar_thumb: PlayEntity? = null
 
     var short_id: String? = null
+    var signature: String? = null
+    var birthday: String? = null
 }

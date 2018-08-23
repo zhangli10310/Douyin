@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -48,27 +49,17 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/moreImg"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/bg_gray_corner_5"
-                    android:src="@mipmap/ic_more"
-                    app:layout_constraintBottom_toBottomOf="@+id/headImg"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/headImg" />
-
                 <TextView
                     android:id="@+id/nameText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/white"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintLeft_toLeftOf="@+id/headImg"
-                    app:layout_constraintRight_toRightOf="@+id/moreImg"
+                    app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/headImg" />
 
                 <TextView
@@ -76,11 +67,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="抖音号:123456789"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     app:layout_constraintLeft_toLeftOf="@+id/nameText"
-                    app:layout_constraintRight_toRightOf="@+id/moreImg"
+                    app:layout_constraintRight_toRightOf="@+id/nameText"
                     app:layout_constraintTop_toBottomOf="@+id/nameText" />
 
                 <View
@@ -90,7 +80,7 @@
                     android:layout_marginTop="10dp"
                     android:background="#aaa"
                     app:layout_constraintLeft_toLeftOf="@+id/headImg"
-                    app:layout_constraintRight_toRightOf="@+id/moreImg"
+                    app:layout_constraintRight_toRightOf="@+id/nameText"
                     app:layout_constraintTop_toBottomOf="@+id/douyinCodeText" />
 
                 <TextView
@@ -98,10 +88,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="介绍"
                     android:textSize="12sp"
                     app:layout_constraintLeft_toLeftOf="@+id/nameText"
-                    app:layout_constraintRight_toRightOf="@+id/moreImg"
+                    app:layout_constraintRight_toRightOf="@+id/line"
                     app:layout_constraintTop_toBottomOf="@+id/line" />
 
                 <TextView
@@ -109,42 +98,42 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/half_circle_rect_pink"
+                    android:background="@drawable/half_circle_rect"
+                    android:backgroundTint="#3fff"
                     android:paddingLeft="6dp"
                     android:paddingRight="6dp"
-                    android:text="♂31岁"
-                    android:textColor="@color/white"
                     android:textSize="12sp"
                     app:layout_constraintLeft_toLeftOf="@+id/headImg"
-                    app:layout_constraintTop_toBottomOf="@+id/describeText" />
+                    app:layout_constraintTop_toBottomOf="@+id/describeText"
+                    tools:text="♂31岁" />
 
                 <TextView
                     android:id="@+id/cityText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/half_circle_rect_purple"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/half_circle_rect"
+                    android:backgroundTint="#3fff"
                     android:paddingLeft="6dp"
                     android:paddingRight="6dp"
-                    android:text="北京"
-                    android:textColor="@color/white"
                     android:textSize="12sp"
                     app:layout_constraintBaseline_toBaselineOf="@+id/ageText"
-                    app:layout_constraintLeft_toRightOf="@+id/ageText" />
+                    app:layout_constraintLeft_toRightOf="@+id/ageText"
+                    tools:text="北京" />
 
                 <TextView
                     android:id="@+id/starText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/half_circle_rect_purple"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/half_circle_rect"
+                    android:backgroundTint="#3fff"
                     android:paddingLeft="6dp"
                     android:paddingRight="6dp"
-                    android:text="天秤座"
-                    android:textColor="@color/white"
                     android:textSize="12sp"
                     app:layout_constraintBaseline_toBaselineOf="@+id/ageText"
-                    app:layout_constraintLeft_toRightOf="@+id/cityText" />
+                    app:layout_constraintLeft_toRightOf="@+id/cityText"
+                    tools:text="天秤座" />
 
                 <TextView
                     android:id="@+id/likeText"
@@ -214,6 +203,14 @@
                         android:layout_centerInParent="true"
                         android:layout_gravity="center" />
 
+                    <ImageView
+                        android:id="@+id/moreImg"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="5dp"
+                        android:src="@mipmap/ic_more" />
+
                 </RelativeLayout>
 
             </android.support.v7.widget.Toolbar>
@@ -235,12 +232,12 @@
             <android.support.design.widget.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="作品24" />
+                android:text="作品0" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="喜欢78" />
+                android:text="喜欢0" />
 
         </android.support.design.widget.TabLayout>
 
