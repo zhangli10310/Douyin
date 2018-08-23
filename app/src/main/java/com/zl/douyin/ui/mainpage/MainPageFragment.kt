@@ -146,11 +146,7 @@ class MainPageFragment : ModeFragment() {
                                 shareViewModel.currentSelectUser.postValue(it)
                             }
 
-                            if (lastHolder != null) {
-                                //fixme 这里有问题，释放的不对
-                                lastHolder!!.itemView.videoView.release(true)
-                                lastHolder!!.itemView.videoView.visibility = View.INVISIBLE
-                            }
+                            stopLastVideo()
 
                             list[index].video?.play_addr?.url_list?.let {
                                 if (it.isEmpty()) {
@@ -177,6 +173,13 @@ class MainPageFragment : ModeFragment() {
 
         searchImg.setOnClickListener {
             shareViewModel.gotoViewPagerPosition.postValue(0)
+        }
+    }
+
+    private fun stopLastVideo() {
+        if (lastHolder != null) {
+            lastHolder!!.itemView.videoView.release(true)
+            lastHolder!!.itemView.videoView.visibility = View.INVISIBLE
         }
     }
 
@@ -357,6 +360,7 @@ class MainPageFragment : ModeFragment() {
 
     override fun onStop() {
         super.onStop()
+        stopLastVideo()
         IjkMediaPlayer.native_profileEnd()
     }
 
