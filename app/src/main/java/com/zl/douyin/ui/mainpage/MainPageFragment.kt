@@ -146,11 +146,10 @@ class MainPageFragment : ModeFragment() {
                                 shareViewModel.currentSelectUser.postValue(it)
                             }
 
-                            val holder = recyclerView.findViewHolderForAdapterPosition(lastIndex)
-                            if (holder != null) {
+                            if (lastHolder != null) {
                                 //fixme 这里有问题，释放的不对
-                                holder.itemView.videoView.release(true)
-                                holder.itemView.videoView.visibility = View.INVISIBLE
+                                lastHolder!!.itemView.videoView.release(true)
+                                lastHolder!!.itemView.videoView.visibility = View.INVISIBLE
                             }
 
                             list[index].video?.play_addr?.url_list?.let {
@@ -180,6 +179,8 @@ class MainPageFragment : ModeFragment() {
             shareViewModel.gotoViewPagerPosition.postValue(0)
         }
     }
+
+    var lastHolder: RecyclerView.ViewHolder? = null
 
     private fun play(index: Int, urls: List<String>) {
         val holder = recyclerView.findViewHolderForAdapterPosition(index)
@@ -214,6 +215,7 @@ class MainPageFragment : ModeFragment() {
         holder.itemView.videoView.setVideoURI(Uri.parse(urls[i]))
         holder.itemView.videoView.start()
         holder.itemView.pauseImg.visibility = View.GONE
+        lastHolder = holder
     }
 
     private fun showComment() {
