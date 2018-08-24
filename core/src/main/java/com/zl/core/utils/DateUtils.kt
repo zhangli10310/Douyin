@@ -40,4 +40,26 @@ object DateUtils {
         calendar.timeInMillis = timeMillis
         return getConstellation(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH))
     }
+
+    fun timeToCurrent(time: Long): CharSequence {
+        val distance = (System.currentTimeMillis() - time) / 1000 //秒
+        if (distance < 0) {
+            return ""
+        }
+        return when (distance) {
+            in 0..60 -> {
+                "刚刚"
+            }
+            in 60..3600 -> {
+                "${distance / 60}分前"
+            }
+            in 3600..24 * 3600 -> {
+                "${distance / 3600}小时前"
+            }
+            else -> {
+                "${distance / 3600 / 24}天前"
+            }
+        }
+
+    }
 }

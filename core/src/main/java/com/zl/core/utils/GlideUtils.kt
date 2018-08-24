@@ -1,6 +1,8 @@
 package com.zl.core.utils
 
 import android.graphics.drawable.Drawable
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -27,7 +29,9 @@ object GlideUtils {
                 if (index >= list.size) {
                     return false
                 }
-                load(view, list[index], this)
+                Handler(Looper.getMainLooper()).post {
+                    load(view, list[index], this)
+                }
                 return true
             }
         })

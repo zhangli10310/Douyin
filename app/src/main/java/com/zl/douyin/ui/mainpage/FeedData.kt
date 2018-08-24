@@ -23,6 +23,7 @@ class FeedItem {
     var author: UserEntity? = null
     var statistics: StatisticsEntity? = null
     var user_digged: Int? = null
+    var aweme_id: Long? = null
 }
 
 class MusicEntity {

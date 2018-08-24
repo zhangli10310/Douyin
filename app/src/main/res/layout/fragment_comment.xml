@@ -13,7 +13,6 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:padding="5dp"
-        android:text="100评论"
         android:textSize="16sp" />
 
     <TextView
@@ -21,8 +20,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
         android:padding="5dp"
         android:text="X" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -36,7 +42,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:hint="@string/app_name" />
+        android:hint="留下你的精彩评论吧"
+        android:inputType="text" />
 
 
 </RelativeLayout>

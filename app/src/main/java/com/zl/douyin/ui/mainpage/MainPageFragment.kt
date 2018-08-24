@@ -23,6 +23,7 @@ import com.zl.douyin.R
 import com.zl.douyin.ui.comment.CommentDialogFragment
 import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.ijk.media.IRenderView
+import com.zl.ijk.media.IjkVideoView
 import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.item_main_video.view.*
 import tv.danmaku.ijk.media.player.IMediaPlayer
@@ -117,8 +118,10 @@ class MainPageFragment : ModeFragment() {
                 return@setOnTouchListener gestureDetector.onTouchEvent(event, it)
             }
 
-            it.itemView.commentImg.setOnClickListener {
-                showComment()
+            it.itemView.commentImg.setOnClickListener { _ ->
+                if (it.adapterPosition >= 0) {
+                    showComment(list[it.adapterPosition].aweme_id ?: 0)
+                }
             }
 
             it.itemView.headImg.setOnClickListener {
@@ -181,6 +184,10 @@ class MainPageFragment : ModeFragment() {
         searchImg.setOnClickListener {
             shareViewModel.gotoViewPagerPosition.postValue(0)
         }
+
+        doublePointImg.setOnClickListener {
+
+        }
     }
 
     private fun loadMore() {
@@ -205,7 +212,7 @@ class MainPageFragment : ModeFragment() {
         }
         var i = 0
 
-//        holder.itemView.videoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW)
+        holder.itemView.videoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW)
         holder.itemView.videoView.setAspectRatio(IRenderView.AR_MATCH_WIDTH)
         holder.itemView.videoView.setOnCompletionListener {
             Log.i(TAG, "setOnCompletionListener: ")
@@ -257,8 +264,8 @@ class MainPageFragment : ModeFragment() {
         lastHolder = holder
     }
 
-    private fun showComment() {
-        val fragment = CommentDialogFragment()
+    private fun showComment(aweId: Long) {
+        val fragment = CommentDialogFragment.getInstance(aweId)
         fragment.show(fragmentManager, "tag")
     }
 
