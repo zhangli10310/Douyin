@@ -61,6 +61,19 @@ class MainPageRepository public constructor() {
         val map = mapOf(
                 Pair("type", "0"),
                 Pair("max_cursor", "0"),
+                Pair("min_cursor", "-1"),
+                Pair("count", "6"),
+                Pair("volume", "0.13333333333333333"),
+                Pair("pull_type", "2"),
+                Pair("need_relieve_aweme", "0")
+        )
+        return mService.loadRecommendVideo(url = "${BuildConfig.API_URL}aweme/v1/feed/", map = map)
+    }
+
+    fun loadMoreVideo(): Observable<FeedData> {
+        val map = mapOf(
+                Pair("type", "0"),
+                Pair("max_cursor", "0"),
                 Pair("min_cursor", "0"),
                 Pair("count", "6"),
                 Pair("volume", "0.13333333333333333"),

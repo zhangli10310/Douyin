@@ -39,6 +39,9 @@ class MainPageFragment : ModeFragment() {
 
     private val TAG = MainPageFragment::class.java.simpleName
 
+    private var hasMore = true
+    private var isLoading = false
+
     private lateinit var shareViewModel: SharedViewModel
     private lateinit var viewModel: MainPageViewModel
 
@@ -157,6 +160,10 @@ class MainPageFragment : ModeFragment() {
 
                             lastIndex = index
                         }
+
+                        if ((last + 3) > list.size && hasMore && !isLoading) {
+                            loadMore()
+                        }
                     }
 
                     RecyclerView.SCROLL_STATE_DRAGGING -> {//当屏幕滚动且用户使用的触碰或手指还在屏幕上
@@ -174,6 +181,11 @@ class MainPageFragment : ModeFragment() {
         searchImg.setOnClickListener {
             shareViewModel.gotoViewPagerPosition.postValue(0)
         }
+    }
+
+    private fun loadMore() {
+        isLoading = true
+        viewModel.loadMoreVideo()
     }
 
     private fun stopLastVideo() {
@@ -343,6 +355,7 @@ class MainPageFragment : ModeFragment() {
 
         viewModel.moreVideoList.observe(this, Observer {
             if (it != null) {
+                isLoading = false
                 list.addAll(it)
                 mAdapter.notifyDataSetChanged()
             }

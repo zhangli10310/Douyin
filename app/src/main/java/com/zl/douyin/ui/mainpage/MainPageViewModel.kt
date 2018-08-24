@@ -21,6 +21,8 @@ class MainPageViewModel(private var repository: MainPageRepository) : BaseViewMo
     var moreVideoList: MutableLiveData<MutableList<FeedItem>> = MutableLiveData()
     var loadingRecommendStatus: MutableLiveData<Int> = MutableLiveData()
 
+    var hasMore: MutableLiveData<Boolean> = MutableLiveData()
+
     fun loadRecommendVideo() {
 
         repository.loadRecommendVideo()
@@ -33,10 +35,16 @@ class MainPageViewModel(private var repository: MainPageRepository) : BaseViewMo
     }
 
     fun loadMoreVideo() {
-        //fixme
-        repository.loadRecommendVideo()
+        repository.loadMoreVideo()
                 .noLoadingSubscribe(this, {
+                    if (it.has_more != 1) {
+                        hasMore.postValue(false)
+                    } else {
+                        hasMore.postValue(true)
+                    }
                     moreVideoList.postValue(it.aweme_list)
+                }, {
+                    hasMore.postValue(false)
                 })
     }
 
