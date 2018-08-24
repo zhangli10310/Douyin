@@ -9,7 +9,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.net.Uri
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
-import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PagerSnapHelper
 import android.support.v7.widget.RecyclerView
@@ -26,6 +25,7 @@ import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.ijk.media.IRenderView
 import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.item_main_video.view.*
+import tv.danmaku.ijk.media.player.IMediaPlayer
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
 
@@ -183,7 +183,7 @@ class MainPageFragment : ModeFragment() {
         }
     }
 
-    var lastHolder: RecyclerView.ViewHolder? = null
+    private var lastHolder: RecyclerView.ViewHolder? = null
 
     private fun play(index: Int, urls: List<String>) {
         val holder = recyclerView.findViewHolderForAdapterPosition(index)
@@ -193,17 +193,41 @@ class MainPageFragment : ModeFragment() {
         }
         var i = 0
 
-        holder.itemView.videoView.setOnPreparedListener {
-            Log.e(TAG, "onBindViewHolder: OnPrepared")
-            holder.itemView.videoView.visibility = View.VISIBLE
-        }
+//        holder.itemView.videoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW)
         holder.itemView.videoView.setAspectRatio(IRenderView.AR_MATCH_WIDTH)
         holder.itemView.videoView.setOnCompletionListener {
             Log.i(TAG, "setOnCompletionListener: ")
             holder.itemView.videoView.start()
         }
-        holder.itemView.videoView.setOnInfoListener { v1, v2, v3 ->
-            Log.i(TAG, "play: $v1,${v1.isPlaying}, $v2, $v3")
+        holder.itemView.videoView.setOnInfoListener { _, arg2, _ ->
+            when (arg2) {
+//                IMediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING -> Log.d(TAG, "MEDIA_INFO_VIDEO_TRACK_LAGGING:")
+                IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START -> {
+                    Log.d(TAG, "MEDIA_INFO_VIDEO_RENDERING_START:")
+                    holder.itemView.videoView.postDelayed({
+                        holder.itemView.videoView.visibility = View.VISIBLE
+                    }, 180) //不延迟会有黑屏
+                }
+//                IMediaPlayer.MEDIA_INFO_BUFFERING_START -> Log.d(TAG, "MEDIA_INFO_BUFFERING_START:")
+//                IMediaPlayer.MEDIA_INFO_BUFFERING_END -> {
+//                    Log.d(TAG, "MEDIA_INFO_BUFFERING_END:")
+//                    if (holder.itemView.videoView.visibility != View.VISIBLE) {
+//                        holder.itemView.videoView.post {
+//                            holder.itemView.videoView.visibility = View.VISIBLE
+//                        }
+//                    }
+//                }
+//                IMediaPlayer.MEDIA_INFO_NETWORK_BANDWIDTH -> Log.d(TAG, "MEDIA_INFO_NETWORK_BANDWIDTH: $arg2")
+//                IMediaPlayer.MEDIA_INFO_BAD_INTERLEAVING -> Log.d(TAG, "MEDIA_INFO_BAD_INTERLEAVING:")
+//                IMediaPlayer.MEDIA_INFO_NOT_SEEKABLE -> Log.d(TAG, "MEDIA_INFO_NOT_SEEKABLE:")
+//                IMediaPlayer.MEDIA_INFO_METADATA_UPDATE -> Log.d(TAG, "MEDIA_INFO_METADATA_UPDATE:")
+//                IMediaPlayer.MEDIA_INFO_UNSUPPORTED_SUBTITLE -> Log.d(TAG, "MEDIA_INFO_UNSUPPORTED_SUBTITLE:")
+//                IMediaPlayer.MEDIA_INFO_SUBTITLE_TIMED_OUT -> Log.d(TAG, "MEDIA_INFO_SUBTITLE_TIMED_OUT:")
+//                IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED -> {
+//
+//                }
+//                IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START -> Log.d(TAG, "MEDIA_INFO_AUDIO_RENDERING_START:")
+            }
             true
         }
         holder.itemView.videoView.setOnErrorListener { _, _, _ ->
