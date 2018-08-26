@@ -1,18 +1,13 @@
 package com.zl.douyin.ui.mainpage
 
-import android.net.Uri
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
 import com.zl.core.extend.inflate
+import com.zl.core.utils.CommonUtils
 import com.zl.core.utils.GlideUtils
 import com.zl.douyin.R
-import com.zl.ijk.media.IMediaController
-import com.zl.ijk.media.IRenderView
 import kotlinx.android.synthetic.main.item_main_video.view.*
-import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 /**
  *
@@ -58,9 +53,9 @@ class MainPageVideoAdapter(private var list: MutableList<FeedItem>) : RecyclerVi
         }
 
         feedItem.statistics?.let {
-            holder.itemView.commentCountText.text = convertCount(it.comment_count)
-            holder.itemView.shareCountText.text = convertCount(it.share_count)
-            holder.itemView.likeCountText.text = convertCount(it.digg_count)
+            holder.itemView.commentCountText.text = CommonUtils.formatCount(it.comment_count)
+            holder.itemView.shareCountText.text = CommonUtils.formatCount(it.share_count)
+            holder.itemView.likeCountText.text = CommonUtils.formatCount(it.digg_count)
         }
 
         if (feedItem.user_digged == 1) {
@@ -82,22 +77,22 @@ class MainPageVideoAdapter(private var list: MutableList<FeedItem>) : RecyclerVi
         }
     }
 
-    private fun convertCount(number: Long?): String {
-        return when (number) {
-            null -> {
-                "0"
-            }
-            in 0..9999 -> {
-                number.toString()
-            }
-            in 10000..99999 -> {
-                (number / 10000).toString() + "." + (number / 1000 % 10).toString() + "w"
-            }
-            else -> {
-                (number / 10000).toString() + "w"
-            }
-        }
-    }
+//    private fun convertCount(number: Long?): String {
+//        return when (number) {
+//            null -> {
+//                "0"
+//            }
+//            in 0..9999 -> {
+//                number.toString()
+//            }
+//            in 10000..99999 -> {
+//                (number / 10000).toString() + "." + (number / 1000 % 10).toString() + "w"
+//            }
+//            else -> {
+//                (number / 10000).toString() + "w"
+//            }
+//        }
+//    }
 
     fun registerViewClick(viewClick: ((ViewHolder) -> Unit)) {
         this.viewClick = viewClick

@@ -23,7 +23,6 @@ import com.zl.douyin.R
 import com.zl.douyin.ui.comment.CommentDialogFragment
 import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.ijk.media.IRenderView
-import com.zl.ijk.media.IjkVideoView
 import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.item_main_video.view.*
 import tv.danmaku.ijk.media.player.IMediaPlayer
@@ -212,7 +211,7 @@ class MainPageFragment : ModeFragment() {
         }
         var i = 0
 
-        holder.itemView.videoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW)
+//        holder.itemView.videoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW)
         holder.itemView.videoView.setAspectRatio(IRenderView.AR_MATCH_WIDTH)
         holder.itemView.videoView.setOnCompletionListener {
             Log.i(TAG, "setOnCompletionListener: ")

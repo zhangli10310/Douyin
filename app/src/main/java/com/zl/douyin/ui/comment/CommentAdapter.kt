@@ -3,6 +3,7 @@ package com.zl.douyin.ui.comment
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.zl.core.extend.inflate
+import com.zl.core.utils.CommonUtils
 import com.zl.core.utils.DateUtils
 import com.zl.core.utils.GlideUtils
 import com.zl.douyin.R
@@ -37,7 +38,7 @@ class CommentAdapter(private var list: MutableList<CommentItem>) : RecyclerView.
         }
 
         commentItem.digg_count?.let {
-            holder.itemView.likeCountText.text = it.toString()
+            holder.itemView.likeCountText.text = CommonUtils.formatCount(it.toLong())
         }
     }
 }
