@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<com.zl.core.view.InterceptTouchViewPager
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/viewPager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#8f0f"
-    app:cardCornerRadius="8dp">
+    android:background="@drawable/bg_comment"
+    android:backgroundTint="#222">
 
-    <com.zl.core.view.InterceptTouchViewPager
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</android.support.v7.widget.CardView>
+</com.zl.core.view.InterceptTouchViewPager>

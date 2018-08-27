@@ -12,7 +12,7 @@ import com.zl.douyin.R
  *
  * Created by zhangli on 2018/3/19 16:12.<br/>
  */
-class UserVideoAdapter : RecyclerView.Adapter<UserVideoAdapter.ViewHolder>() {
+class UserVideoAdapter() : RecyclerView.Adapter<UserVideoAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
     }
@@ -22,7 +22,7 @@ class UserVideoAdapter : RecyclerView.Adapter<UserVideoAdapter.ViewHolder>() {
         return ViewHolder(view)
     }
 
-    override fun getItemCount() = 30
+    override fun getItemCount() = 0
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
