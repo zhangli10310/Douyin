@@ -13,6 +13,7 @@ import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.GridSpacingItemDecoration
 import com.zl.douyin.R
 import com.bumptech.glide.Glide
+import com.zl.core.utils.CommonUtils
 import com.zl.core.utils.DateUtils
 import com.zl.core.utils.GlideUtils
 import com.zl.core.view.AppBarStateChangeListener
@@ -28,7 +29,11 @@ import kotlinx.android.synthetic.main.fragment_user.*
  */
 class UserFragment : ModeFragment() {
 
+    private var userEntity: UserEntity? = null
+
     private lateinit var shareViewModel: SharedViewModel
+    private lateinit var userViewModel: UserViewModel
+
 
     private val TAG = UserFragment::class.java.simpleName
 
@@ -102,10 +107,24 @@ class UserFragment : ModeFragment() {
     }
 
     override fun observe() {
+        userViewModel = ViewModelProviders.of(activity!!, UserViewModel.Factory(UserRepository.get())).get(UserViewModel::class.java)
         shareViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
         shareViewModel.currentSelectUser.observe(this, Observer {
+            userViewModel.userInfo.postValue(it)
+        })
+
+        shareViewModel.queryUser.observe(this, Observer {
+            if (it != null && it) {
+                userEntity?.uid?.let {
+                    userViewModel.queryUser(it)
+                }
+            }
+        })
+
+        userViewModel.userInfo.observe(this, Observer {
             if (it != null) {
+                userEntity = it
                 it.avatar_thumb?.url_list?.let {
                     GlideUtils.load(it, headImg)
                     GlideUtils.load(it, headBlurImg)
@@ -131,15 +150,43 @@ class UserFragment : ModeFragment() {
                     gender = "♀"
                 }
                 if (birthday > 0) {
-                    ageText.text =  "$gender ${(System.currentTimeMillis() - birthday)/1000/60/60/24/365}岁"
+                    ageText.text = "$gender ${(System.currentTimeMillis() - birthday) / 1000 / 60 / 60 / 24 / 365}岁"
                     starText.text = DateUtils.getConstellation(birthday)
                 }
 
+                cityText.text = it.location
+
+                it.total_favorited?.let {
+                    likeText.text = CommonUtils.formatCount(it) + "获赞"
+                }
+
+                it.following_count?.let {
+                    focusText.text = CommonUtils.formatCount(it) + "关注"
+                }
+
+                it.follower_count?.let {
+                    fansText.text = CommonUtils.formatCount(it) + "粉丝"
+                }
+
+                it.aweme_count?.let {
+                    tabLayout.getTabAt(0)?.setText("作品" + CommonUtils.formatCount(it))
+                }
+
+                it.favoriting_count?.let {
+                    tabLayout.getTabAt(1)?.setText("喜欢" + CommonUtils.formatCount(it))
+                }
             }
         })
     }
 
     override fun afterView() {
+
+        arguments?.let {
+            val uid = it.getString("uid")
+            if (!uid.isNullOrBlank()) {
+                userViewModel.queryUser(uid)
+            }
+        }
 
     }
 

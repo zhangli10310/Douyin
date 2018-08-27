@@ -31,6 +31,8 @@ class CommentDialogFragment : AppCompatDialogFragment() {
     private var list = mutableListOf<CommentItem>()
     private lateinit var mAdapter: CommentAdapter
 
+    private var hasMore: Boolean = true
+
     companion object {
 
         const val AWEME_ID = "aweme_id"
@@ -77,11 +79,40 @@ class CommentDialogFragment : AppCompatDialogFragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity!!)
         recyclerView.adapter = mAdapter
 
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                when (newState) {
+                    RecyclerView.SCROLL_STATE_IDLE -> { //当屏幕停止滚动
+
+                        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                        val first = layoutManager.findFirstVisibleItemPosition()
+                        val last = layoutManager.findLastVisibleItemPosition()
+
+                        if ((last + 3) > list.size && hasMore && viewModel.isLoading.value != true) {
+                            loadComment()
+                        }
+                    }
+
+                    RecyclerView.SCROLL_STATE_DRAGGING -> {//当屏幕滚动且用户使用的触碰或手指还在屏幕上
+
+                    }
+
+                    RecyclerView.SCROLL_STATE_SETTLING -> {//由于用户的操作，屏幕产生惯性滑动
+
+                    }
+
+                }
+            }
+        })
+
         arguments?.let {
             val id = it.getLong(AWEME_ID)
             if (id != awemeId) {
                 awemeId = id
                 list.clear()
+                progressBar.visibility = View.VISIBLE
                 loadComment()
             }
         }
@@ -104,6 +135,9 @@ class CommentDialogFragment : AppCompatDialogFragment() {
 
         viewModel.hasMore.observe(this, Observer {
             progressBar.visibility = View.GONE
+            it?.let {
+                hasMore = it
+            }
         })
     }
 }

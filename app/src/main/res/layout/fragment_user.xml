@@ -230,6 +230,7 @@
             app:tabTextColor="#888">
 
             <android.support.design.widget.TabItem
+                android:id="@+id/aweCount"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="作品0" />

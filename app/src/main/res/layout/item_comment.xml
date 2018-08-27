@@ -23,9 +23,10 @@
 
     <TextView
         android:id="@+id/commentText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#000"
+        app:layout_constraintRight_toLeftOf="@+id/likeImg"
         app:layout_constraintLeft_toLeftOf="@+id/nameText"
         app:layout_constraintTop_toBottomOf="@+id/nameText" />
 

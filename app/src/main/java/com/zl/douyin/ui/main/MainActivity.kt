@@ -42,6 +42,9 @@ class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
 
             override fun onPageSelected(position: Int) {
                 checkViewPagerScroll()
+                if (position == 2) {
+                    shareViewModel.queryUser.postValue(true)
+                }
             }
 
         })

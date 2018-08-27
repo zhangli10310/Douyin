@@ -126,6 +126,10 @@ class MainPageFragment : ModeFragment() {
             it.itemView.headImg.setOnClickListener {
                 shareViewModel.gotoViewPagerPosition.postValue(2)
             }
+
+            it.itemView.likeImg.setOnClickListener {
+
+            }
         }
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -294,10 +298,10 @@ class MainPageFragment : ModeFragment() {
     private fun anim(heartView: View, v: ConstraintLayout) {
         val set = AnimatorSet()
         val random = Random()
-        val ran = DisplayUtils.dp2px(context!!, random.nextInt(60).toFloat())
+        val ran = DisplayUtils.dp2px(context!!, random.nextInt(40).toFloat())
         set.playTogether(ObjectAnimator.ofFloat(heartView, View.ALPHA, 1f, 0.3f),
-                ObjectAnimator.ofFloat(heartView, View.TRANSLATION_X, 0f, (ran - DisplayUtils.dp2px(context!!, 30f)) * 2),
-                ObjectAnimator.ofFloat(heartView, View.TRANSLATION_Y, 0f, -ran),
+                ObjectAnimator.ofFloat(heartView, View.TRANSLATION_X, 0f, (ran - DisplayUtils.dp2px(context!!, 20f)) * 2),
+                ObjectAnimator.ofFloat(heartView, View.TRANSLATION_Y, 0f, -2 * ran),
                 ObjectAnimator.ofFloat(heartView, View.SCALE_X, 1f, 1.4f),
                 ObjectAnimator.ofFloat(heartView, View.SCALE_Y, 1f, 1.4f)
         )
@@ -309,6 +313,7 @@ class MainPageFragment : ModeFragment() {
 //                likeHeartRecycler.offer(heartView)
             }
         })
+        set.duration = 800
         set.startDelay = 200L
         set.start()
     }
