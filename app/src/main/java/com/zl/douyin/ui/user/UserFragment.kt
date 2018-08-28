@@ -10,14 +10,13 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import com.zl.core.base.ModeFragment
-import com.zl.core.utils.DisplayUtils
-import com.zl.core.view.GridSpacingItemDecoration
-import com.zl.douyin.R
-import com.bumptech.glide.Glide
 import com.zl.core.utils.CommonUtils
 import com.zl.core.utils.DateUtils
+import com.zl.core.utils.DisplayUtils
 import com.zl.core.utils.GlideUtils
 import com.zl.core.view.AppBarStateChangeListener
+import com.zl.core.view.GridSpacingItemDecoration
+import com.zl.douyin.R
 import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.douyin.ui.mainpage.FeedItem
 import kotlinx.android.synthetic.main.fragment_user.*
@@ -33,6 +32,7 @@ class UserFragment : ModeFragment() {
 
     private val TAG = UserFragment::class.java.simpleName
 
+    private var lastUserId: String? = null
     private var userEntity: UserEntity? = null
 
     private lateinit var shareViewModel: SharedViewModel
@@ -59,6 +59,7 @@ class UserFragment : ModeFragment() {
         tabLayout.setupWithViewPager(viewPager)
     }
 
+    //这个控制的数据最好放到ViewModel里面
     private var hasMoreAwe: Boolean = true
     private var maxAweCursor: String = "0"
     private var aweList: MutableList<FeedItem> = mutableListOf()
@@ -66,7 +67,9 @@ class UserFragment : ModeFragment() {
 
     private fun getAweView(): View {
 
-        aweAdapter = VideoGridAdapter(aweList)
+        aweAdapter = VideoGridAdapter(aweList) {
+
+        }
 
         return RecyclerView(activity!!).apply {
             layoutManager = GridLayoutManager(activity, 3)
@@ -137,15 +140,18 @@ class UserFragment : ModeFragment() {
         shareViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
         shareViewModel.currentSelectUser.observe(this, Observer {
-            resetInfo()
             userViewModel.userInfo.postValue(it)
         })
 
         shareViewModel.queryUser.observe(this, Observer {
             if (it != null && it) {
                 userEntity?.uid?.let {
-                    userViewModel.queryUser(it)
-                    userViewModel.queryAwe(it, maxAweCursor)
+                    if (lastUserId != it) {
+                        resetInfo()
+                        lastUserId = it
+                        userViewModel.queryUser(it)
+                        userViewModel.queryAwe(it, maxAweCursor)
+                    }
                 }
             }
         })

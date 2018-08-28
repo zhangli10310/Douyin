@@ -44,6 +44,15 @@ android {
             signingConfig signingConfigs.config
         }
     }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'armeabi-v7a' //引入fresco后 要把这个去掉'arm64-v8a'
+            universalApk false
+        }
+    }
 }
 
 dependencies {

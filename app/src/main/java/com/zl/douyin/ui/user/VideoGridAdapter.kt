@@ -9,7 +9,7 @@ import com.zl.douyin.ui.mainpage.FeedItem
 import kotlinx.android.synthetic.main.item_user_video.view.*
 
 
-class VideoGridAdapter(var list: MutableList<FeedItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class VideoGridAdapter(var list: MutableList<FeedItem>, var onItemClick: ((RecyclerView.ViewHolder) -> Unit)? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = parent.inflate(R.layout.item_user_video, parent, false)
@@ -20,10 +20,15 @@ class VideoGridAdapter(var list: MutableList<FeedItem>) : RecyclerView.Adapter<R
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         list[position].video?.dynamic_cover?.url_list?.let {
+
+            val list = mutableListOf<String>()
             it.forEach {
-                "$it.webp"
+                list.add("$it.webp")
             }
-            GlideUtils.load(it, holder.itemView.dynamicCoverImg)
+            GlideUtils.loadWebp(list, holder.itemView.dynamicCoverImg)
+        }
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(holder)
         }
     }
 }

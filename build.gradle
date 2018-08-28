@@ -13,7 +13,7 @@ buildscript {
         retrofit2Version = '2.3.0'
         rxjava2Version = '2.1.7'
         rxandroidVersion = '2.0.1'
-        glideVersion = '4.2.0'
+        glideVersion = '4.8.0'
         lifecycleVersion = '1.1.1'
         roomVersion = '1.1.1'
         pagingVersion = '1.0.1'

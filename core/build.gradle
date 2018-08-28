@@ -68,6 +68,8 @@ dependencies {
     api "io.reactivex.rxjava2:rxandroid:$rxandroidVersion"
 
     api "com.github.bumptech.glide:glide:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    api "com.zlc.glide:webpdecoder:1.0.$glideVersion"
 
     api "android.arch.lifecycle:extensions:$lifecycleVersion"
     api "android.arch.lifecycle:reactivestreams:$lifecycleVersion"

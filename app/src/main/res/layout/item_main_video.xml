@@ -13,7 +13,7 @@
         android:adjustViewBounds="true"
         android:maxHeight="1200dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.zl.ijk.media.IjkVideoView
         android:id="@+id/videoView"
@@ -21,14 +21,14 @@
         android:layout_height="0dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/bottomGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/bottom_layout_height" />
+        app:layout_constraintGuide_end="@dimen/bottom_layout_height"/>
 
     <ImageView
         android:id="@+id/musicIconImg"
@@ -38,7 +38,7 @@
         android:src="@mipmap/ic_music_white"
         app:layout_constraintBottom_toBottomOf="@+id/musicText"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/musicText" />
+        app:layout_constraintTop_toTopOf="@+id/musicText"/>
 
     <com.zl.core.view.FocusedTextView
         android:id="@+id/musicText"
@@ -47,7 +47,7 @@
         android:layout_marginStart="16dp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/bottomGuideline"
-        app:layout_constraintLeft_toRightOf="@+id/musicIconImg" />
+        app:layout_constraintLeft_toRightOf="@+id/musicIconImg"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/musicRoundImg"
@@ -57,7 +57,7 @@
         app:civ_border_color="#000"
         app:civ_border_width="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/musicIconImg"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <TextView
         android:id="@+id/descText"
@@ -68,7 +68,7 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/musicIconImg"
         app:layout_constraintLeft_toLeftOf="@+id/musicIconImg"
-        app:layout_constraintRight_toLeftOf="@+id/musicRoundImg" />
+        app:layout_constraintRight_toLeftOf="@+id/musicRoundImg"/>
 
     <TextView
         android:id="@+id/authorText"
@@ -78,17 +78,17 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/descText"
-        app:layout_constraintLeft_toLeftOf="@+id/musicIconImg" />
+        app:layout_constraintLeft_toLeftOf="@+id/musicIconImg"/>
 
     <ImageView
         android:id="@+id/commentImg"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginBottom="38dp"
         android:layout_marginEnd="20dp"
         android:src="@mipmap/ic_comment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/shareImg"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <TextView
         android:id="@+id/commentCountText"
@@ -97,17 +97,17 @@
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@+id/commentImg"
         app:layout_constraintRight_toRightOf="@+id/commentImg"
-        app:layout_constraintTop_toBottomOf="@+id/commentImg" />
+        app:layout_constraintTop_toBottomOf="@+id/commentImg"/>
 
     <ImageView
         android:id="@+id/shareImg"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginBottom="18dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="18dp"
         android:src="@mipmap/ic_share"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/commentCountText" />
+        app:layout_constraintBottom_toTopOf="@+id/authorText"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <TextView
         android:id="@+id/shareCountText"
@@ -116,17 +116,17 @@
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@+id/shareImg"
         app:layout_constraintRight_toRightOf="@+id/shareImg"
-        app:layout_constraintTop_toBottomOf="@+id/shareImg" />
+        app:layout_constraintTop_toBottomOf="@+id/shareImg"/>
 
     <ImageView
         android:id="@+id/likeImg"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginBottom="38dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="18dp"
         android:src="@mipmap/ic_unlike"
-        app:layout_constraintBottom_toTopOf="@+id/likeCountText"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/commentImg"
+        app:layout_constraintRight_toRightOf="parent"/>
 
 
     <TextView
@@ -135,21 +135,20 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="18dp"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/commentImg"
         app:layout_constraintLeft_toLeftOf="@+id/shareImg"
-        app:layout_constraintRight_toRightOf="@+id/shareImg" />
+        app:layout_constraintRight_toRightOf="@+id/shareImg"
+        app:layout_constraintTop_toBottomOf="@+id/likeImg"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/headImg"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="30dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginTop="18dp"
         app:civ_border_color="#fff"
         app:civ_border_width="2dp"
         app:layout_constraintBottom_toTopOf="@+id/likeImg"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <ImageView
         android:layout_width="20dp"
@@ -159,7 +158,7 @@
         android:src="@mipmap/ic_add_follow"
         app:layout_constraintLeft_toLeftOf="@+id/headImg"
         app:layout_constraintRight_toRightOf="@+id/headImg"
-        app:layout_constraintTop_toTopOf="@+id/headImg" />
+        app:layout_constraintTop_toTopOf="@+id/headImg"/>
 
     <ImageView
         android:id="@+id/pauseImg"
@@ -171,6 +170,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>
