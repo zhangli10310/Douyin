@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.MotionEvent
+import com.zl.core.R
 
 
 /**
@@ -21,7 +22,14 @@ class InterceptTouchViewPager : ViewPager {
     private var yLast: Float = 0f
 
     constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        val ta = context.obtainStyledAttributes(attrs, R.styleable.InterceptTouchViewPager)
+
+        forbidToLeft = ta.getBoolean(R.styleable.InterceptTouchViewPager_forbid_to_left, false)
+        forbidToRight = ta.getBoolean(R.styleable.InterceptTouchViewPager_forbid_to_right, false)
+
+        ta.recycle()
+    }
 
 //    override fun onTouchEvent(ev: MotionEvent): Boolean {
 //        return isIntercept?.invoke(ev) ?: true && super.onTouchEvent(ev)

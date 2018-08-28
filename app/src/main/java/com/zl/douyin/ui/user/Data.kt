@@ -1,5 +1,6 @@
 package com.zl.douyin.ui.user
 
+import android.view.View
 import com.zl.core.api.data.BaseResult
 import com.zl.douyin.ui.mainpage.PlayEntity
 
@@ -29,3 +30,5 @@ class UserEntity {
     var following_count: Long? = null
     var follower_count: Long? = null
 }
+
+data class TitleView(var title: String, var view: View)

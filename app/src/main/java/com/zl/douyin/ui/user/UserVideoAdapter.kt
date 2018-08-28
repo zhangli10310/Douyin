@@ -1,10 +1,8 @@
 package com.zl.douyin.ui.user
 
-import android.support.v7.widget.RecyclerView
+import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
-import com.zl.core.extend.inflate
-import com.zl.douyin.R
 
 /**
  *
@@ -12,17 +10,27 @@ import com.zl.douyin.R
  *
  * Created by zhangli on 2018/3/19 16:12.<br/>
  */
-class UserVideoAdapter() : RecyclerView.Adapter<UserVideoAdapter.ViewHolder>() {
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+class UserVideoAdapter(var list: MutableList<TitleView>):PagerAdapter() {
 
+
+    override fun getCount() = list.size
+
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val view = list[position].view
+        container.addView(view)
+        return view
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = parent.inflate(R.layout.item_user_video, parent, false)
-        return ViewHolder(view)
+    override fun isViewFromObject(view: View, obj: Any): Boolean {
+        return view == obj
     }
 
-    override fun getItemCount() = 0
+    override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
+        container.removeView(obj as View)
+    }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    override fun getPageTitle(position: Int): CharSequence? {
+        return list[position].title
+    }
+
 }

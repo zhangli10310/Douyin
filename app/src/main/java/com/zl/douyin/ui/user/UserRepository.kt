@@ -5,6 +5,7 @@ import com.zl.core.api.ServiceGenerator
 import io.reactivex.Observable
 import com.google.gson.Gson
 import com.zl.core.MainApp
+import com.zl.douyin.ui.mainpage.FeedData
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -38,5 +39,14 @@ class UserRepository public constructor() {
                 Pair("user_id", userId)
         )
         return mService.queryUser(map)
+    }
+
+    fun queryAwe(userId: String, maxCursor: String): Observable<FeedData> {
+        val map = mapOf(
+                Pair("user_id", userId),
+                Pair("max_cursor", maxCursor),
+                Pair("count", "20")
+        )
+        return mService.queryAwe(map)
     }
 }

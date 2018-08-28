@@ -2,6 +2,7 @@ package com.zl.douyin.ui.user
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v7.widget.GridLayoutManager
@@ -18,6 +19,7 @@ import com.zl.core.utils.DateUtils
 import com.zl.core.utils.GlideUtils
 import com.zl.core.view.AppBarStateChangeListener
 import com.zl.douyin.ui.main.SharedViewModel
+import com.zl.douyin.ui.mainpage.FeedItem
 import kotlinx.android.synthetic.main.fragment_user.*
 
 
@@ -29,22 +31,77 @@ import kotlinx.android.synthetic.main.fragment_user.*
  */
 class UserFragment : ModeFragment() {
 
+    private val TAG = UserFragment::class.java.simpleName
+
     private var userEntity: UserEntity? = null
 
     private lateinit var shareViewModel: SharedViewModel
     private lateinit var userViewModel: UserViewModel
 
+    private var list: MutableList<TitleView> = mutableListOf()
+    private lateinit var mUserVideoAdapter: UserVideoAdapter
 
-    private val TAG = UserFragment::class.java.simpleName
 
     override fun initView(savedInstanceState: Bundle?) {
 
-        recyclerView.layoutManager = GridLayoutManager(activity, 3)
-        recyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount = 3, space = DisplayUtils.dp2px(activity!!, 1f).toInt(), includeEdge = false))
-        recyclerView.adapter = UserVideoAdapter()
+//        recyclerView.layoutManager = GridLayoutManager(activity, 3)
+//        recyclerView.addItemDecoration(GridSpacingItemDecoration(spanCount = 3, space = DisplayUtils.dp2px(activity!!, 1f).toInt(), includeEdge = false))
+//        recyclerView.adapter = UserVideoAdapter()
 //        recyclerView.setHasFixedSize(true)
 //        recyclerView.isNestedScrollingEnabled = false
 
+        list.clear()
+        list.add(TitleView("作品0", getAweView()))
+        list.add(TitleView("动态0", getDongtaiView()))
+        list.add(TitleView("喜欢0", getFavoritingView()))
+        mUserVideoAdapter = UserVideoAdapter(list)
+        viewPager.adapter = mUserVideoAdapter
+        tabLayout.setupWithViewPager(viewPager)
+    }
+
+    private var hasMoreAwe: Boolean = true
+    private var maxAweCursor: String = "0"
+    private var aweList: MutableList<FeedItem> = mutableListOf()
+    private lateinit var aweAdapter: VideoGridAdapter
+
+    private fun getAweView(): View {
+
+        aweAdapter = VideoGridAdapter(aweList)
+
+        return RecyclerView(activity!!).apply {
+            layoutManager = GridLayoutManager(activity, 3)
+            addItemDecoration(GridSpacingItemDecoration(spanCount = 3, space = DisplayUtils.dp2px(activity!!, 1f).toInt(), includeEdge = false, color = Color.BLACK))
+            adapter = aweAdapter
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    when (newState) {
+                        RecyclerView.SCROLL_STATE_IDLE -> { //当屏幕停止滚动
+
+                            val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                            val last = layoutManager.findLastVisibleItemPosition()
+
+                            if ((last + layoutManager.spanCount + 3) > list.size && hasMoreAwe && userViewModel.isLoading.value != true) {
+                                userEntity?.uid?.let {
+                                    userViewModel.queryAwe(it, maxAweCursor)
+                                }
+                            }
+                        }
+
+                    }
+                }
+            })
+        }
+    }
+
+    private fun getDongtaiView(): View {
+        return RecyclerView(activity!!)
+    }
+
+    private fun getFavoritingView(): View {
+        return RecyclerView(activity!!)
     }
 
     override fun setListener() {
@@ -73,37 +130,6 @@ class UserFragment : ModeFragment() {
                 }
             }
         })
-
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                when (newState) {
-                    RecyclerView.SCROLL_STATE_IDLE ->
-                        //当屏幕停止滚动，加载图片
-                        try {
-                            Glide.with(activity).resumeRequests()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-
-                    RecyclerView.SCROLL_STATE_DRAGGING ->
-                        //当屏幕滚动且用户使用的触碰或手指还在屏幕上，停止加载图片
-                        try {
-                            Glide.with(activity).pauseRequests()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-
-                    RecyclerView.SCROLL_STATE_SETTLING ->
-                        //由于用户的操作，屏幕产生惯性滑动，停止加载图片
-                        try {
-                            Glide.with(activity).pauseRequests()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                }
-            }
-        })
     }
 
     override fun observe() {
@@ -111,6 +137,7 @@ class UserFragment : ModeFragment() {
         shareViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
         shareViewModel.currentSelectUser.observe(this, Observer {
+            resetInfo()
             userViewModel.userInfo.postValue(it)
         })
 
@@ -118,7 +145,23 @@ class UserFragment : ModeFragment() {
             if (it != null && it) {
                 userEntity?.uid?.let {
                     userViewModel.queryUser(it)
+                    userViewModel.queryAwe(it, maxAweCursor)
                 }
+            }
+        })
+
+        userViewModel.hasMoreAwe.observe(this, Observer {
+            hasMoreAwe = it ?: true
+        })
+
+        userViewModel.maxAweCursor.observe(this, Observer {
+            maxAweCursor = it ?: "0"
+        })
+
+        userViewModel.moreAweVideoList.observe(this, Observer {
+            if (it != null) {
+                aweList.addAll(it)
+                aweAdapter.notifyDataSetChanged()
             }
         })
 
@@ -156,27 +199,40 @@ class UserFragment : ModeFragment() {
 
                 cityText.text = it.location
 
-                it.total_favorited?.let {
+                it.total_favorited.let {
                     likeText.text = CommonUtils.formatCount(it) + "获赞"
                 }
 
-                it.following_count?.let {
+                it.following_count.let {
                     focusText.text = CommonUtils.formatCount(it) + "关注"
                 }
 
-                it.follower_count?.let {
+                it.follower_count.let {
                     fansText.text = CommonUtils.formatCount(it) + "粉丝"
                 }
 
-                it.aweme_count?.let {
-                    tabLayout.getTabAt(0)?.setText("作品" + CommonUtils.formatCount(it))
+                it.aweme_count.let {
+                    list[0].title = "作品" + CommonUtils.formatCount(it)
                 }
 
-                it.favoriting_count?.let {
-                    tabLayout.getTabAt(1)?.setText("喜欢" + CommonUtils.formatCount(it))
+                it.dongtai_count.let {
+                    list[1].title = "动态" + CommonUtils.formatCount(it)
                 }
+
+                it.favoriting_count.let {
+                    list[2].title = "喜欢" + CommonUtils.formatCount(it)
+                }
+
+                mUserVideoAdapter.notifyDataSetChanged()
             }
         })
+    }
+
+    private fun resetInfo() {
+        hasMoreAwe = true
+        maxAweCursor = "0"
+        aweList.clear()
+        aweAdapter.notifyDataSetChanged()
     }
 
     override fun afterView() {

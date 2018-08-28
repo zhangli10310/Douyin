@@ -2,6 +2,7 @@ package com.zl.core.extend
 
 import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
+import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher

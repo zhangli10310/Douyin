@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="InterceptTouchViewPager">
+        <attr name="forbid_to_left" format="boolean"/>
+        <attr name="forbid_to_right" format="boolean"/>
+    </declare-styleable>
+</resources>

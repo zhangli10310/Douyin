@@ -34,7 +34,9 @@ class MusicEntity {
 
 class VideoItem {
     var origin_cover: PlayEntity? = null
+    var cover: PlayEntity? = null
     var play_addr: PlayEntity? = null
+    var dynamic_cover: PlayEntity? = null
 }
 
 class StatisticsEntity {
