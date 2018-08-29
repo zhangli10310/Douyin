@@ -299,12 +299,18 @@ class MainPageFragment : ModeFragment() {
         val set = AnimatorSet()
         val random = Random()
         val ran = DisplayUtils.dp2px(context!!, random.nextInt(40).toFloat())
-        set.playTogether(ObjectAnimator.ofFloat(heartView, View.ALPHA, 1f, 0.3f),
-                ObjectAnimator.ofFloat(heartView, View.TRANSLATION_X, 0f, (ran - DisplayUtils.dp2px(context!!, 20f)) * 2),
-                ObjectAnimator.ofFloat(heartView, View.TRANSLATION_Y, 0f, -2 * ran),
-                ObjectAnimator.ofFloat(heartView, View.SCALE_X, 1f, 1.4f),
-                ObjectAnimator.ofFloat(heartView, View.SCALE_Y, 1f, 1.4f)
-        )
+
+        val firstSet = AnimatorSet()
+        firstSet.play(ObjectAnimator.ofFloat(heartView, View.SCALE_X, 1f, 0.8f))
+                .with(ObjectAnimator.ofFloat(heartView, View.SCALE_Y, 1f, 0.8f))
+        firstSet.duration = 100
+
+        set.play(ObjectAnimator.ofFloat(heartView, View.ALPHA, 1f, 0.3f))
+                .with(ObjectAnimator.ofFloat(heartView, View.TRANSLATION_X, 0f, (ran - DisplayUtils.dp2px(context!!, 20f)) * 2))
+                .with(ObjectAnimator.ofFloat(heartView, View.TRANSLATION_Y, 0f, -2 * ran))
+                .with(ObjectAnimator.ofFloat(heartView, View.SCALE_X, 0.8f, 1.4f))
+                .with(ObjectAnimator.ofFloat(heartView, View.SCALE_Y, 0.8f, 1.4f))
+        
         set.interpolator = AccelerateInterpolator()
         set.addListener(object : AnimatorListenerAdapter() {
 
@@ -313,9 +319,14 @@ class MainPageFragment : ModeFragment() {
 //                likeHeartRecycler.offer(heartView)
             }
         })
-        set.duration = 800
-        set.startDelay = 200L
-        set.start()
+        set.duration = 600
+
+        firstSet.addListener(object :AnimatorListenerAdapter(){
+            override fun onAnimationEnd(animation: Animator?) {
+                set.start()
+            }
+        })
+        firstSet.start()
     }
 
     override fun observe() {
