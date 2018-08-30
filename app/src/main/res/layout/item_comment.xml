@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -17,25 +18,68 @@
         android:id="@+id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         app:layout_constraintLeft_toRightOf="@+id/headImg"
-        app:layout_constraintTop_toTopOf="@+id/headImg" />
+        app:layout_constraintTop_toTopOf="@+id/headImg"
+        tools:text="@string/app_name" />
 
     <TextView
         android:id="@+id/commentText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#000"
-        app:layout_constraintRight_toLeftOf="@+id/likeImg"
         app:layout_constraintLeft_toLeftOf="@+id/nameText"
-        app:layout_constraintTop_toBottomOf="@+id/nameText" />
+        app:layout_constraintRight_toLeftOf="@+id/likeImg"
+        app:layout_constraintTop_toBottomOf="@+id/nameText"
+        tools:text="@string/app_name" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/replyLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@+id/commentText"
+        app:layout_constraintRight_toRightOf="@+id/commentText"
+        app:layout_constraintTop_toBottomOf="@+id/commentText"
+        app:layout_goneMarginBottom="0dp"
+        app:layout_goneMarginEnd="0dp"
+        app:layout_goneMarginStart="0dp"
+        app:layout_goneMarginTop="0dp">
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="0dp"
+            android:background="#bbb"
+            app:layout_constraintBottom_toBottomOf="@+id/replyContentText"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/replyNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/app_name" />
+
+        <TextView
+            android:id="@+id/replyContentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/replyNameText"
+            tools:text="@string/app_name" />
+
+    </android.support.constraint.ConstraintLayout>
 
     <TextView
         android:id="@+id/timeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@+id/nameText"
-        app:layout_constraintTop_toBottomOf="@+id/commentText" />
+        app:layout_constraintTop_toBottomOf="@+id/replyLayout"
+        tools:text="@string/app_name" />
 
     <ImageView
         android:id="@+id/likeImg"
@@ -52,6 +96,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@+id/likeImg"
         app:layout_constraintRight_toRightOf="@+id/likeImg"
-        app:layout_constraintTop_toBottomOf="@+id/likeImg" />
+        app:layout_constraintTop_toBottomOf="@+id/likeImg"
+        tools:text="@string/app_name" />
 
 </android.support.constraint.ConstraintLayout>

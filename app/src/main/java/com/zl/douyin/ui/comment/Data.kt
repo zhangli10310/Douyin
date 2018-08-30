@@ -17,4 +17,6 @@ class CommentItem {
     var user_digged: Int? = null
     var digg_count: Int? = null
     var user: UserEntity? = null
+
+    var reply_comment: MutableList<CommentItem>? = null
 }
