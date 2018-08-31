@@ -19,6 +19,11 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="BottomSheetEdit" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustNothing</item>
+    </style>
+
 
     <style name="TitleGlobal">
         <item name="android:layout_width">match_parent</item>

@@ -35,13 +35,12 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/commentEdit"
         android:layout_below="@+id/titleText" />
 
     <EditText
         android:id="@+id/commentEdit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:hint="留下你的精彩评论吧"
         android:inputType="text" />
