@@ -21,7 +21,8 @@ class MainPageViewModel(private var repository: MainPageRepository) : BaseViewMo
     var moreVideoList: MutableLiveData<MutableList<FeedItem>> = MutableLiveData()
     var loadingRecommendStatus: MutableLiveData<Int> = MutableLiveData()
 
-    var hasMore: MutableLiveData<Boolean> = MutableLiveData()
+    private var hasMore: Boolean = true
+    private var loading: Boolean = false
 
     fun loadRecommendVideo() {
 
@@ -29,23 +30,27 @@ class MainPageViewModel(private var repository: MainPageRepository) : BaseViewMo
                 .doOnTerminate {
                     loadingRecommendStatus.postValue(1)
                 }
-                .loadingInnerSubscribe(this, {
+                .loadingInnerSubscribe(this, onNext = {
                     videoList.postValue(it.aweme_list)
                 })
     }
 
     fun loadMoreVideo() {
-        repository.loadMoreVideo()
-                .noLoadingSubscribe(this, {
-                    if (it.has_more != 1) {
-                        hasMore.postValue(false)
-                    } else {
-                        hasMore.postValue(true)
+
+        if (hasMore && !loading) {
+            loading = true
+            repository.loadMoreVideo()
+                    .doOnTerminate {
+                        loading = false
                     }
-                    moreVideoList.postValue(it.aweme_list)
-                }, {
-                    hasMore.postValue(false)
-                })
+                    .noLoadingSubscribe(this, {
+                        hasMore = it.has_more == 1
+                        moreVideoList.postValue(it.aweme_list)
+                    }, {
+                        hasMore = false
+                    })
+        }
+
     }
 
     @Suppress("UNCHECKED_CAST")

@@ -11,4 +11,5 @@ open class BaseResult {
     var extra: ExtraResult? = null
     var status_msg: String? = null
     var max_cursor: Long? = null
+    var cursor: Long? = null
 }

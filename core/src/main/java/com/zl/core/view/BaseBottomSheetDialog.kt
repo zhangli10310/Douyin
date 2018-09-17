@@ -2,7 +2,6 @@ package com.zl.core.view
 
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.CoordinatorLayout
@@ -11,7 +10,9 @@ import android.support.v4.view.ViewCompat
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat
 import android.support.v7.app.AppCompatDialog
 import android.util.TypedValue
-import android.view.*
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.FrameLayout
 import com.zl.core.R
 import com.zl.core.utils.DisplayUtils
@@ -30,7 +31,7 @@ class BaseBottomSheetDialog : AppCompatDialog {
     private var mCanceledOnTouchOutside = true
     private var mCanceledOnTouchOutsideSet: Boolean = false
 
-    public var heightDP = 460f
+    public var heightDP = 480f
 
     constructor(context: Context) : this(context, 0)
 
@@ -92,10 +93,10 @@ class BaseBottomSheetDialog : AppCompatDialog {
     }
 
     private fun wrapInBottomSheet(layoutResId: Int, view: View?, params: ViewGroup.LayoutParams?): View {
-        var view = view
+        var v = view
         val coordinator = View.inflate(context, R.layout.design_base_bottom_sheet_dialog, null) as CoordinatorLayout
-        if (layoutResId != 0 && view == null) {
-            view = layoutInflater.inflate(layoutResId, coordinator, false)
+        if (layoutResId != 0 && v == null) {
+            v = layoutInflater.inflate(layoutResId, coordinator, false)
         }
         val bottomSheet = coordinator.findViewById<View>(android.support.design.R.id.design_bottom_sheet) as FrameLayout
         mBehavior = BottomSheetBehavior.from(bottomSheet)
@@ -103,9 +104,9 @@ class BaseBottomSheetDialog : AppCompatDialog {
         mBehavior!!.isHideable = mCancelable
         if (params == null) {
             val p = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.dp2px(context, heightDP).toInt())
-            bottomSheet.addView(view, p)
+            bottomSheet.addView(v, p)
         } else {
-            bottomSheet.addView(view, params)
+            bottomSheet.addView(v, params)
         }
         // We treat the CoordinatorLayout as outside the dialog though it is technically inside
         coordinator.findViewById<View>(android.support.design.R.id.touch_outside).setOnClickListener {
@@ -134,10 +135,10 @@ class BaseBottomSheetDialog : AppCompatDialog {
                 return super.performAccessibilityAction(host, action, args)
             }
         })
-        bottomSheet.setOnTouchListener { view, event ->
-            // Consume the event and prevent it from falling through
-            true
-        }
+//        bottomSheet.setOnTouchListener { v, event ->
+//            // Consume the event and prevent it from falling through
+//            true
+//        }
         return coordinator
     }
 

@@ -3,11 +3,6 @@ package com.zl.douyin.ui.comment
 import com.zl.core.BuildConfig
 import com.zl.core.api.ServiceGenerator
 import io.reactivex.Observable
-import com.google.gson.Gson
-import com.zl.core.MainApp
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
 
 
 /**
@@ -33,7 +28,7 @@ class CommentRepository public constructor() {
         val repository = CommentRepository()
     }
 
-    fun loadComment(awemeId: Long?, cursor: Int): Observable<CommentData> {
+    fun loadComment(awemeId: Long?, cursor: Long): Observable<CommentData> {
         val map = mapOf(
                 Pair("aweme_id", awemeId.toString()),
                 Pair("cursor", cursor.toString()),

@@ -37,6 +37,9 @@ class VideoItem {
     var cover: PlayEntity? = null
     var play_addr: PlayEntity? = null
     var dynamic_cover: PlayEntity? = null
+
+    var height: Int? = null
+    var width: Int? = null
 }
 
 class StatisticsEntity {

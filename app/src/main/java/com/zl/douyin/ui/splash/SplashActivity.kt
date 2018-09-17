@@ -7,10 +7,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.zl.core.base.ModeActivity
-import com.zl.douyin.BuildConfig
 import com.zl.douyin.R
 import com.zl.douyin.ui.main.MainActivity
-import com.zl.douyin.update.BackgroundDownloadService
 import kotlinx.android.synthetic.main.activity_splash.*
 
 /**
@@ -43,13 +41,13 @@ class SplashActivity : ModeActivity() {
                 .setDuration(1500)
                 .start()
 
-        requestPermission(arrayOf(android.Manifest.permission.READ_PHONE_STATE), {
+        requestPermission(arrayOf(android.Manifest.permission.READ_PHONE_STATE)) {
             if (it) {
                 viewModel.countDown()
             } else {
                 finish()
             }
-        })
+        }
     }
 
     override fun setListener() {

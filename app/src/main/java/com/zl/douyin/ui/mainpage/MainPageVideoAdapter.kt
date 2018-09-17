@@ -1,6 +1,7 @@
 package com.zl.douyin.ui.mainpage
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import com.zl.core.extend.inflate
@@ -25,22 +26,6 @@ class MainPageVideoAdapter(private var list: MutableList<FeedItem>) : RecyclerVi
         viewClick?.invoke(holder)
 
         val feedItem = list[position]
-
-//        feedItem.video?.play_addr?.url_list?.let {
-//            val url = it[2]
-//
-//            holder.itemView.videoView.setOnPreparedListener {
-//                Log.e(TAG, "onBindViewHolder: OnPrepared")
-//                holder.itemView.videoView.visibility = View.VISIBLE
-//            }
-//            holder.itemView.videoView.setAspectRatio(IRenderView.AR_MATCH_WIDTH)
-//            holder.itemView.videoView.setOnCompletionListener {
-//                Log.i(TAG, "setOnCompletionListener: ")
-//                holder.itemView.videoView.start()
-//            }
-//            holder.itemView.videoView.setVideoURI(Uri.parse(url))
-//            holder.itemView.videoView.start()
-//        }
 
         feedItem.music?.let {
             holder.itemView.musicText.text = it.title + "-" + it.owner_nickname
@@ -72,27 +57,40 @@ class MainPageVideoAdapter(private var list: MutableList<FeedItem>) : RecyclerVi
 
         feedItem.video?.apply {
 
+            Log.i(TAG, "data:width=$width, height=$height")
+
+            //计算适配屏幕
+//            if (videoFrameWidth == null || videoFrameWidth!! == 0) {
+//                videoFrameWidth = holder.itemView.displayFrameLayout.width
+//            }
+//            if (videoFrameHeight == null || videoFrameHeight!! == 0) {
+//                videoFrameHeight = holder.itemView.displayFrameLayout.height
+//            }
+//            var w: Int = videoFrameWidth!!
+//            var h: Int = videoFrameHeight!!
+//            if (width != null && height != null && width!! > 0 && height!! > 0) {
+//                if (width!! > height!!) {
+//                    h = (w.toFloat() * height!! / width!!).toInt()
+//                } else if (videoFrameWidth!!.toFloat() / videoFrameHeight!! > width!!.toFloat() / height!!) {
+//                    h = (w.toFloat() * height!! / width!!).toInt()
+//                } else {
+//                    w = (videoFrameHeight!!.toFloat() * width!!.toFloat() / height!!).toInt()
+//                }
+//            }
+//            if (w != 0 && h != 0) {
+//                Log.i(TAG, "video: $width, $height")
+//                Log.i(TAG, "layout: $videoFrameWidth, $videoFrameHeight")
+//                Log.i(TAG, "param: $w, $h")
+//                val layoutParams = holder.itemView.displayFrameLayout.layoutParams
+//                layoutParams.height = h
+//                layoutParams.width = w
+//                holder.itemView.displayFrameLayout.layoutParams = layoutParams
+//            }
+
         }?.origin_cover?.url_list?.let {
             GlideUtils.load(it, holder.itemView.previewImg)
         }
     }
-
-//    private fun convertCount(number: Long?): String {
-//        return when (number) {
-//            null -> {
-//                "0"
-//            }
-//            in 0..9999 -> {
-//                number.toString()
-//            }
-//            in 10000..99999 -> {
-//                (number / 10000).toString() + "." + (number / 1000 % 10).toString() + "w"
-//            }
-//            else -> {
-//                (number / 10000).toString() + "w"
-//            }
-//        }
-//    }
 
     fun registerViewClick(viewClick: ((ViewHolder) -> Unit)) {
         this.viewClick = viewClick

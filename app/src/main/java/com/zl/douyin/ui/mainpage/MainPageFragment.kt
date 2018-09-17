@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AccelerateInterpolator
+import com.zl.core.Router
 import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.RVGestureDetector
@@ -39,8 +40,8 @@ class MainPageFragment : ModeFragment() {
 
     private val TAG = MainPageFragment::class.java.simpleName
 
-    private var hasMore = true
-    private var isLoading = false
+//    private var hasMore = true
+//    private var isLoading = false
 
     private lateinit var shareViewModel: SharedViewModel
     private lateinit var viewModel: MainPageViewModel
@@ -167,7 +168,7 @@ class MainPageFragment : ModeFragment() {
                             lastIndex = index
                         }
 
-                        if ((last + 3) > list.size && hasMore && !isLoading) {
+                        if ((last + 3) > list.size) {
                             loadMore()
                         }
                     }
@@ -189,12 +190,11 @@ class MainPageFragment : ModeFragment() {
         }
 
         doublePointImg.setOnClickListener {
-
+            Router.toFunc(activity!!, "http://www.baidu.com")
         }
     }
 
     private fun loadMore() {
-        isLoading = true
         viewModel.loadMoreVideo()
     }
 
@@ -216,7 +216,7 @@ class MainPageFragment : ModeFragment() {
         var i = 0
 
 //        holder.itemView.videoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW)
-        holder.itemView.videoView.setAspectRatio(IRenderView.AR_MATCH_WIDTH)
+        holder.itemView.videoView.setAspectRatio(IRenderView.AR_FIT_SCREEN)
         holder.itemView.videoView.setOnCompletionListener {
             Log.i(TAG, "setOnCompletionListener: ")
             holder.itemView.videoView.start()
@@ -377,7 +377,6 @@ class MainPageFragment : ModeFragment() {
 
         viewModel.moreVideoList.observe(this, Observer {
             if (it != null) {
-                isLoading = false
                 list.addAll(it)
                 mAdapter.notifyDataSetChanged()
             }

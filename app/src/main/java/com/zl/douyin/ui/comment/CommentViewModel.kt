@@ -4,7 +4,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.zl.core.base.BaseViewModel
-import com.zl.core.extend.loadingInnerSubscribe
 import com.zl.core.extend.noLoadingSubscribe
 
 /**
@@ -17,22 +16,47 @@ class CommentViewModel(private var repository: CommentRepository) : BaseViewMode
 
     private val TAG = CommentViewModel::class.java.simpleName
 
-    var moreCommentList: MutableLiveData<CommentData> = MutableLiveData()
+    var allCommentList:MutableLiveData<MutableList<CommentItem>> = MutableLiveData()
+    var lastComment: MutableLiveData<CommentData?> = MutableLiveData()
 
-    var hasMore: MutableLiveData<Boolean> = MutableLiveData()
+    private var loading = false
+    private var hasMore = true
 
-    fun loadComment(awemeId: Long?, cursor: Int) {
-        repository.loadComment(awemeId, cursor)
-                .noLoadingSubscribe(this, {
-                    if (it.has_more != 1) {
-                        hasMore.postValue(false)
-                    } else {
-                        hasMore.postValue(true)
+    fun loadComment(awemeId: Long?) {
+
+        var cursor = 0L
+
+        lastComment.value?.let {
+            cursor = it.cursor ?: 0L
+        }
+
+        if (hasMore && !loading) {
+            loading = true
+            repository.loadComment(awemeId, cursor)
+                    .doOnTerminate {
+                        loading = false
                     }
-                    moreCommentList.postValue(it)
-                }, {
-                    hasMore.postValue(false)
-                })
+                    .noLoadingSubscribe(this, {
+                        hasMore = it.has_more == 1
+
+                        it.comments?.let {
+                            val list = allCommentList.value!!
+                            list.addAll(it)
+                            allCommentList.postValue(list)
+                        }
+
+                        lastComment.postValue(it)
+                    }, {
+                        hasMore = false
+                    })
+        }
+    }
+
+    fun reset() {
+        lastComment.value = null
+        allCommentList.value = mutableListOf()
+        loading = false
+        hasMore = true
     }
 
     @Suppress("UNCHECKED_CAST")

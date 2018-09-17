@@ -1,7 +1,8 @@
 package com.zl.core.base
 
+import android.annotation.TargetApi
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,13 +24,19 @@ abstract class ModeFragment : BaseFragment() {
         observe()
         setListener()
 
-        view?.viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                afterView()
-                view?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view?.viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+                override fun onGlobalLayout() {
+                    afterView()
+                    view?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+                }
 
-        })
+            })
+        } else {
+            afterView()
+        }
+
     }
 
     abstract protected fun layoutId(): Int

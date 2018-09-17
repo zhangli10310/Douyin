@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialogFragment
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AppCompatDialogFragment
 import android.support.v7.widget.LinearLayoutManager
@@ -12,8 +11,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.TextView
 import com.zl.core.view.BaseBottomSheetDialog
 import com.zl.douyin.R
 import kotlinx.android.synthetic.main.fragment_comment.*
@@ -32,7 +29,7 @@ class CommentDialogFragment : AppCompatDialogFragment() {
     private var list = mutableListOf<CommentItem>()
     private lateinit var mAdapter: CommentAdapter
 
-    private var hasMore: Boolean = true
+//    private var hasMore: Boolean = true
 
     companion object {
 
@@ -98,7 +95,7 @@ class CommentDialogFragment : AppCompatDialogFragment() {
                         val first = layoutManager.findFirstVisibleItemPosition()
                         val last = layoutManager.findLastVisibleItemPosition()
 
-                        if ((last + 3) > list.size && hasMore && viewModel.isLoading.value != true) {
+                        if ((last + 3) > list.size) {
                             loadComment()
                         }
                     }
@@ -119,33 +116,47 @@ class CommentDialogFragment : AppCompatDialogFragment() {
             val id = it.getLong(AWEME_ID)
             if (id != awemeId) {
                 awemeId = id
-                list.clear()
-                progressBar.visibility = View.VISIBLE
+                viewModel.reset()
                 loadComment()
             }
+        }
+
+        viewModel.lastComment.value.let {
+            handleView(it)
         }
     }
 
     private fun loadComment() {
-        viewModel.loadComment(awemeId, list.size)
+        viewModel.loadComment(awemeId)
     }
 
     private fun observer() {
-        viewModel = ViewModelProviders.of(this, CommentViewModel.Factory(CommentRepository.get())).get(CommentViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!, CommentViewModel.Factory(CommentRepository.get())).get(CommentViewModel::class.java)
 
-        viewModel.moreCommentList.observe(this, Observer {
-            it?.apply {
-                titleText.text = "${it.total}条评论"
-            }?.comments?.let {
+        viewModel.lastComment.observe(this, Observer {
+            handleView(it)
+        })
+
+        viewModel.allCommentList.observe(this, Observer {
+            list.clear()
+            if (it != null) {
                 list.addAll(it)
             }
-        })
-
-        viewModel.hasMore.observe(this, Observer {
-            progressBar.visibility = View.GONE
-            it?.let {
-                hasMore = it
-            }
+            mAdapter.notifyDataSetChanged()
         })
     }
+
+    private fun handleView(data: CommentData?) {
+        if (data != null) {
+            titleText.text = "${data.total}条评论"
+            if (progressBar.visibility == View.VISIBLE) {
+                progressBar.visibility = View.GONE
+            }
+        } else {
+            titleText.text = "0条评论"
+            progressBar.visibility = View.VISIBLE
+        }
+    }
+
+
 }

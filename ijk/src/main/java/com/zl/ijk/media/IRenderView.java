@@ -34,7 +34,8 @@ public interface IRenderView {
     int AR_16_9_FIT_PARENT = 4;
     int AR_4_3_FIT_PARENT = 5;
 
-    int AR_MATCH_WIDTH = 6;//根据宽度调节高度
+    int AR_MATCH_WIDTH = 6;//根据宽度调节高度，可能导致高度比屏幕长从而使视频的上下部分有丢失
+    int AR_FIT_SCREEN = 7;//根据比例调节宽度或者高度，使屏幕不留空隙，可能导致宽或者高的两边在屏幕上看不到,根据视频的比例使丢失最小化
 
     View getView();
 

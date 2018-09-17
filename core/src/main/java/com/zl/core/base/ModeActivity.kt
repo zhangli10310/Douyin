@@ -1,7 +1,8 @@
 package com.zl.core.base
 
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.support.annotation.RequiresApi
 import android.view.ViewTreeObserver
 
 
@@ -21,13 +22,18 @@ abstract class ModeActivity : BaseActivity() {
         observe()
         setListener()
 
-        window.decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                afterView()
-                window.decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            window.decorView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+                override fun onGlobalLayout() {
+                    afterView()
+                    window.decorView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
+        } else {
+            afterView()
+        }
 
-        })
     }
 
     abstract protected fun layoutId(): Int

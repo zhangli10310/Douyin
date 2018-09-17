@@ -19,6 +19,7 @@ package com.zl.ijk.media;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 
 import com.zl.ijk.R;
@@ -75,7 +76,7 @@ public final class MeasureHelper {
         //        + MeasureSpec.toString(heightMeasureSpec) + ")");
         if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270) {
             int tempSpec = widthMeasureSpec;
-            widthMeasureSpec  = heightMeasureSpec;
+            widthMeasureSpec = heightMeasureSpec;
             heightMeasureSpec = tempSpec;
         }
 
@@ -92,7 +93,27 @@ public final class MeasureHelper {
 
             if (mCurrentAspectRatio == IRenderView.AR_MATCH_WIDTH) {
                 width = widthSpecSize;
-                height = width * mVideoHeight / mVideoWidth;
+                height = (int) (width * 1.0 * mVideoHeight / mVideoWidth);
+            } else if (mCurrentAspectRatio == IRenderView.AR_FIT_SCREEN) {
+
+                //  width       mVideoWidth
+                //  -----   =  -------------
+                //  height      mVideoHeight
+
+                Log.i("helper", "width="+width+",height="+height);
+                Log.i("helper", "videoWidth="+mVideoWidth+",videoHeight="+mVideoHeight);
+                if (mVideoWidth > mVideoHeight) {
+                    width = widthSpecSize;
+                    height = width * mVideoHeight / mVideoWidth;
+                } else if ((widthSpecSize * 1.0 / heightSpecSize) > (mVideoWidth * 1.0 / mVideoHeight)) {
+                    width = widthSpecSize;
+                    height = width * mVideoHeight / mVideoWidth;
+                } else {
+                    height = heightSpecSize;
+                    width = (int) (height * 1.0 * mVideoWidth / mVideoHeight);
+                }
+
+
             } else if (widthSpecMode == View.MeasureSpec.AT_MOST && heightSpecMode == View.MeasureSpec.AT_MOST) {
                 float specAspectRatio = (float) widthSpecSize / (float) heightSpecSize;
                 float displayAspectRatio;
