@@ -1,6 +1,5 @@
 package com.zl.core.extend
 
-import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
@@ -69,4 +68,12 @@ public fun View.setPaddingAll(padding: Int) {
 
 public fun View.inflate(@LayoutRes id: Int, root: ViewGroup? = null, attach: Boolean = false): View {
     return LayoutInflater.from(context).inflate(id, root, attach)
+}
+
+public fun RecyclerView.onScrollState(onState: (Int) -> Unit) {
+    addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            onState(newState)
+        }
+    })
 }

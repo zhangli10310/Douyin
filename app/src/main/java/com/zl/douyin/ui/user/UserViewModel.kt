@@ -16,9 +16,13 @@ class UserViewModel(var repository: UserRepository) : BaseViewModel() {
     var maxAweCursor = MutableLiveData<String>()
     var moreAweVideoList = MutableLiveData<MutableList<FeedItem>>()
 
+    var hasMoreFavorite = MutableLiveData<Boolean>()
+    var maxFavoriteCursor = MutableLiveData<String>()
+    var moreFavoriteVideoList = MutableLiveData<MutableList<FeedItem>>()
+
     fun queryUser(uid: String) {
         repository.queryUser(uid)
-                .noLoadingSubscribe(this, {
+                .noLoadingSubscribe(this, onNext = {
                     userInfo.postValue(it.user)
                 })
     }
@@ -35,6 +39,21 @@ class UserViewModel(var repository: UserRepository) : BaseViewModel() {
                     moreAweVideoList.postValue(it.aweme_list)
                 }, {
                     hasMoreAwe.postValue(false)
+                })
+    }
+
+    fun queryFavorite(uid: String, maxCursor: String) {
+        repository.queryFavorite(uid, maxCursor)
+                .noLoadingSubscribe(this, {
+                    maxFavoriteCursor.postValue(it.max_cursor.toString())
+                    if (it.has_more != 1) {
+                        hasMoreFavorite.postValue(false)
+                    } else {
+                        hasMoreFavorite.postValue(true)
+                    }
+                    moreFavoriteVideoList.postValue(it.aweme_list)
+                }, {
+                    hasMoreFavorite.postValue(false)
                 })
     }
 

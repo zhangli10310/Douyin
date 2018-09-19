@@ -13,4 +13,10 @@ interface UserService {
 
     @GET("aweme/v1/aweme/post/")
     fun queryAwe(@QueryMap map: Map<String, String>): Observable<FeedData>
+
+    @GET("aweme/v1/forward/list/")
+    fun queryDongtai(@QueryMap map: Map<String, String>): Observable<FeedData>
+
+    @GET("aweme/v1/aweme/favorite/")
+    fun queryFavorite(@QueryMap map: Map<String, String>): Observable<FeedData>
 }

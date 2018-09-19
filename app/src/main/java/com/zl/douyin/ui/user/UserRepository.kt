@@ -49,4 +49,22 @@ class UserRepository public constructor() {
         )
         return mService.queryAwe(map)
     }
+
+    fun queryDongtai(userId: String, maxCursor: String): Observable<FeedData> {
+        val map = mapOf(
+                Pair("user_id", userId),
+                Pair("max_cursor", maxCursor),
+                Pair("count", "20")
+        )
+        return mService.queryDongtai(map)
+    }
+
+    fun queryFavorite(userId: String, maxCursor: String): Observable<FeedData> {
+        val map = mapOf(
+                Pair("user_id", userId),
+                Pair("max_cursor", maxCursor),
+                Pair("count", "20")
+        )
+        return mService.queryFavorite(map)
+    }
 }

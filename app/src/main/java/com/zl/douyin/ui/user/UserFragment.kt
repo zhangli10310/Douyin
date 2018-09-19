@@ -5,11 +5,13 @@ import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.v4.view.ViewPager
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import com.zl.core.base.ModeFragment
+import com.zl.core.extend.onScrollState
 import com.zl.core.utils.CommonUtils
 import com.zl.core.utils.DateUtils
 import com.zl.core.utils.DisplayUtils
@@ -53,10 +55,25 @@ class UserFragment : ModeFragment() {
         list.clear()
         list.add(TitleView("作品0", getAweView()))
         list.add(TitleView("动态0", getDongtaiView()))
-        list.add(TitleView("喜欢0", getFavoritingView()))
+        list.add(TitleView("喜欢0", getFavoriteView()))
         mUserVideoAdapter = UserVideoAdapter(list)
         viewPager.adapter = mUserVideoAdapter
         tabLayout.setupWithViewPager(viewPager)
+
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                Log.i(TAG, "onPageSelected: $position")
+            }
+
+        })
     }
 
     //这个控制的数据最好放到ViewModel里面
@@ -76,26 +93,22 @@ class UserFragment : ModeFragment() {
             addItemDecoration(GridSpacingItemDecoration(spanCount = 3, space = DisplayUtils.dp2px(activity!!, 1f).toInt(), includeEdge = false, color = Color.BLACK))
             adapter = aweAdapter
 
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            onScrollState {
+                when (it) {
+                    RecyclerView.SCROLL_STATE_IDLE -> { //当屏幕停止滚动
 
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    when (newState) {
-                        RecyclerView.SCROLL_STATE_IDLE -> { //当屏幕停止滚动
+                        val layoutManager = layoutManager as GridLayoutManager
+                        val last = layoutManager.findLastVisibleItemPosition()
 
-                            val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                            val last = layoutManager.findLastVisibleItemPosition()
-
-                            if ((last + layoutManager.spanCount + 3) > list.size && hasMoreAwe && userViewModel.isLoading.value != true) {
-                                userEntity?.uid?.let {
-                                    userViewModel.queryAwe(it, maxAweCursor)
-                                }
+                        if ((last + layoutManager.spanCount + 3) > list.size && hasMoreAwe && userViewModel.isLoading.value != true) {
+                            userEntity?.uid?.let {
+                                userViewModel.queryAwe(it, maxAweCursor)
                             }
                         }
-
                     }
+
                 }
-            })
+            }
         }
     }
 
@@ -103,8 +116,37 @@ class UserFragment : ModeFragment() {
         return RecyclerView(activity!!)
     }
 
-    private fun getFavoritingView(): View {
-        return RecyclerView(activity!!)
+    private var hasMoreFavorite: Boolean = true
+    private var maxFavoriteCursor: String = "0"
+    private var favoriteList: MutableList<FeedItem> = mutableListOf()
+    private lateinit var favoriteAdapter: VideoGridAdapter
+
+    private fun getFavoriteView(): View {
+
+        favoriteAdapter = VideoGridAdapter(favoriteList) {
+
+        }
+
+        return RecyclerView(activity!!).apply {
+            layoutManager = GridLayoutManager(activity, 3)
+            addItemDecoration(GridSpacingItemDecoration(spanCount = 3, space = DisplayUtils.dp2px(activity!!, 1f).toInt(), includeEdge = false, color = Color.BLACK))
+            adapter = favoriteAdapter
+
+            onScrollState {
+                when (it) {
+                    RecyclerView.SCROLL_STATE_IDLE -> { //当屏幕停止滚动
+                        val layoutManager = layoutManager as GridLayoutManager
+                        val last = layoutManager.findLastVisibleItemPosition()
+
+                        if ((last + layoutManager.spanCount + 3) > list.size && hasMoreFavorite && userViewModel.isLoading.value != true) {
+                            userEntity?.uid?.let {
+                                userViewModel.queryFavorite(it, maxFavoriteCursor)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun setListener() {
@@ -168,6 +210,21 @@ class UserFragment : ModeFragment() {
             if (it != null) {
                 aweList.addAll(it)
                 aweAdapter.notifyDataSetChanged()
+            }
+        })
+
+        userViewModel.hasMoreFavorite.observe(this, Observer {
+            hasMoreFavorite = it ?: true
+        })
+
+        userViewModel.maxFavoriteCursor.observe(this, Observer {
+            maxFavoriteCursor = it ?: "0"
+        })
+
+        userViewModel.moreFavoriteVideoList.observe(this, Observer {
+            if (it != null) {
+                favoriteList.addAll(it)
+                favoriteAdapter.notifyDataSetChanged()
             }
         })
 
@@ -235,10 +292,17 @@ class UserFragment : ModeFragment() {
     }
 
     private fun resetInfo() {
+        appBarLayout.scrollY = 0
+
         hasMoreAwe = true
         maxAweCursor = "0"
         aweList.clear()
         aweAdapter.notifyDataSetChanged()
+
+        hasMoreFavorite = true
+        maxFavoriteCursor = "0"
+        favoriteList.clear()
+        favoriteAdapter.notifyDataSetChanged()
     }
 
     override fun afterView() {

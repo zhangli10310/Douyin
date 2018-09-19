@@ -49,9 +49,11 @@ object GlideUtils {
 
     fun load(view: ImageView, any: Any, listener: RequestListener<Drawable>? = null) {
         Log.i(TAG, "load: $any")
-        Glide.with(view)
+        Glide.with(view.context).clear(view)
+        GlideApp.with(view)
                 .load(any)
                 .listener(listener)
+                .fitCenter()
                 .into(view)
     }
 
@@ -85,10 +87,12 @@ object GlideUtils {
     fun loadWebp(view: ImageView, any: Any, listener: RequestListener<Drawable>? = null) {
         Log.i(TAG, "loadWebp: $any")
         val circleCrop = CenterCrop()
+        Glide.with(view.context).clear(view)
         GlideApp.with(view)
                 .load(any)
                 .optionalTransform(WebpDrawable::class.java, WebpDrawableTransformation(circleCrop))
                 .listener(listener)
+                .fitCenter()
                 .into(view)
     }
 
