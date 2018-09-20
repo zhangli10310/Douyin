@@ -98,6 +98,7 @@ class UserFragment : ModeFragment() {
                     RecyclerView.SCROLL_STATE_IDLE -> { //当屏幕停止滚动
 
                         val layoutManager = layoutManager as GridLayoutManager
+                        val first = layoutManager.findFirstVisibleItemPosition()
                         val last = layoutManager.findLastVisibleItemPosition()
 
                         if ((last + layoutManager.spanCount + 3) > list.size && hasMoreAwe && userViewModel.isLoading.value != true) {
@@ -105,6 +106,15 @@ class UserFragment : ModeFragment() {
                                 userViewModel.queryAwe(it, maxAweCursor)
                             }
                         }
+
+//                        val i = (first + last)/2
+//                        val holder = findViewHolderForAdapterPosition(i)
+//                        if (holder != null) {
+//                            val drawable = holder.itemView.dynamicCoverImg.drawable
+//                            if (drawable is WebpDrawable) {
+//                                drawable.setLoopCount(0) //最中间的动图播放
+//                            }
+//                        }
                     }
 
                 }

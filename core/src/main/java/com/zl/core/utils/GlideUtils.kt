@@ -67,6 +67,12 @@ object GlideUtils {
 
 
             override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+
+                Log.i(TAG, "onResourceReady: $resource")
+                if (resource is WebpDrawable) {
+                    resource.setLoopCount(3) //播放3次，防止CPU占用过高
+                }
+
                 return false
             }
 
