@@ -22,6 +22,9 @@ import com.zl.douyin.R
 import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.douyin.ui.mainpage.FeedItem
 import kotlinx.android.synthetic.main.fragment_user.*
+import android.support.design.widget.CoordinatorLayout
+
+
 
 
 /**
@@ -302,7 +305,15 @@ class UserFragment : ModeFragment() {
     }
 
     private fun resetInfo() {
-        appBarLayout.scrollY = 0
+
+        val behavior = (appBarLayout.layoutParams as CoordinatorLayout.LayoutParams).behavior
+        if (behavior is AppBarLayout.Behavior) {
+            val appBarLayoutBehavior = behavior as AppBarLayout.Behavior?
+            val topAndBottomOffset = appBarLayoutBehavior!!.topAndBottomOffset
+            if (topAndBottomOffset != 0) {
+                appBarLayoutBehavior.topAndBottomOffset = 0
+            }
+        }
 
         hasMoreAwe = true
         maxAweCursor = "0"

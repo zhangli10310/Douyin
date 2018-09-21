@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@drawable/bg_comment">
+    android:background="@drawable/bg_comment"
+    android:fitsSystemWindows="true">
 
     <TextView
         android:id="@+id/titleText"
@@ -21,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_margin="10dp"
         android:padding="5dp"
         android:text="X" />
@@ -39,13 +40,15 @@
         android:layout_above="@+id/commentEdit"
         android:layout_below="@+id/titleText" />
 
-    <EditText
+    <TextView
         android:id="@+id/commentEdit"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:hint="留下你的精彩评论吧"
-        android:inputType="text" />
+        android:gravity="center_vertical"
+        android:text="留下你的精彩评论吧"
+        android:textColor="#aaa"
+        android:textSize="16sp" />
 
 
 </RelativeLayout>
