@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -22,7 +23,6 @@ import com.zl.douyin.R
 import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.douyin.ui.mainpage.FeedItem
 import kotlinx.android.synthetic.main.fragment_user.*
-import android.support.design.widget.CoordinatorLayout
 
 
 
@@ -191,13 +191,19 @@ class UserFragment : ModeFragment() {
     }
 
     override fun observe() {
-        userViewModel = ViewModelProviders.of(activity!!, UserViewModel.Factory(UserRepository.get())).get(UserViewModel::class.java)
+        Log.i(TAG, "observe: ")
+        userViewModel = ViewModelProviders.of(this, UserViewModel.Factory(UserRepository.get())).get(UserViewModel::class.java)
         shareViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
+        //当滑到第一个fragment时会销毁这个fragment，再划回来会导致这些livedata重复被观察,暂时的解决办法是给他们都remove掉,好像这个也没解决这个问题
+        //fixme
+        //fixme 需要好好看看Viewmodel机制
+        shareViewModel.currentSelectUser.removeObservers(activity!!)
         shareViewModel.currentSelectUser.observe(this, Observer {
             userViewModel.userInfo.postValue(it)
         })
 
+        shareViewModel.queryUser.removeObservers(activity!!)
         shareViewModel.queryUser.observe(this, Observer {
             if (it != null && it) {
                 userEntity?.uid?.let {
@@ -211,14 +217,17 @@ class UserFragment : ModeFragment() {
             }
         })
 
+        userViewModel.hasMoreAwe.removeObservers(this)
         userViewModel.hasMoreAwe.observe(this, Observer {
             hasMoreAwe = it ?: true
         })
 
+        userViewModel.maxAweCursor.removeObservers(this)
         userViewModel.maxAweCursor.observe(this, Observer {
             maxAweCursor = it ?: "0"
         })
 
+        userViewModel.moreAweVideoList.removeObservers(this)
         userViewModel.moreAweVideoList.observe(this, Observer {
             if (it != null) {
                 aweList.addAll(it)
@@ -226,14 +235,17 @@ class UserFragment : ModeFragment() {
             }
         })
 
+        userViewModel.hasMoreFavorite.removeObservers(this)
         userViewModel.hasMoreFavorite.observe(this, Observer {
             hasMoreFavorite = it ?: true
         })
 
+        userViewModel.maxFavoriteCursor.removeObservers(this)
         userViewModel.maxFavoriteCursor.observe(this, Observer {
             maxFavoriteCursor = it ?: "0"
         })
 
+        userViewModel.moreFavoriteVideoList.removeObservers(this)
         userViewModel.moreFavoriteVideoList.observe(this, Observer {
             if (it != null) {
                 favoriteList.addAll(it)
@@ -241,6 +253,7 @@ class UserFragment : ModeFragment() {
             }
         })
 
+        userViewModel.userInfo.removeObservers(this)
         userViewModel.userInfo.observe(this, Observer {
             if (it != null) {
                 userEntity = it
