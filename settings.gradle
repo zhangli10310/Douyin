@@ -1,1 +1,2 @@
-include ':app', ':core', ':cpp', ':ijk'
+include ':app', ':core', ':ijk'
+//include ':cpp'
