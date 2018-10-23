@@ -226,7 +226,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/title_height"
             android:layout_gravity="bottom"
-            android:background="#000"
             android:fillViewport="false"
             app:layout_scrollFlags="scroll"
             app:tabIndicatorColor="#dcdc0c"

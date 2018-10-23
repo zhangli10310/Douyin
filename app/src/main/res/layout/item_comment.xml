@@ -8,30 +8,32 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/headImg"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_margin="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/nameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         app:layout_constraintLeft_toRightOf="@+id/headImg"
         app:layout_constraintTop_toTopOf="@+id/headImg"
-        tools:text="@string/app_name" />
+        tools:text="@string/app_name"/>
 
     <TextView
         android:id="@+id/commentText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#000"
+        android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="@+id/nameText"
         app:layout_constraintRight_toLeftOf="@+id/likeImg"
         app:layout_constraintTop_toBottomOf="@+id/nameText"
-        tools:text="@string/app_name" />
+        tools:text="@string/app_name"/>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/replyLayout"
@@ -50,26 +52,29 @@
             android:layout_height="0dp"
             android:background="#bbb"
             app:layout_constraintBottom_toBottomOf="@+id/replyContentText"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/replyNameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/app_name" />
+            tools:text="@string/app_name"/>
 
         <TextView
             android:id="@+id/replyContentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="3dp"
+            android:textSize="16sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/replyNameText"
-            tools:text="@string/app_name" />
+            tools:text="@string/app_name"/>
 
     </android.support.constraint.ConstraintLayout>
 
@@ -77,18 +82,20 @@
         android:id="@+id/timeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:layout_constraintLeft_toLeftOf="@+id/nameText"
         app:layout_constraintTop_toBottomOf="@+id/replyLayout"
-        tools:text="@string/app_name" />
+        tools:text="@string/app_name"/>
 
     <ImageView
         android:id="@+id/likeImg"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_margin="10dp"
-        android:src="@mipmap/ic_like"
+        android:contentDescription="@string/app_name"
+        android:src="@mipmap/ic_unlike_tran"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/likeCountText"
@@ -97,6 +104,6 @@
         app:layout_constraintLeft_toLeftOf="@+id/likeImg"
         app:layout_constraintRight_toRightOf="@+id/likeImg"
         app:layout_constraintTop_toBottomOf="@+id/likeImg"
-        tools:text="@string/app_name" />
+        tools:text="@string/app_name"/>
 
 </android.support.constraint.ConstraintLayout>
