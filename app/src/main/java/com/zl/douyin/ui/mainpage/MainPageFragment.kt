@@ -85,8 +85,7 @@ class MainPageFragment : ModeFragment() {
                     if (holder.itemView.videoView.isPlaying) {
                         pauseCurrent(holder)
                     } else {
-                        holder.itemView.videoView.start()
-                        holder.itemView.pauseImg.visibility = View.GONE
+                        playCurrent(holder)
                     }
                 } else {
                     showLikeHeart(e.x, e.y)
@@ -125,7 +124,7 @@ class MainPageFragment : ModeFragment() {
             }
 
             it.itemView.headImg.setOnClickListener {
-                shareViewModel.gotoViewPagerPosition.postValue(2)
+                shareViewModel.changeViewPagerPosition(2)
             }
 
             it.itemView.likeImg.setOnClickListener {
@@ -214,9 +213,8 @@ class MainPageFragment : ModeFragment() {
             return
         }
         var i = 0
-
 //        holder.itemView.videoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW)
-        holder.itemView.videoView.setAspectRatio(IRenderView.AR_FIT_SCREEN)
+        holder.itemView.videoView.setAspectRatio(IRenderView.AR_MATCH_WIDTH)
         holder.itemView.videoView.setOnCompletionListener {
             Log.i(TAG, "setOnCompletionListener: ")
             holder.itemView.videoView.start()
@@ -310,7 +308,7 @@ class MainPageFragment : ModeFragment() {
                 .with(ObjectAnimator.ofFloat(heartView, View.TRANSLATION_Y, 0f, -2 * ran))
                 .with(ObjectAnimator.ofFloat(heartView, View.SCALE_X, 0.8f, 1.4f))
                 .with(ObjectAnimator.ofFloat(heartView, View.SCALE_Y, 0.8f, 1.4f))
-        
+
         set.interpolator = AccelerateInterpolator()
         set.addListener(object : AnimatorListenerAdapter() {
 
@@ -321,7 +319,7 @@ class MainPageFragment : ModeFragment() {
         })
         set.duration = 600
 
-        firstSet.addListener(object :AnimatorListenerAdapter(){
+        firstSet.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
                 set.start()
             }
@@ -391,6 +389,17 @@ class MainPageFragment : ModeFragment() {
                 }
             }
         })
+
+        shareViewModel.onViewPagerChange.observe(this, Observer {
+            lastHolder?.let { holder ->
+                if (it == 1) {
+                    playCurrent(holder as MainPageVideoAdapter.ViewHolder)
+                } else {
+                    pauseCurrent(holder as MainPageVideoAdapter.ViewHolder)
+                }
+            }
+
+        })
     }
 
     fun pauseCurrent(viewHolder: MainPageVideoAdapter.ViewHolder) {
@@ -402,6 +411,11 @@ class MainPageFragment : ModeFragment() {
                 ObjectAnimator.ofFloat(viewHolder.itemView.pauseImg, View.SCALE_Y, 1.2f, 1.0f)
         )
         set.start()
+    }
+
+    fun playCurrent(holder: MainPageVideoAdapter.ViewHolder) {
+        holder.itemView.videoView.start()
+        holder.itemView.pauseImg.visibility = View.GONE
     }
 
     override fun loadingProgressBarId() = R.id.loadingBar

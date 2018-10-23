@@ -3,15 +3,14 @@ package com.zl.douyin.ui.comment
 import android.app.Dialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v7.app.AppCompatDialogFragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import com.zl.core.view.BaseBottomSheetDialog
 import com.zl.douyin.R
 import kotlinx.android.synthetic.main.fragment_comment.*
@@ -54,10 +53,10 @@ class CommentDialogFragment : AppCompatDialogFragment() {
             }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.BottomSheetEdit)
-    }
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setStyle(DialogFragment.STYLE_NORMAL, R.style.BottomSheetEdit)
+//    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BaseBottomSheetDialog(context!!, theme)
@@ -72,7 +71,7 @@ class CommentDialogFragment : AppCompatDialogFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-//        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 //        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 
         observer()
@@ -83,6 +82,8 @@ class CommentDialogFragment : AppCompatDialogFragment() {
 
         commentEdit.setOnClickListener {
 //            startActivity(Intent(activity, InputCommentBottomDialogFragment::class.java))
+            val fragment = InputCommentBottomDialogFragment()
+            fragment.show(fragmentManager, "tag")
         }
 
         mAdapter = CommentAdapter(list)

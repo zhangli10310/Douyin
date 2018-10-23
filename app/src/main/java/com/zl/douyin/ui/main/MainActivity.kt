@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.view.ViewPager
-import com.zl.core.MainApp
 import com.zl.core.base.BaseFragment
 import com.zl.core.base.ModeActivity
 import com.zl.douyin.R
@@ -42,6 +41,7 @@ class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
 
             override fun onPageSelected(position: Int) {
                 checkViewPagerScroll()
+                shareViewModel.onViewPagerPositionChange(position)
                 if (position == 2) {
                     shareViewModel.queryUser.postValue(true)
                 }

@@ -10,6 +10,15 @@ class SharedViewModel : ViewModel() {
     var currentSelectUser = MutableLiveData<UserEntity>()
     var queryUser = MutableLiveData<Boolean>()
 
-    var gotoViewPagerPosition = MutableLiveData<Int>()
+    var gotoViewPagerPosition = MutableLiveData<Int>() //命令Viewpager跳转
+    var onViewPagerChange = MutableLiveData<Int>() //viewPager跳转回调
+
+    fun changeViewPagerPosition(pos: Int) {
+        gotoViewPagerPosition.postValue(pos)
+    }
+
+    fun onViewPagerPositionChange(pos: Int) {
+        onViewPagerChange.postValue(pos)
+    }
 
 }
