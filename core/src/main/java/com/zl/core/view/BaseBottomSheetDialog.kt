@@ -31,7 +31,7 @@ class BaseBottomSheetDialog : AppCompatDialog {
     private var mCanceledOnTouchOutside = true
     private var mCanceledOnTouchOutsideSet: Boolean = false
 
-    public var heightDP = 480f
+    public var heightDP:Int
 
     constructor(context: Context) : this(context, 0)
 
@@ -42,6 +42,10 @@ class BaseBottomSheetDialog : AppCompatDialog {
     constructor(context: Context, cancelable: Boolean, cancelListener: DialogInterface.OnCancelListener?) : super(context, cancelable, cancelListener) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         mCancelable = cancelable
+    }
+
+    init {
+        heightDP = DisplayUtils.dp2px(context, 480f).toInt()
     }
 
 
@@ -103,7 +107,7 @@ class BaseBottomSheetDialog : AppCompatDialog {
         mBehavior!!.setBottomSheetCallback(mBottomSheetCallback)
         mBehavior!!.isHideable = mCancelable
         if (params == null) {
-            val p = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtils.dp2px(context, heightDP).toInt())
+            val p = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightDP)
             bottomSheet.addView(v, p)
         } else {
             bottomSheet.addView(v, params)
