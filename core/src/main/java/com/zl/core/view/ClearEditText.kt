@@ -15,7 +15,7 @@ import android.widget.EditText
  *
  * Created by zhangli.<br/>
  */
-class ClearEditText : EditText {
+class ClearEditText : KeyboardEditText {
 
     private var mDrawable: Drawable? = null
     private var mDelete = false
