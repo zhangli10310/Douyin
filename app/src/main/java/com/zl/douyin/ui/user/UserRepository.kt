@@ -21,7 +21,7 @@ class UserRepository public constructor() {
 
     private val TAG = UserRepository::class.java.simpleName
 
-    private var mService: UserService = ServiceGenerator.createRxService(UserService::class.java, BuildConfig.BASE_URL)
+    private var mService: UserService = ServiceGenerator.createRxService(UserService::class.java)
 
 
     companion object {

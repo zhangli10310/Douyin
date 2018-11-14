@@ -15,7 +15,7 @@ class CommentRepository public constructor() {
 
     private val TAG = CommentRepository::class.java.simpleName
 
-    private var mService: CommentService = ServiceGenerator.createRxService(CommentService::class.java, BuildConfig.API_URL)
+    private var mService: CommentService = ServiceGenerator.createRxService(CommentService::class.java)
 
 
     companion object {

@@ -14,6 +14,6 @@ import retrofit2.http.Url
  */
 interface MainPageService {
 
-    @GET
-    fun loadRecommendVideo(@Url url: String, @QueryMap map: Map<String, String>): Observable<FeedData>
+    @GET("aweme/v1/feed/")
+    fun loadRecommendVideo(@QueryMap map: Map<String, String>): Observable<FeedData>
 }

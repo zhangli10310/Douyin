@@ -101,4 +101,25 @@ class MainApp: MultiDexApplication() {
         return uuid
     }
 
+    fun getBaseUrl(): String {
+
+        return if (isInternational()) {
+            BuildConfig.INTERNATIONAL_URL
+        } else {
+            BuildConfig.API_URL
+        }
+    }
+
+    fun isInternational(): Boolean { // 是否是国际版
+        return true
+    }
+
+    fun getRegionCode(): String {
+        return "JP"
+    }
+
+    fun getCarrierRegionCode(): String {
+        return "ja"
+    }
+
 }

@@ -9,10 +9,8 @@ import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import com.zl.core.BuildConfig
-import com.zl.core.api.interceptor.AddBaseParamInterceptor
-import com.zl.core.api.interceptor.ConnectErrorInterceptor
-import com.zl.core.api.interceptor.DownloadProgressInterceptor
-import com.zl.core.api.interceptor.LogInterceptor
+import com.zl.core.MainApp
+import com.zl.core.api.interceptor.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -33,7 +31,7 @@ object ServiceGenerator {
 
     private val TAG = ServiceGenerator::class.java.simpleName
 
-    fun <T> createRxService(clazz: Class<T>, baseUrl: String): T {
+    fun <T> createRxService(clazz: Class<T>, baseUrl: String = MainApp.instance.getBaseUrl()): T {
 
         Log.i(TAG, "createService: url=$baseUrl")
 
@@ -47,7 +45,7 @@ object ServiceGenerator {
         return build.create(clazz)
     }
 
-    fun <T> createLiveDataService(clazz: Class<T>, baseUrl: String): T {
+    fun <T> createLiveDataService(clazz: Class<T>, baseUrl: String = MainApp.instance.getBaseUrl()): T {
 
         Log.i(TAG, "createService: url=$baseUrl")
 
@@ -69,7 +67,7 @@ object ServiceGenerator {
                 .build()
 
         val build = Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_URL)
+                .baseUrl(MainApp.instance.getBaseUrl())
                 .client(client)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
@@ -79,8 +77,14 @@ object ServiceGenerator {
 
     private fun getClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
-                .addInterceptor(AddBaseParamInterceptor())
-                .addInterceptor(LogInterceptor())
+
+        if (MainApp.instance.isInternational()) {
+            builder.addInterceptor(AddInternationalBaseParamInterceptor())
+        } else {
+            builder.addInterceptor(AddBaseParamInterceptor())
+        }
+
+        builder.addInterceptor(LogInterceptor())
                 .addInterceptor(ConnectErrorInterceptor())
 
         try {
@@ -124,7 +128,7 @@ object ServiceGenerator {
                 override fun read(inn: JsonReader): T {
                     if (rawType == object : TypeToken<List<*>>() {
 
-                    }.rawType) {
+                            }.rawType) {
                         if (inn.peek() == JsonToken.NULL) {
                             inn.nextNull()
                             return ArrayList<Any>() as T

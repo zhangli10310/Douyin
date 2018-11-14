@@ -20,7 +20,7 @@ class MainPageRepository public constructor() {
 
     private val TAG = MainPageRepository::class.java.simpleName
 
-    private var mService: MainPageService = ServiceGenerator.createRxService(MainPageService::class.java, BuildConfig.BASE_URL)
+    private var mService: MainPageService = ServiceGenerator.createRxService(MainPageService::class.java)
 
 
     companion object {
@@ -67,7 +67,7 @@ class MainPageRepository public constructor() {
                 Pair("pull_type", "2"),
                 Pair("need_relieve_aweme", "0")
         )
-        return mService.loadRecommendVideo(url = "${BuildConfig.API_URL}aweme/v1/feed/", map = map)
+        return mService.loadRecommendVideo(map = map)
     }
 
     fun loadMoreVideo(): Observable<FeedData> {
@@ -76,10 +76,10 @@ class MainPageRepository public constructor() {
                 Pair("max_cursor", "0"),
                 Pair("min_cursor", "0"),
                 Pair("count", "6"),
-                Pair("volume", "0.13333333333333333"),
-                Pair("pull_type", "1"),
-                Pair("need_relieve_aweme", "0")
+                Pair("volume", "0.0"),
+                Pair("pull_type", "4"),
+                Pair("is_cold_start", "1")
         )
-        return mService.loadRecommendVideo(url = "${BuildConfig.API_URL}aweme/v1/feed/", map = map)
+        return mService.loadRecommendVideo(map)
     }
 }

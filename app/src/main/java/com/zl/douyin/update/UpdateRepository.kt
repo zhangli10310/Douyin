@@ -12,7 +12,7 @@ import io.reactivex.Observable
  */
 class UpdateRepository {
 
-    private var mService: UpdateApi = ServiceGenerator.createRxService(UpdateApi::class.java, BuildConfig.BASE_URL)
+    private var mService: UpdateApi = ServiceGenerator.createRxService(UpdateApi::class.java)
 
     companion object {
         fun get(): UpdateRepository {

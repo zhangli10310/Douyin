@@ -21,12 +21,14 @@ android {
 
     productFlavors {
         local {
-            buildConfigField "String", "BASE_URL", '"https://aweme.snssdk.com/"'
+//            buildConfigField "String", "BASE_URL", '"https://aweme.snssdk.com/"'
             buildConfigField "String", "API_URL", '"https://api.amemv.com/"'
+            buildConfigField "String", "INTERNATIONAL_URL", '"https://api.tiktokv.com/"'
         }
         product {
-            buildConfigField "String", "BASE_URL", '"https://aweme.snssdk.com/"'
+//            buildConfigField "String", "BASE_URL", '"https://aweme.snssdk.com/"'
             buildConfigField "String", "API_URL", '"https://api.amemv.com/"'
+            buildConfigField "String", "INTERNATIONAL_URL", '"https://api.tiktokv.com/"'
         }
     }
 
