@@ -62,10 +62,10 @@ class MainPageRepository public constructor() {
         val map = mapOf(
                 Pair("type", "0"),
                 Pair("max_cursor", "0"),
-                Pair("min_cursor", "-1"),
+                Pair("min_cursor", "0"),
                 Pair("count", "6"),
-                Pair("volume", "0.13333333333333333"),
-                Pair("pull_type", "2"),
+                Pair("volume", "0.0"),
+                Pair("pull_type", "0"),
                 Pair("need_relieve_aweme", "0")
         )
         return mService.loadRecommendVideo(map = map)
@@ -78,8 +78,8 @@ class MainPageRepository public constructor() {
                 Pair("min_cursor", "0"),
                 Pair("count", "6"),
                 Pair("volume", "0.0"),
-                Pair("pull_type", "4"),
-                Pair("is_cold_start", "1")
+                Pair("pull_type", "3"),
+                Pair("is_cold_start", "0")
         )
         return mService.loadRecommendVideo(map)
     }

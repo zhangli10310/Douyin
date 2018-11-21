@@ -219,34 +219,34 @@ class MainPageFragment : ModeFragment() {
             Log.i(TAG, "setOnCompletionListener: ")
             holder.itemView.videoView.start()
         }
+        holder.itemView.videoView.setOnPreparedListener {
+            Log.i(TAG, "setOnPreparedListener: ")
+            holder.itemView.videoView.start()
+        }
+
         holder.itemView.videoView.setOnInfoListener { _, arg2, _ ->
+
+            //int MEDIA_INFO_VIDEO_RENDERING_START = 3;//视频准备渲染
+            //int MEDIA_INFO_BUFFERING_START = 701;//开始缓冲
+            //int MEDIA_INFO_BUFFERING_END = 702;//缓冲结束
+            //int MEDIA_INFO_VIDEO_ROTATION_CHANGED = 10001;//视频选择信息
+            //int MEDIA_ERROR_SERVER_DIED = 100;//视频中断，一般是视频源异常或者不支持的视频类型。
+            //int MEDIA_ERROR_IJK_PLAYER = -10000,//一般是视频源有问题或者数据格式不支持，比如音频不是AAC之类的
+            //int MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK = 200;//数据错误没有有效的回收
+            Log.d(TAG, arg2.toString())
             when (arg2) {
-//                IMediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING -> Log.d(TAG, "MEDIA_INFO_VIDEO_TRACK_LAGGING:")
                 IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START -> {
                     Log.d(TAG, "MEDIA_INFO_VIDEO_RENDERING_START:")
                     holder.itemView.videoView.postDelayed({
                         holder.itemView.videoView.visibility = View.VISIBLE
                     }, 180) //不延迟会有黑屏
                 }
-//                IMediaPlayer.MEDIA_INFO_BUFFERING_START -> Log.d(TAG, "MEDIA_INFO_BUFFERING_START:")
-//                IMediaPlayer.MEDIA_INFO_BUFFERING_END -> {
-//                    Log.d(TAG, "MEDIA_INFO_BUFFERING_END:")
-//                    if (holder.itemView.videoView.visibility != View.VISIBLE) {
-//                        holder.itemView.videoView.post {
-//                            holder.itemView.videoView.visibility = View.VISIBLE
-//                        }
-//                    }
-//                }
-//                IMediaPlayer.MEDIA_INFO_NETWORK_BANDWIDTH -> Log.d(TAG, "MEDIA_INFO_NETWORK_BANDWIDTH: $arg2")
-//                IMediaPlayer.MEDIA_INFO_BAD_INTERLEAVING -> Log.d(TAG, "MEDIA_INFO_BAD_INTERLEAVING:")
-//                IMediaPlayer.MEDIA_INFO_NOT_SEEKABLE -> Log.d(TAG, "MEDIA_INFO_NOT_SEEKABLE:")
-//                IMediaPlayer.MEDIA_INFO_METADATA_UPDATE -> Log.d(TAG, "MEDIA_INFO_METADATA_UPDATE:")
-//                IMediaPlayer.MEDIA_INFO_UNSUPPORTED_SUBTITLE -> Log.d(TAG, "MEDIA_INFO_UNSUPPORTED_SUBTITLE:")
-//                IMediaPlayer.MEDIA_INFO_SUBTITLE_TIMED_OUT -> Log.d(TAG, "MEDIA_INFO_SUBTITLE_TIMED_OUT:")
-//                IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED -> {
-//
-//                }
-//                IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START -> Log.d(TAG, "MEDIA_INFO_AUDIO_RENDERING_START:")
+                IMediaPlayer.MEDIA_INFO_BUFFERING_START -> { //缓冲
+                    holder.itemView.bufferProgressBar.visibility = View.VISIBLE
+                }
+                IMediaPlayer.MEDIA_INFO_BUFFERING_END -> { //缓冲结束
+                    holder.itemView.bufferProgressBar.visibility = View.GONE
+                }
             }
             true
         }
@@ -260,7 +260,6 @@ class MainPageFragment : ModeFragment() {
             true
         }
         holder.itemView.videoView.setVideoURI(Uri.parse(urls[i]))
-        holder.itemView.videoView.start()
         holder.itemView.pauseImg.visibility = View.GONE
         lastHolder = holder
     }

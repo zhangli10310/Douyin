@@ -111,7 +111,7 @@ class MainApp: MultiDexApplication() {
     }
 
     fun isInternational(): Boolean { // 是否是国际版
-        return true
+        return false
     }
 
     fun getRegionCode(): String {
