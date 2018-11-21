@@ -53,6 +53,8 @@ class MainPageViewModel(private var repository: MainPageRepository) : BaseViewMo
 
     }
 
+
+
     @Suppress("UNCHECKED_CAST")
     class Factory(private var repository: MainPageRepository) : ViewModelProvider.Factory {
 

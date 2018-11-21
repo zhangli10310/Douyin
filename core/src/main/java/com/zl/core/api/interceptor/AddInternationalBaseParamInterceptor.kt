@@ -46,9 +46,9 @@ class AddInternationalBaseParamInterceptor : Interceptor {
 
                 .addQueryParameter("ad_user_agent", "Dalvik/2.1.0 (Linux; U; Android 6.0.1; ATH-AL00 Build/HONORATH-AL00)")
                 .addQueryParameter("retry_type", "no_retry")
-                .addQueryParameter("app_language", "en")
+                .addQueryParameter("app_language", MainApp.instance.getCarrierRegionCode())
                 .addQueryParameter("language", "en")
-                .addQueryParameter("region", MainApp.instance.getRegionCode())
+                .addQueryParameter("region", "en")
                 .addQueryParameter("sys_region", "US")
                 .addQueryParameter("carrier_region", MainApp.instance.getCarrierRegionCode())
                 .addQueryParameter("carrier_region_v2", "")

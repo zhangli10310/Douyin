@@ -5,6 +5,7 @@ import com.zl.core.api.ServiceGenerator
 import io.reactivex.Observable
 import com.google.gson.Gson
 import com.zl.core.MainApp
+import com.zl.core.api.data.BaseResult
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -81,5 +82,9 @@ class MainPageRepository public constructor() {
                 Pair("is_cold_start", "1")
         )
         return mService.loadRecommendVideo(map)
+    }
+
+    fun stats(): Observable<BaseResult> {
+        return mService.stats(mapOf())
     }
 }

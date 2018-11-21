@@ -24,6 +24,7 @@ class FeedItem {
     var statistics: StatisticsEntity? = null
     var user_digged: Int? = null
     var aweme_id: Long? = null
+    var region: String? = null
 }
 
 class MusicEntity {

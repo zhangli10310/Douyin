@@ -43,15 +43,13 @@ class CommentAdapter(private var list: MutableList<CommentItem>) : RecyclerView.
         }
 
         val reply = commentItem.reply_comment
-        if (reply == null) {
+        if (reply == null || reply.isEmpty()) {
             holder.itemView.replyLayout.visibility = View.GONE
         } else {
             holder.itemView.replyLayout.visibility = View.VISIBLE
 
-            if (!reply.isEmpty()) {
-                holder.itemView.replyNameText.text = reply[0].user?.nickname
-                holder.itemView.replyContentText.text = reply[0].text
-            }
+            holder.itemView.replyNameText.text = reply[0].user?.nickname
+            holder.itemView.replyContentText.text = reply[0].text
         }
     }
 }

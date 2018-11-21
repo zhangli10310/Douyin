@@ -90,6 +90,10 @@ class MainPageVideoAdapter(private var list: MutableList<FeedItem>) : RecyclerVi
         }?.origin_cover?.url_list?.let {
             GlideUtils.load(it, holder.itemView.previewImg)
         }
+
+        if (!feedItem.region.isNullOrEmpty()) {
+            holder.itemView.regionText.text = feedItem.region
+        }
     }
 
     fun registerViewClick(viewClick: ((ViewHolder) -> Unit)) {

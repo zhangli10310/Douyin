@@ -76,7 +76,7 @@ class MainPageFragment : ModeFragment() {
 
             override fun onLongPress(e: MotionEvent?) {
                 super.onLongPress(e)
-                Log.i(TAG, "不喜欢?")
+                showToast("不喜欢")
             }
 
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
@@ -123,11 +123,11 @@ class MainPageFragment : ModeFragment() {
                 }
             }
 
-            it.itemView.headImg.setOnClickListener {
+            it.itemView.headImg.setOnClickListener { _ ->
                 shareViewModel.changeViewPagerPosition(2)
             }
 
-            it.itemView.likeImg.setOnClickListener {
+            it.itemView.likeImg.setOnClickListener { _ ->
 
             }
         }
