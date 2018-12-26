@@ -6,6 +6,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
@@ -22,6 +23,7 @@ import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.RVGestureDetector
 import com.zl.douyin.R
 import com.zl.douyin.ui.comment.CommentDialogFragment
+import com.zl.douyin.ui.live.LiveRoomActivity
 import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.ijk.media.IRenderView
 import kotlinx.android.synthetic.main.fragment_main_page.*
@@ -189,7 +191,7 @@ class MainPageFragment : ModeFragment() {
         }
 
         doublePointImg.setOnClickListener {
-            Router.toFunc(activity!!, "http://www.baidu.com")
+            startActivity(Intent(activity!!, LiveRoomActivity::class.java))
         }
     }
 

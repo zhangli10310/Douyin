@@ -1268,4 +1268,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     public int getSelectedTrack(int trackType) {
         return MediaPlayerCompat.getSelectedTrack(mMediaPlayer, trackType);
     }
+
+    public IjkMediaPlayer getIjkMediaPlayer() {
+        if (mMediaPlayer instanceof  IjkMediaPlayer) {
+            return (IjkMediaPlayer) mMediaPlayer;
+        }
+        return null;
+    }
 }

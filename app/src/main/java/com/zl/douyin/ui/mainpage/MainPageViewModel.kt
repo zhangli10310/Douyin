@@ -41,6 +41,7 @@ class MainPageViewModel(private var repository: MainPageRepository) : BaseViewMo
             loading = true
             repository.loadMoreVideo()
                     .doOnTerminate {
+                        loadingRecommendStatus.postValue(1)
                         loading = false
                     }
                     .noLoadingSubscribe(this, {
