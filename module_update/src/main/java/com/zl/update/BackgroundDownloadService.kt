@@ -1,4 +1,4 @@
-package com.zl.douyin.update
+package com.zl.update
 
 import android.annotation.SuppressLint
 import android.app.IntentService

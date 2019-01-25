@@ -72,5 +72,7 @@ dependencies {
     implementation project(':core')
     if (!isModule.toBoolean()) {
         implementation project(':module_main')
+        implementation project(':module_live')
+        implementation project(':module_update')
     }
 }

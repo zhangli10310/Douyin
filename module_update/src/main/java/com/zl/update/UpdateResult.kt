@@ -1,4 +1,4 @@
-package com.zl.douyin.update
+package com.zl.update
 
 import com.zl.core.api.data.BaseResult
 

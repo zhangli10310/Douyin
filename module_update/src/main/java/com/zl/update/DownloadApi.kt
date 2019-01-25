@@ -1,4 +1,4 @@
-package com.zl.douyin.update
+package com.zl.update
 
 import io.reactivex.Observable
 import okhttp3.ResponseBody

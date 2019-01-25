@@ -9,11 +9,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+
     compileSdkVersion rootProject.compileSdkVersion
     flavorDimensions rootProject.flavorDimensions
     defaultConfig {
         if (isModule.toBoolean()) {
-            applicationId "com.zl.main"
+            applicationId "com.zl.live"
         }
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
@@ -24,29 +25,19 @@ android {
         multiDexEnabled true
     }
 
-    productFlavors {
-        local {
-//            applicationId "com.zl.douyin.l"
-            resValue "string", "app_name", "module_main"
-        }
-        product {
-//            applicationId "com.zl.douyin"
-            resValue "string", "app_name", "module_main"
-        }
-    }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'x86', 'x86_64', 'armeabi-v7a' //引入fresco后 要把这个去掉'arm64-v8a'
-            universalApk false
+    productFlavors {
+        local {
+
+        }
+        product {
+
         }
     }
 
@@ -59,11 +50,11 @@ android {
             }
         }
     }
+
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    testImplementation 'junit:junit:4.12'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(':core')
     implementation project(':ijk')

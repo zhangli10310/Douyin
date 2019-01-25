@@ -22,7 +22,6 @@ import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.RVGestureDetector
 import com.zl.douyin.R
 import com.zl.douyin.ui.comment.CommentDialogFragment
-import com.zl.douyin.ui.live.LiveRoomActivity
 import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.ijk.media.IRenderView
 import kotlinx.android.synthetic.main.fragment_main_page.*
@@ -190,7 +189,7 @@ class MainPageFragment : ModeFragment() {
         }
 
         doublePointImg.setOnClickListener {
-            startActivity(Intent(activity!!, LiveRoomActivity::class.java))
+//            startActivity(Intent(activity!!, LiveRoomActivity::class.java))
         }
     }
 

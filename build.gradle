@@ -7,7 +7,7 @@ buildscript {
         ijk_version = '0.8.8'
         compileSdkVersion = 28
         buildToolsVersion = '28.0.2'
-        minSdkVersion = 15
+        minSdkVersion = 16
         targetSdkVersion = 28
         supportVersion = '27.1.1'
         retrofit2Version = '2.3.0'

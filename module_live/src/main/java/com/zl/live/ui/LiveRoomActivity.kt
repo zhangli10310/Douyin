@@ -1,9 +1,9 @@
-package com.zl.douyin.ui.live
+package com.zl.live.ui
 
 import android.net.Uri
 import android.os.Bundle
 import com.zl.core.base.ModeActivity
-import com.zl.douyin.R
+import com.zl.live.R
 import kotlinx.android.synthetic.main.activity_live_room.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
