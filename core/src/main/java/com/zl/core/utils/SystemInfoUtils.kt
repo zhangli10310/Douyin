@@ -5,7 +5,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.net.ConnectivityManager
 import android.provider.Settings
-import android.support.annotation.RequiresPermission
+import androidx.annotation.RequiresPermission
 import android.hardware.usb.UsbDevice.getDeviceId
 import android.app.Activity
 import android.net.NetworkInfo

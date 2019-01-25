@@ -4,8 +4,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
 
 /**
@@ -23,7 +23,7 @@ class GridSpacingItemDecoration(private var spanCount: Int, private var space: I
         dividerPaint.color = color
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
 
         //这里是关键，需要根据你有几列来判断
         val position = parent.getChildAdapterPosition(view) // item position

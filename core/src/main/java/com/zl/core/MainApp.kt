@@ -3,7 +3,7 @@ package com.zl.core
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
-import android.support.multidex.MultiDexApplication
+import androidx.multidex.MultiDexApplication
 import android.util.Log
 import com.ss.android.common.applog.GlobalContext
 import com.zl.core.db.AppDatabase

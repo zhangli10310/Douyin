@@ -2,7 +2,7 @@ package com.zl.core.base
 
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import android.view.ViewTreeObserver
 
 

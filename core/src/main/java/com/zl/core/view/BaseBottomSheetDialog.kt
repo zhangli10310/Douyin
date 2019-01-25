@@ -3,17 +3,17 @@ package com.zl.core.view
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.CoordinatorLayout
-import android.support.v4.view.AccessibilityDelegateCompat
-import android.support.v4.view.ViewCompat
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat
-import android.support.v7.app.AppCompatDialog
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatDialog
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.AccessibilityDelegateCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.zl.core.R
 import com.zl.core.utils.DisplayUtils
 
@@ -102,7 +102,7 @@ class BaseBottomSheetDialog : AppCompatDialog {
         if (layoutResId != 0 && v == null) {
             v = layoutInflater.inflate(layoutResId, coordinator, false)
         }
-        val bottomSheet = coordinator.findViewById<View>(android.support.design.R.id.design_bottom_sheet) as FrameLayout
+        val bottomSheet = coordinator.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
         mBehavior = BottomSheetBehavior.from(bottomSheet)
         mBehavior!!.setBottomSheetCallback(mBottomSheetCallback)
         mBehavior!!.isHideable = mCancelable
@@ -113,7 +113,7 @@ class BaseBottomSheetDialog : AppCompatDialog {
             bottomSheet.addView(v, params)
         }
         // We treat the CoordinatorLayout as outside the dialog though it is technically inside
-        coordinator.findViewById<View>(android.support.design.R.id.touch_outside).setOnClickListener {
+        coordinator.findViewById<View>(com.google.android.material.R.id.touch_outside).setOnClickListener {
             if (mCancelable && isShowing && shouldWindowCloseOnTouchOutside()) {
                 cancel()
             }

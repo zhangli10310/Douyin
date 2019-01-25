@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
-import android.support.annotation.RequiresPermission
+import androidx.annotation.RequiresPermission
 import android.util.Log
 import com.zl.core.MainApp
 import okhttp3.ResponseBody

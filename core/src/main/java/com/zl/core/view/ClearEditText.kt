@@ -3,11 +3,10 @@ package com.zl.core.view
 import android.content.Context
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.widget.EditText
+import androidx.core.content.ContextCompat
 
 /**
  *

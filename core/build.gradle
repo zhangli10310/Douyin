@@ -6,7 +6,6 @@ apply plugin: 'kotlin-kapt'
 android {
 
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
     flavorDimensions rootProject.flavorDimensions
 
     defaultConfig {
@@ -15,7 +14,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -57,10 +56,10 @@ dependencies {
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    api "com.android.support:appcompat-v7:$supportVersion"
-    api "com.android.support:cardview-v7:$supportVersion"
-    api "com.android.support:design:$supportVersion"
-    api 'com.android.support.constraint:constraint-layout:1.1.3'
+    api 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    api 'androidx.cardview:cardview:1.0.0'
+    api 'com.google.android.material:material:1.1.0-alpha02'
+    api 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
 
     api "com.squareup.retrofit2:retrofit:$retrofit2Version"
     api "com.squareup.retrofit2:converter-gson:$retrofit2Version"
@@ -73,17 +72,17 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
     api "com.zlc.glide:webpdecoder:1.0.$glideVersion"
 
-    api "android.arch.lifecycle:extensions:$lifecycleVersion"
-    api "android.arch.lifecycle:reactivestreams:$lifecycleVersion"
-    api "android.arch.persistence.room:runtime:$roomVersion"
-    api "android.arch.persistence.room:rxjava2:$roomVersion"
-    api "android.arch.paging:runtime:$pagingVersion"
-    kapt "android.arch.lifecycle:compiler:$lifecycleVersion"
-    kapt "android.arch.persistence.room:compiler:$roomVersion"
+    api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    api "androidx.lifecycle:lifecycle-reactivestreams:$lifecycleVersion"
+    api "androidx.room:room-runtime:$roomVersion"
+    api "androidx.room:room-rxjava2:$roomVersion"
+    api "androidx.paging:paging-runtime:$pagingVersion"
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
 
     api 'de.hdodenhof:circleimageview:2.2.0'
     api 'com.wingjay:blurimageviewlib:2.0.1'
 
-    api 'com.android.support:multidex:1.0.3'
+    api 'androidx.multidex:multidex:2.0.1'
 
 }

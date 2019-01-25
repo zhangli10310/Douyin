@@ -1,6 +1,6 @@
 package com.zl.core.api
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import android.util.Log
 import retrofit2.*
 import java.lang.reflect.ParameterizedType

@@ -1,7 +1,7 @@
 package com.zl.core.base
 
-import android.arch.lifecycle.Observer
-import android.support.annotation.CallSuper
+import androidx.lifecycle.Observer
+import androidx.annotation.CallSuper
 
 
 /**

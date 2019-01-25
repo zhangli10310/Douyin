@@ -4,8 +4,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
 
 /**
@@ -23,7 +23,7 @@ class LinearItemDecoration(private val space: Int = 5, color: Int = Color.WHITE)
         dividerPaint.color = color
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         if ((view.layoutParams as RecyclerView.LayoutParams).viewLayoutPosition < parent.childCount) {
             outRect.bottom = space
         }

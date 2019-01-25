@@ -1,2 +1,2 @@
-include ':app', ':core', ':ijk'
+include ':module_main', ':core', ':ijk', ':app'
 //include ':cpp'

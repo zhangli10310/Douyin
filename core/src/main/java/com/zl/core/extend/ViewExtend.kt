@@ -1,7 +1,6 @@
 package com.zl.core.extend
 
-import android.support.annotation.LayoutRes
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.LayoutRes
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -11,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  *

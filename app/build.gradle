@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
+
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
     flavorDimensions rootProject.flavorDimensions
     defaultConfig {
         applicationId "com.zl.douyin"
@@ -14,19 +14,11 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 240
         versionName "2.4.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
     }
-    signingConfigs {
 
-        config {
-            keyAlias 'douyin'
-            keyPassword 'douyin'
-            storeFile file('douyin.jks')
-            storePassword 'douyin'
-        }
-    }
     productFlavors {
         local {
             applicationId "com.zl.douyin.l"
@@ -37,6 +29,24 @@ android {
             resValue "string", "app_name", "抖音"
         }
     }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    signingConfigs {
+
+        config {
+            keyAlias 'douyin'
+            keyPassword 'douyin'
+            storeFile file('douyin.jks')
+            storePassword 'douyin'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -53,14 +63,14 @@ android {
             universalApk false
         }
     }
+
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    testImplementation 'junit:junit:4.12'
-//    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation project(':core')
-//    implementation project(':cpp')
-    implementation project(':ijk')
+    if (!isModule.toBoolean()) {
+        implementation project(':module_main')
+    }
 }

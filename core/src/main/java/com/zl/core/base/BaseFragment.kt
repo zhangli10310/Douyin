@@ -1,10 +1,10 @@
 package com.zl.core.base
 
 import android.content.Intent
-import android.support.v4.app.Fragment
 import android.view.Gravity
 import android.view.View
 import android.widget.ProgressBar
+import androidx.fragment.app.Fragment
 
 
 /**

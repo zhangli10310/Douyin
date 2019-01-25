@@ -1,8 +1,8 @@
 package com.zl.core.db
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.zl.core.MainApp
 import com.zl.core.db.user.User
 import com.zl.core.db.user.UserDao

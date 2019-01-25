@@ -10,8 +10,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
-import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -24,8 +22,10 @@ import java.util.*
 import kotlin.collections.HashSet
 import android.view.WindowManager
 import android.os.Build
-import android.support.v4.content.ContextCompat
 import android.view.MotionEvent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.zl.core.R
 
 
