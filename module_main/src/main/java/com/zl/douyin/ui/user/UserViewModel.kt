@@ -14,11 +14,11 @@ class UserViewModel(var repository: UserRepository) : BaseViewModel() {
 
     var hasMoreAwe = MutableLiveData<Boolean>()
     var maxAweCursor = MutableLiveData<String>()
-    var moreAweVideoList = MutableLiveData<MutableList<FeedItem>>()
+    var moreAweVideoList = MutableLiveData<MutableList<FeedItem>?>()
 
     var hasMoreFavorite = MutableLiveData<Boolean>()
     var maxFavoriteCursor = MutableLiveData<String>()
-    var moreFavoriteVideoList = MutableLiveData<MutableList<FeedItem>>()
+    var moreFavoriteVideoList = MutableLiveData<MutableList<FeedItem>?>()
 
     fun queryUser(uid: String) {
         repository.queryUser(uid)

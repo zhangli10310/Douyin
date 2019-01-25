@@ -11,6 +11,12 @@ import com.zl.core.db.user.User
 import com.zl.core.utils.SPUtils
 import com.zl.core.utils.SystemInfoUtils
 import java.util.*
+import com.github.moduth.blockcanary.BlockCanary
+import com.github.moduth.blockcanary.BlockCanaryContext
+import com.github.moduth.blockcanary.internal.BlockInfo
+
+
+
 
 /**
  *
@@ -54,17 +60,12 @@ class MainApp: MultiDexApplication() {
 //        Thread.setDefaultUncaughtExceptionHandler { t, e ->
 //            Log.i("error_by_", "${t.name}, ${e.message}")
 //        }
-    }
 
-//    fun gotoLogin() {
-//        val intent = Intent(Router.ACTION_LOGIN)
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-//        try {
-//            startActivity(intent)
-//        } catch (e: Exception) {
-//
-//        }
-//    }
+        BlockCanary.install(this, object : BlockCanaryContext(){
+
+            override fun provideBlockThreshold() = 500
+        }).start()
+    }
 
     fun getVersion(): String {
         return try {

@@ -85,4 +85,6 @@ dependencies {
 
     api 'androidx.multidex:multidex:2.0.1'
 
+    debugApi 'com.github.markzhai:blockcanary-android:1.5.0'
+
 }

@@ -7,7 +7,7 @@ import com.zl.douyin.ui.user.UserEntity
 
 class SharedViewModel : ViewModel() {
 
-    var currentSelectUser = MutableLiveData<UserEntity>()
+    var currentSelectUser = MutableLiveData<UserEntity?>()
     var queryUser = MutableLiveData<Boolean>()
 
     var gotoViewPagerPosition = MutableLiveData<Int>() //命令Viewpager跳转

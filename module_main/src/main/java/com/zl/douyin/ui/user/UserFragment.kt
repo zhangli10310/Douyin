@@ -195,12 +195,12 @@ class UserFragment : ModeFragment() {
         userViewModel = ViewModelProviders.of(this, UserViewModel.Factory(UserRepository.get())).get(UserViewModel::class.java)
         shareViewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
-        //当滑到第一个fragment时会销毁这个fragment，再划回来会导致这些livedata重复被观察,暂时的解决办法是给他们都remove掉,好像这个也没解决这个问题
-        //fixme
-        //fixme 需要好好看看Viewmodel机制
-        shareViewModel.currentSelectUser.removeObservers(activity!!)
+        //当滑到第一个fragment时会销毁这个fragment，再划回来会导致这些livedata重复被观察,解决办法是观察完了赋值null
         shareViewModel.currentSelectUser.observe(this, Observer {
-            userViewModel.userInfo.postValue(it)
+            if (it != null) {
+                userViewModel.userInfo.postValue(it)
+                shareViewModel.currentSelectUser.value = null
+            }
         })
 
         shareViewModel.queryUser.removeObservers(activity!!)
@@ -217,43 +217,38 @@ class UserFragment : ModeFragment() {
             }
         })
 
-        userViewModel.hasMoreAwe.removeObservers(this)
         userViewModel.hasMoreAwe.observe(this, Observer {
             hasMoreAwe = it ?: true
         })
 
-        userViewModel.maxAweCursor.removeObservers(this)
         userViewModel.maxAweCursor.observe(this, Observer {
             maxAweCursor = it ?: "0"
         })
 
-        userViewModel.moreAweVideoList.removeObservers(this)
         userViewModel.moreAweVideoList.observe(this, Observer {
             if (it != null) {
                 aweList.addAll(it)
                 aweAdapter.notifyDataSetChanged()
+                userViewModel.moreAweVideoList.value = null
             }
         })
 
-        userViewModel.hasMoreFavorite.removeObservers(this)
         userViewModel.hasMoreFavorite.observe(this, Observer {
             hasMoreFavorite = it ?: true
         })
 
-        userViewModel.maxFavoriteCursor.removeObservers(this)
         userViewModel.maxFavoriteCursor.observe(this, Observer {
             maxFavoriteCursor = it ?: "0"
         })
 
-        userViewModel.moreFavoriteVideoList.removeObservers(this)
         userViewModel.moreFavoriteVideoList.observe(this, Observer {
             if (it != null) {
                 favoriteList.addAll(it)
                 favoriteAdapter.notifyDataSetChanged()
+                userViewModel.moreFavoriteVideoList.value = null
             }
         })
 
-        userViewModel.userInfo.removeObservers(this)
         userViewModel.userInfo.observe(this, Observer {
             if (it != null) {
                 userEntity = it
