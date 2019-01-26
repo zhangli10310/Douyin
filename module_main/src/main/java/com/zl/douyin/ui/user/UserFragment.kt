@@ -25,8 +25,6 @@ import com.zl.douyin.ui.mainpage.FeedItem
 import kotlinx.android.synthetic.main.fragment_user.*
 
 
-
-
 /**
  *
  *<p></p>
@@ -204,8 +202,8 @@ class UserFragment : ModeFragment() {
         })
 
         shareViewModel.queryUser.removeObservers(activity!!)
-        shareViewModel.queryUser.observe(this, Observer {
-            if (it != null && it) {
+        shareViewModel.queryUser.observe(this, Observer { value ->
+            if (value != null && value) {
                 userEntity?.uid?.let {
                     if (lastUserId != it) {
                         resetInfo()
