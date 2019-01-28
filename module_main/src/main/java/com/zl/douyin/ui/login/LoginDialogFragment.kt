@@ -34,9 +34,7 @@ class LoginDialogFragment : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (dialog != null && dialog!!.window != null) {
-            dialog!!.window.attributes.windowAnimations = R.style.dialogAnim
-        }
+        dialog?.window?.attributes?.windowAnimations = R.style.dialogAnim
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 

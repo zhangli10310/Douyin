@@ -15,6 +15,9 @@ object Router {
 
     private val TAG = Router::class.java.simpleName
 
+    const val MAIN_ACTIVITY = "/main/main"
+    const val LIVE_ACTIVITY = "/live/room"
+
     fun toFunc(context: Context, url: String) {
         when {
             url.startsWith("http") -> {

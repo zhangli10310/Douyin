@@ -4,12 +4,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.zl.core.Router
 import com.zl.core.base.BaseFragment
 import com.zl.core.base.ModeActivity
 import com.zl.douyin.R
 import com.zl.douyin.ui.user.UserFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
+@Route(path = Router.MAIN_ACTIVITY)
 class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
 
 

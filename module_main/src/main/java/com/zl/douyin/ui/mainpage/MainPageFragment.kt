@@ -17,6 +17,8 @@ import android.view.animation.AccelerateInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
+import com.zl.core.Router
 import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.RVGestureDetector
@@ -189,7 +191,7 @@ class MainPageFragment : ModeFragment() {
         }
 
         doublePointImg.setOnClickListener {
-//            startActivity(Intent(activity!!, LiveRoomActivity::class.java))
+            ARouter.getInstance().build(Router.LIVE_ACTIVITY).navigation()
         }
     }
 

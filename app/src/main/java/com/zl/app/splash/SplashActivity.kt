@@ -3,12 +3,12 @@ package com.zl.app.splash
 import android.animation.ObjectAnimator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.alibaba.android.arouter.launcher.ARouter
 import com.zl.app.R
+import com.zl.core.Router
 import com.zl.core.base.ModeActivity
-import com.zl.douyin.ui.main.MainActivity
 import kotlinx.android.synthetic.main.activity_splash.*
 
 /**
@@ -81,7 +81,7 @@ class SplashActivity : ModeActivity() {
 
         viewModel.jump.observe(this, Observer {
             if (it != null && it) {
-                startActivity(Intent(this, MainActivity::class.java))
+                ARouter.getInstance().build(Router.MAIN_ACTIVITY).navigation()
                 finish()
             }
         })

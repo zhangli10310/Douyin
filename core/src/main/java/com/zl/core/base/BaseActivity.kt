@@ -26,6 +26,7 @@ import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.alibaba.android.arouter.launcher.ARouter
 import com.zl.core.R
 
 
@@ -64,6 +65,7 @@ open class BaseActivity : AppCompatActivity() {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
         }
+        ARouter.getInstance().inject(this)
     }
 
     @SuppressLint("ShowToast")
@@ -252,6 +254,6 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     interface OnTouchListener {
-        public fun onTouchEvent(event: MotionEvent)
+        fun onTouchEvent(event: MotionEvent)
     }
 }
