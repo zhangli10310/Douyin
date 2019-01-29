@@ -22,8 +22,9 @@ class CommentViewModel(private var repository: CommentRepository) : BaseViewMode
     private var loading = false
     private var hasMore = true
 
-    fun loadComment(awemeId: Long?) {
+    var awemeId = 0L
 
+    fun loadComment() {
         var cursor = 0L
 
         lastComment.value?.let {

@@ -25,32 +25,20 @@ class CommentDialogFragment : AppCompatDialogFragment() {
 
     private lateinit var viewModel: CommentViewModel
 
-    private var awemeId = 0L
     private var list = mutableListOf<CommentItem>()
     private lateinit var mAdapter: CommentAdapter
-
-//    private var hasMore: Boolean = true
 
     companion object {
 
         const val AWEME_ID = "aweme_id"
 
-        @Synchronized
-        fun getInstance(awemeId: Long): CommentDialogFragment {
-            return instance!!.apply {
+        fun newInstance(awemeId: Long): CommentDialogFragment {
+            return CommentDialogFragment().apply {
                 arguments = Bundle().apply {
                     putLong(AWEME_ID, awemeId)
                 }
             }
         }
-
-        private var instance: CommentDialogFragment? = null
-            get() {
-                if (field == null) {
-                    field = CommentDialogFragment()
-                }
-                return field
-            }
     }
 
 //    override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,20 +108,17 @@ class CommentDialogFragment : AppCompatDialogFragment() {
 
         arguments?.let {
             val id = it.getLong(AWEME_ID)
-            if (id != awemeId) {
-                awemeId = id
+            if (id != viewModel.awemeId) {
+                viewModel.awemeId = id
                 viewModel.reset()
                 loadComment()
             }
         }
 
-        viewModel.lastComment.value.let {
-            handleView(it)
-        }
     }
 
     private fun loadComment() {
-        viewModel.loadComment(awemeId)
+        viewModel.loadComment()
     }
 
     private fun observer() {

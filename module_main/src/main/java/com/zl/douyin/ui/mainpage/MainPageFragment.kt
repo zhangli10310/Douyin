@@ -267,7 +267,7 @@ class MainPageFragment : ModeFragment() {
     }
 
     private fun showComment(aweId: Long) {
-        val fragment = CommentDialogFragment.getInstance(aweId)
+        val fragment = CommentDialogFragment.newInstance(aweId)
         fragment.show(fragmentManager!!, "tag")
     }
 
