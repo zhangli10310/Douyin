@@ -6,13 +6,13 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -294,7 +294,7 @@ class MainPageFragment : ModeFragment() {
         }
     }
 
-    private fun anim(heartView: View, v: ConstraintLayout) {
+    private fun anim(heartView: View, v: ViewGroup) {
         val set = AnimatorSet()
         val random = Random()
         val ran = DisplayUtils.dp2px(context!!, random.nextInt(40).toFloat())
@@ -319,6 +319,7 @@ class MainPageFragment : ModeFragment() {
             }
         })
         set.duration = 600
+        set.startDelay = 100
 
         firstSet.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {

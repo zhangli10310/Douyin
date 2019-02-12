@@ -59,34 +59,6 @@ class MainPageVideoAdapter(private var list: MutableList<FeedItem>) : RecyclerVi
 
             Log.i(TAG, "data:width=$width, height=$height")
 
-            //计算适配屏幕
-//            if (videoFrameWidth == null || videoFrameWidth!! == 0) {
-//                videoFrameWidth = holder.itemView.displayFrameLayout.width
-//            }
-//            if (videoFrameHeight == null || videoFrameHeight!! == 0) {
-//                videoFrameHeight = holder.itemView.displayFrameLayout.height
-//            }
-//            var w: Int = videoFrameWidth!!
-//            var h: Int = videoFrameHeight!!
-//            if (width != null && height != null && width!! > 0 && height!! > 0) {
-//                if (width!! > height!!) {
-//                    h = (w.toFloat() * height!! / width!!).toInt()
-//                } else if (videoFrameWidth!!.toFloat() / videoFrameHeight!! > width!!.toFloat() / height!!) {
-//                    h = (w.toFloat() * height!! / width!!).toInt()
-//                } else {
-//                    w = (videoFrameHeight!!.toFloat() * width!!.toFloat() / height!!).toInt()
-//                }
-//            }
-//            if (w != 0 && h != 0) {
-//                Log.i(TAG, "video: $width, $height")
-//                Log.i(TAG, "layout: $videoFrameWidth, $videoFrameHeight")
-//                Log.i(TAG, "param: $w, $h")
-//                val layoutParams = holder.itemView.displayFrameLayout.layoutParams
-//                layoutParams.height = h
-//                layoutParams.width = w
-//                holder.itemView.displayFrameLayout.layoutParams = layoutParams
-//            }
-
         }?.origin_cover?.url_list?.let {
             GlideUtils.load(it, holder.itemView.previewImg)
         }

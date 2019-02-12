@@ -14,9 +14,9 @@ buildscript {
         rxjava2Version = '2.1.7'
         rxandroidVersion = '2.1.0'
         glideVersion = '4.8.0'
-        lifecycleVersion = '2.1.0-alpha01'
-        roomVersion = '2.1.0-alpha03'
-        pagingVersion = '2.1.0-rc01'
+        lifecycleVersion = '2.1.0-alpha02'
+        roomVersion = '2.1.0-alpha04'
+        pagingVersion = '2.1.0'
         flavorDimensions = '1.0'
         arouterCompiler = '1.2.2'
     }

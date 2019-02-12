@@ -1,8 +1,6 @@
 package com.zl.core
 
 import android.annotation.SuppressLint
-import android.app.Application
-import android.content.Intent
 import androidx.multidex.MultiDexApplication
 import android.util.Log
 import com.alibaba.android.arouter.launcher.ARouter
@@ -14,7 +12,6 @@ import com.zl.core.utils.SystemInfoUtils
 import java.util.*
 import com.github.moduth.blockcanary.BlockCanary
 import com.github.moduth.blockcanary.BlockCanaryContext
-import com.github.moduth.blockcanary.internal.BlockInfo
 import com.squareup.leakcanary.LeakCanary
 
 
