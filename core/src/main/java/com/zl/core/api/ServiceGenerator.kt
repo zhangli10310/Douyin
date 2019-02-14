@@ -11,6 +11,9 @@ import com.google.gson.stream.JsonWriter
 import com.zl.core.BuildConfig
 import com.zl.core.MainApp
 import com.zl.core.api.interceptor.*
+import okhttp3.Cookie
+import okhttp3.CookieJar
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -20,6 +23,12 @@ import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
 import java.util.ArrayList
 import javax.net.ssl.*
+import android.R.attr.host
+import android.R.attr.host
+
+
+
+
 
 /**
  *
@@ -28,6 +37,8 @@ import javax.net.ssl.*
  * Created by zhangli on 2017/11/28 10:46.<br/>
  */
 object ServiceGenerator {
+
+    private val cookieStore = HashMap<String, MutableList<Cookie>>()
 
     private val TAG = ServiceGenerator::class.java.simpleName
 
@@ -112,6 +123,26 @@ object ServiceGenerator {
             Log.i(TAG, e.message)
         }
         builder.hostnameVerifier({ _, _ -> true })
+
+        builder.cookieJar(object :CookieJar{
+            override fun saveFromResponse(url: HttpUrl, cookies: MutableList<Cookie>) {
+                cookieStore.put(url.host(), cookies)
+            }
+
+            override fun loadForRequest(url: HttpUrl): MutableList<Cookie> {
+                val list = mutableListOf<Cookie>()
+                val cookies = cookieStore[url.host()]
+                list.add(Cookie.Builder()
+                        .hostOnlyDomain(url.host())
+                        .name("odin_tt").value("a68aed6c6ad4469e85e3f1b138d63ad5104924664a23b9be3cb2e4b7e8dffc5f864093a63de6b340612822c1a6c5f72b")
+                        .build())
+                if (cookies != null) {
+                    list.addAll(cookies)
+                }
+                return list
+            }
+
+        })
         return builder.build()
     }
 

@@ -34,6 +34,7 @@ class AddBaseParamInterceptor : Interceptor {
 
         val builder = request.newBuilder()
                 .addHeader("source", "android")
+                .header("User-Agent", "com.ss.android.ugc.aweme/321 (Linux; U; Android 6.0.1; zh_CN; ATH-AL00; Build/HONORATH-AL00; Cronet/58.0.2991.0)")
 
         return builder.build()
     }
