@@ -21,7 +21,7 @@ class MainPageRepository public constructor() {
 
     private val TAG = MainPageRepository::class.java.simpleName
 
-    private var mService: MainPageService = ServiceGenerator.createRxService(MainPageService::class.java)
+    private var mService: MainPageService = ServiceGenerator.createRxService(MainPageService::class.java, "https://aweme-eagle.snssdk.com/")
 
 
     companion object {
