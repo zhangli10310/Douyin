@@ -6,7 +6,7 @@
         android:name="com.zl.core.MainApp"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
-        android:label="module_live"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 

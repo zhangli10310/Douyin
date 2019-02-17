@@ -7,7 +7,6 @@ import com.zl.core.Router
 import com.zl.core.base.ModeActivity
 import com.zl.live.R
 import kotlinx.android.synthetic.main.activity_live_room.*
-import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 /**
  *
@@ -31,12 +30,7 @@ class LiveRoomActivity : ModeActivity(){
 
     override fun afterView() {
 
-        videoView.setOnErrorListener { _, _, _ ->
-            videoView.start()
-            true
-        }
-
-        videoView.setVideoURI(Uri.parse("rtmp://47.91.156.168:1935/live/1"))
+        videoView.setVideoURI(Uri.parse("http://47.91.156.168:8000/60200.mp4"))
         videoView.start()
     }
 }

@@ -1,18 +1,19 @@
 package com.zl.core
 
 import android.annotation.SuppressLint
-import androidx.multidex.MultiDexApplication
 import android.util.Log
+import androidx.multidex.MultiDexApplication
 import com.alibaba.android.arouter.launcher.ARouter
+import com.github.moduth.blockcanary.BlockCanary
+import com.github.moduth.blockcanary.BlockCanaryContext
+import com.squareup.leakcanary.LeakCanary
 import com.ss.android.common.applog.GlobalContext
 import com.zl.core.db.AppDatabase
 import com.zl.core.db.user.User
 import com.zl.core.utils.SPUtils
 import com.zl.core.utils.SystemInfoUtils
+import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
-import com.github.moduth.blockcanary.BlockCanary
-import com.github.moduth.blockcanary.BlockCanaryContext
-import com.squareup.leakcanary.LeakCanary
 
 
 /**
@@ -70,6 +71,8 @@ class MainApp: MultiDexApplication() {
             ARouter.openDebug()   // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
         }
         ARouter.init(this) // 尽可能早，推荐在Application中初始化
+
+        IjkMediaPlayer.loadLibrariesOnce(null)
     }
 
     fun getVersion(): String {

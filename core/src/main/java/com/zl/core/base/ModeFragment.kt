@@ -39,14 +39,14 @@ abstract class ModeFragment : BaseFragment() {
 
     }
 
-    abstract protected fun layoutId(): Int
+    protected abstract fun layoutId(): Int
 
-    abstract protected fun initView(savedInstanceState: Bundle?)
+    protected abstract fun initView(savedInstanceState: Bundle?)
 
     abstract fun setListener()
 
     abstract fun observe()
 
-    abstract protected fun afterView()
+    protected abstract fun afterView()
 
 }
