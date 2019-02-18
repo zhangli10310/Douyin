@@ -30,7 +30,7 @@ class LiveRoomActivity : ModeActivity(){
 
     override fun afterView() {
 
-        videoView.setVideoURI(Uri.parse("http://47.91.156.168:8000/60200.mp4"))
+        videoView.setVideoURI(Uri.parse(""))
         videoView.start()
     }
 }

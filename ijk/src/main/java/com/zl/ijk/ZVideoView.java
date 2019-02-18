@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 
 import com.zl.ijk.media.FileMediaDataSource;
+import com.zl.ijk.media.IMediaController;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,28 +43,43 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
     private static final int STATE_PAUSED = 4;
     private static final int STATE_PLAYBACK_COMPLETED = 5;
 
-    private int mCurrentState;
-    private int mTargetState;
-
-    private int mSeekWhenPrepared;
+    private int mCurrentState = STATE_IDLE;
+    private int mTargetState = STATE_IDLE;
 
     private ImageView mPreviewImage;
     private SurfaceView mSurfaceView;
     private SurfaceHolder mSurfaceHolder;
 
-    private IMediaPlayer mMediaPlayer;
+    private IMediaPlayer mMediaPlayer = null;
 
+    // private int         mAudioSession;
     private int mVideoWidth;
     private int mVideoHeight;
     private int mSurfaceWidth;
     private int mSurfaceHeight;
+    private int mVideoRotationDegree;
+    private IMediaController mMediaController;
+    private IMediaPlayer.OnCompletionListener mOnCompletionListener;
+    private IMediaPlayer.OnPreparedListener mOnPreparedListener;
+    private int mCurrentBufferPercentage;
+    private IMediaPlayer.OnErrorListener mOnErrorListener;
+    private IMediaPlayer.OnInfoListener mOnInfoListener;
+    private int mSeekWhenPrepared;  // recording the seek position while preparing
+    private boolean mCanPause = true;
+    private boolean mCanSeekBack = true;
+    private boolean mCanSeekForward = true;
+
+    private List<UriHeader> mUriHeaders;
+    private int mCurrentUriIndex = 0;
 
     private int mVideoSarNum;
     private int mVideoSarDen;
 
-    private int mVideoRotationDegree;
+    private long mPrepareStartTime = 0;
+    private long mPrepareEndTime = 0;
 
-    private List<Uri> mUris;
+    private long mSeekStartTime = 0;
+    private long mSeekEndTime = 0;
 
 
     private IMediaPlayer.OnPreparedListener mPreparedListener = new IMediaPlayer.OnPreparedListener() {
@@ -72,22 +88,48 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
 
             Log.i(TAG, "onPrepared: 准备完毕");
 
+            mPrepareEndTime = System.currentTimeMillis();
             mCurrentState = STATE_PREPARED;
 
+            // Get the capabilities of the player for this stream
+            // REMOVED: Metadata
+
+            if (mOnPreparedListener != null) {
+                mOnPreparedListener.onPrepared(mMediaPlayer);
+            }
+            if (mMediaController != null) {
+                mMediaController.setEnabled(true);
+            }
             mVideoWidth = mp.getVideoWidth();
             mVideoHeight = mp.getVideoHeight();
 
+            int seekToPosition = mSeekWhenPrepared;  // mSeekWhenPrepared may be changed after seekTo() call
+            if (seekToPosition != 0) {
+                seekTo(seekToPosition);
+            }
             if (mVideoWidth != 0 && mVideoHeight != 0) {
-                //Log.i("@@@@", "video size: " + mVideoWidth +"/"+ mVideoHeight);
-                // REMOVED: getHolder().setFixedSize(mVideoWidth, mVideoHeight);
-
-                mSurfaceView.getHolder().setFixedSize(mVideoWidth, mVideoHeight);
-                requestLayout();
-
-                if (mTargetState == STATE_PLAYING) {
-                    start();
+                if (mSurfaceHolder != null) {
+//                    mRenderView.setVideoSize(mVideoWidth, mVideoHeight);
+//                    mRenderView.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
+                    mSurfaceHolder.setFixedSize(mVideoWidth, mVideoHeight);
+                    if (mSurfaceWidth == mVideoWidth && mSurfaceHeight == mVideoHeight) {
+                        // We didn't actually change the size (it was already at the size
+                        // we need), so we won't get a "surface changed" callback, so
+                        // start the video here instead of in the callback.
+                        if (mTargetState == STATE_PLAYING) {
+                            start();
+                            if (mMediaController != null) {
+                                mMediaController.show();
+                            }
+                        } else if (!isPlaying() &&
+                                (seekToPosition != 0 || getCurrentPosition() > 0)) {
+                            if (mMediaController != null) {
+                                // Show the media controls when we're paused into a video and make 'em stick.
+                                mMediaController.show(0);
+                            }
+                        }
+                    }
                 }
-
             } else {
                 // We don't know the video size yet, but should start anyway.
                 // The video size might be reported to us later.
@@ -103,6 +145,12 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
                 public void onCompletion(IMediaPlayer mp) {
                     mCurrentState = STATE_PLAYBACK_COMPLETED;
                     mTargetState = STATE_PLAYBACK_COMPLETED;
+                    if (mMediaController != null) {
+                        mMediaController.hide();
+                    }
+                    if (mOnCompletionListener != null) {
+                        mOnCompletionListener.onCompletion(mMediaPlayer);
+                    }
                 }
             };
 
@@ -143,7 +191,8 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
                         case IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
                             mVideoRotationDegree = arg2;
                             Log.d(TAG, "MEDIA_INFO_VIDEO_ROTATION_CHANGED: " + arg2);
-                            break;
+//                            if (mRenderView != null)
+//                                mRenderView.setVideoRotation(arg2);
                         case IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START:
                             Log.d(TAG, "MEDIA_INFO_AUDIO_RENDERING_START:");
                             break;
@@ -160,8 +209,10 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
                     mVideoSarNum = mp.getVideoSarNum();
                     mVideoSarDen = mp.getVideoSarDen();
                     if (mVideoWidth != 0 && mVideoHeight != 0) {
-                        mSurfaceView.getHolder().setFixedSize(mVideoWidth, mVideoHeight);
-                        // REMOVED: getHolder().setFixedSize(mVideoWidth, mVideoHeight);
+//                        if (mRenderView != null) {
+//                            mRenderView.setVideoSize(mVideoWidth, mVideoHeight);
+//                            mRenderView.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
+//                        }
                         requestLayout();
                     }
                 }
@@ -173,6 +224,16 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
                     Log.d(TAG, "Error: " + framework_err + "," + impl_err);
                     mCurrentState = STATE_ERROR;
                     mTargetState = STATE_ERROR;
+                    if (mMediaController != null) {
+                        mMediaController.hide();
+                    }
+
+                    /* If an error handler has been supplied, use it and finish. */
+                    if (mOnErrorListener != null) {
+                        if (mOnErrorListener.onError(mMediaPlayer, framework_err, impl_err)) {
+                            return true;
+                        }
+                    }
                     return true;
                 }
             };
@@ -181,6 +242,7 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
             new IMediaPlayer.OnBufferingUpdateListener() {
                 public void onBufferingUpdate(IMediaPlayer mp, int percent) {
                     Log.d(TAG, "onBufferingUpdate: " + percent);
+                    mCurrentBufferPercentage = percent;
                 }
             };
 
@@ -189,6 +251,7 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
         @Override
         public void onSeekComplete(IMediaPlayer mp) {
             Log.d(TAG, "onSeekComplete: ");
+            mSeekEndTime = System.currentTimeMillis();
         }
     };
 
@@ -258,22 +321,18 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
 
     private void init() {
 
-        mUris = new ArrayList<>();
+        mUriHeaders = new ArrayList<>();
 
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 Gravity.CENTER);
         mSurfaceView = new ZSurfaceView(getContext());
+        mSurfaceView.getHolder().addCallback(mSurfaceCallback);
         mPreviewImage = new ImageView(getContext());
         
-//        addView(mPreviewImage, lp);
-        mSurfaceView.setLayoutParams(lp);
-        addView(mSurfaceView);
-
-//        mSurfaceView.getHolder().addCallback(mSurfaceCallback);
-//        //noinspection deprecation
-//        mSurfaceView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        addView(mPreviewImage, lp);
+        addView(mSurfaceView, lp);
         
         setFocusable(true);
         setFocusableInTouchMode(true);
@@ -283,76 +342,12 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
         mTargetState = STATE_IDLE;
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        //Log.i("@@@@", "onMeasure(" + MeasureSpec.toString(widthMeasureSpec) + ", "
-        //        + MeasureSpec.toString(heightMeasureSpec) + ")");
-
-        int width = getDefaultSize(mVideoWidth, widthMeasureSpec);
-        int height = getDefaultSize(mVideoHeight, heightMeasureSpec);
-        if (mVideoWidth > 0 && mVideoHeight > 0) {
-
-            int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
-            int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
-            int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
-            int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
-
-            if (widthSpecMode == MeasureSpec.EXACTLY && heightSpecMode == MeasureSpec.EXACTLY) {
-                // the size is fixed
-                width = widthSpecSize;
-                height = heightSpecSize;
-
-                // for compatibility, we adjust size based on aspect ratio
-                if ( mVideoWidth * height  < width * mVideoHeight ) {
-                    //Log.i("@@@", "image too wide, correcting");
-                    width = height * mVideoWidth / mVideoHeight;
-                } else if ( mVideoWidth * height  > width * mVideoHeight ) {
-                    //Log.i("@@@", "image too tall, correcting");
-                    height = width * mVideoHeight / mVideoWidth;
-                }
-            } else if (widthSpecMode == MeasureSpec.EXACTLY) {
-                // only the width is fixed, adjust the height to match aspect ratio if possible
-                width = widthSpecSize;
-                height = width * mVideoHeight / mVideoWidth;
-                if (heightSpecMode == MeasureSpec.AT_MOST && height > heightSpecSize) {
-                    // couldn't match aspect ratio within the constraints
-                    height = heightSpecSize;
-                }
-            } else if (heightSpecMode == MeasureSpec.EXACTLY) {
-                // only the height is fixed, adjust the width to match aspect ratio if possible
-                height = heightSpecSize;
-                width = height * mVideoWidth / mVideoHeight;
-                if (widthSpecMode == MeasureSpec.AT_MOST && width > widthSpecSize) {
-                    // couldn't match aspect ratio within the constraints
-                    width = widthSpecSize;
-                }
-            } else {
-                // neither the width nor the height are fixed, try to use actual video size
-                width = mVideoWidth;
-                height = mVideoHeight;
-                if (heightSpecMode == MeasureSpec.AT_MOST && height > heightSpecSize) {
-                    // too tall, decrease both width and height
-                    height = heightSpecSize;
-                    width = height * mVideoWidth / mVideoHeight;
-                }
-                if (widthSpecMode == MeasureSpec.AT_MOST && width > widthSpecSize) {
-                    // too wide, decrease both width and height
-                    width = widthSpecSize;
-                    height = width * mVideoHeight / mVideoWidth;
-                }
-            }
-        } else {
-            // no size yet, just adopt the given spec sizes
-        }
-        setMeasuredDimension(width, height);
-    }
-
     private IMediaPlayer createDefaultIjkMediaPlayer() {
         IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
         ijkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
 
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1); //使用硬解码
-//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 0); //使用软解码
+//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1); //使用硬解码
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 0); //使用软解码
 
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);  //自动旋转屏幕
 //        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 0);
@@ -388,8 +383,9 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
     }
 
     public void setVideoURI(Uri uri) {
-        mUris.clear();
-        mUris.add(uri);
+        mUriHeaders.clear();
+        mUriHeaders.add(new UriHeader(uri, null));
+        mCurrentUriIndex = 0;
 
         openVideo();
         requestLayout();
@@ -400,18 +396,20 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
         setVideoURI(Uri.parse(path));
     }
 
-    public void setUriList(List<Uri> list) {
-        mUris.clear();
-        mUris.addAll(list);
+    public void setUriList(List<UriHeader> list) {
+        mUriHeaders.clear();
+        mUriHeaders.addAll(list);
+        mCurrentUriIndex = 0;
 
         openVideo();
         requestLayout();
+        invalidate();
     }
 
     private void openVideo() {
 
 
-        if (mUris.isEmpty() || mSurfaceHolder == null) {
+        if (mUriHeaders.isEmpty() || mSurfaceHolder == null) {
             return;
         }
         release(false);
@@ -428,16 +426,16 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
             mMediaPlayer.setOnSeekCompleteListener(mSeekCompleteListener);
             mMediaPlayer.setOnTimedTextListener(mOnTimedTextListener);
 
-            Uri uri = mUris.get(0);
-            String scheme = uri.getScheme();
+            UriHeader uriHeader = mUriHeaders.get(mCurrentUriIndex);
+            String scheme = uriHeader.uri.getScheme();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                     (TextUtils.isEmpty(scheme) || scheme.equalsIgnoreCase("file"))) {
-                IMediaDataSource dataSource = new FileMediaDataSource(new File(uri.toString()));
+                IMediaDataSource dataSource = new FileMediaDataSource(new File(uriHeader.uri.toString()));
                 mMediaPlayer.setDataSource(dataSource);
             }  else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                mMediaPlayer.setDataSource(getContext().getApplicationContext(), uri);
+                mMediaPlayer.setDataSource(getContext().getApplicationContext(), uriHeader.uri, uriHeader.headers);
             } else {
-                mMediaPlayer.setDataSource(uri.toString());
+                mMediaPlayer.setDataSource(uriHeader.uri.toString());
             }
             bindSurfaceHolder(mMediaPlayer, mSurfaceView.getHolder());
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -449,7 +447,9 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
             // we don't set the target state here either, but preserve the
             // target state that was there before.
             mCurrentState = STATE_PREPARING;
+//            attachMediaController();
         } catch (Exception e) {
+            Log.e(TAG, "openVideo: ", e);
             mCurrentState = STATE_ERROR;
             mTargetState = STATE_ERROR;
         }
@@ -505,6 +505,18 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
     public void releaseWithoutStop() {
         if (mMediaPlayer != null)
             mMediaPlayer.setDisplay(null);
+    }
+
+    public void stopPlayback() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+            mCurrentState = STATE_IDLE;
+            mTargetState = STATE_IDLE;
+            AudioManager am = (AudioManager) getContext().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+            am.abandonAudioFocus(null);
+        }
     }
 
     @Override
@@ -563,13 +575,67 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
         return 0;
     }
 
-    class ZSurfaceView extends SurfaceView {
-
-        public ZSurfaceView(Context context) {
-            super(context);
-            getHolder().addCallback(mSurfaceCallback);
-            getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        }
+    public IMediaPlayer.OnPreparedListener getPreparedListener() {
+        return mPreparedListener;
     }
 
+    public void setPreparedListener(IMediaPlayer.OnPreparedListener preparedListener) {
+        mPreparedListener = preparedListener;
+    }
+
+    public IMediaPlayer.OnCompletionListener getCompletionListener() {
+        return mCompletionListener;
+    }
+
+    public void setCompletionListener(IMediaPlayer.OnCompletionListener completionListener) {
+        mCompletionListener = completionListener;
+    }
+
+    public IMediaPlayer.OnInfoListener getInfoListener() {
+        return mInfoListener;
+    }
+
+    public void setInfoListener(IMediaPlayer.OnInfoListener infoListener) {
+        mInfoListener = infoListener;
+    }
+
+    public IMediaPlayer.OnVideoSizeChangedListener getSizeChangedListener() {
+        return mSizeChangedListener;
+    }
+
+    public void setSizeChangedListener(IMediaPlayer.OnVideoSizeChangedListener sizeChangedListener) {
+        mSizeChangedListener = sizeChangedListener;
+    }
+
+    public IMediaPlayer.OnErrorListener getErrorListener() {
+        return mErrorListener;
+    }
+
+    public void setErrorListener(IMediaPlayer.OnErrorListener errorListener) {
+        mErrorListener = errorListener;
+    }
+
+    public IMediaPlayer.OnBufferingUpdateListener getBufferingUpdateListener() {
+        return mBufferingUpdateListener;
+    }
+
+    public void setBufferingUpdateListener(IMediaPlayer.OnBufferingUpdateListener bufferingUpdateListener) {
+        mBufferingUpdateListener = bufferingUpdateListener;
+    }
+
+    public IMediaPlayer.OnSeekCompleteListener getSeekCompleteListener() {
+        return mSeekCompleteListener;
+    }
+
+    public void setSeekCompleteListener(IMediaPlayer.OnSeekCompleteListener seekCompleteListener) {
+        mSeekCompleteListener = seekCompleteListener;
+    }
+
+    public IMediaPlayer.OnTimedTextListener getOnTimedTextListener() {
+        return mOnTimedTextListener;
+    }
+
+    public void setOnTimedTextListener(IMediaPlayer.OnTimedTextListener onTimedTextListener) {
+        mOnTimedTextListener = onTimedTextListener;
+    }
 }
