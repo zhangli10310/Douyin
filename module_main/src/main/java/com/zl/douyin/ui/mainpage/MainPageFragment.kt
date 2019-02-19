@@ -25,6 +25,7 @@ import com.zl.core.view.RVGestureDetector
 import com.zl.douyin.R
 import com.zl.douyin.ui.comment.CommentDialogFragment
 import com.zl.douyin.ui.main.SharedViewModel
+import com.zl.ijk.UriHeader
 import com.zl.ijk.media.IRenderView
 import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.item_main_video.view.*
@@ -202,7 +203,6 @@ class MainPageFragment : ModeFragment() {
     private fun stopLastVideo() {
         if (lastHolder != null) {
             lastHolder!!.itemView.videoView.release(true)
-            lastHolder!!.itemView.videoView.visibility = View.INVISIBLE
         }
     }
 
@@ -214,54 +214,11 @@ class MainPageFragment : ModeFragment() {
             Log.i(TAG, "play: holder null")
             return
         }
-        var i = 0
-//        holder.itemView.videoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW)
-        holder.itemView.videoView.setAspectRatio(IRenderView.AR_MATCH_WIDTH)
-        holder.itemView.videoView.setOnCompletionListener {
-            Log.i(TAG, "setOnCompletionListener: ")
-            holder.itemView.videoView.start()
+        val uriList = mutableListOf<UriHeader>()
+        for (url in urls) {
+            uriList.add(UriHeader(Uri.parse(url)))
         }
-        holder.itemView.videoView.setOnPreparedListener {
-            Log.i(TAG, "setOnPreparedListener: ")
-            holder.itemView.videoView.start()
-        }
-
-        holder.itemView.videoView.setOnInfoListener { _, arg2, _ ->
-
-            //int MEDIA_INFO_VIDEO_RENDERING_START = 3;//视频准备渲染
-            //int MEDIA_INFO_BUFFERING_START = 701;//开始缓冲
-            //int MEDIA_INFO_BUFFERING_END = 702;//缓冲结束
-            //int MEDIA_INFO_VIDEO_ROTATION_CHANGED = 10001;//视频选择信息
-            //int MEDIA_ERROR_SERVER_DIED = 100;//视频中断，一般是视频源异常或者不支持的视频类型。
-            //int MEDIA_ERROR_IJK_PLAYER = -10000,//一般是视频源有问题或者数据格式不支持，比如音频不是AAC之类的
-            //int MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK = 200;//数据错误没有有效的回收
-            Log.d(TAG, arg2.toString())
-            when (arg2) {
-                IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START -> {
-                    Log.d(TAG, "MEDIA_INFO_VIDEO_RENDERING_START:")
-                    holder.itemView.videoView.postDelayed({
-                        holder.itemView.videoView.visibility = View.VISIBLE
-                    }, 180) //不延迟会有黑屏
-                }
-                IMediaPlayer.MEDIA_INFO_BUFFERING_START -> { //缓冲
-                    holder.itemView.bufferProgressBar.visibility = View.VISIBLE
-                }
-                IMediaPlayer.MEDIA_INFO_BUFFERING_END -> { //缓冲结束
-                    holder.itemView.bufferProgressBar.visibility = View.GONE
-                }
-            }
-            true
-        }
-        holder.itemView.videoView.setOnErrorListener { _, _, _ ->
-            i++
-            if (i >= urls.size) {
-                return@setOnErrorListener true
-            }
-            holder.itemView.videoView.setVideoURI(Uri.parse(urls[i]))
-            holder.itemView.videoView.start()
-            true
-        }
-        holder.itemView.videoView.setVideoURI(Uri.parse(urls[i]))
+        holder.itemView.videoView.setUriList(uriList)
         holder.itemView.pauseImg.visibility = View.GONE
         lastHolder = holder
     }

@@ -2,26 +2,28 @@ package com.zl.ijk;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.SurfaceView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 
 /**
  * <p></p>
  * <p>
- * Created by zhangli on 2019/2/18 19:06.<br/>
+ * Created by zhangli on 2019/2/19 16:54.<br/>
  */
-public class ZSurfaceView extends SurfaceView {
+public class ZImageView extends AppCompatImageView {
 
     private ZMeasureHelper mMeasureHelper;
 
-    public ZSurfaceView(Context context) {
-        this(context, null);
+    public ZImageView(Context context) {
+        super(context);
     }
 
-    public ZSurfaceView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public ZImageView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
     }
 
-    public ZSurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ZImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

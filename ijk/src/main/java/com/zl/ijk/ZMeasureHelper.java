@@ -1,5 +1,6 @@
 package com.zl.ijk;
 
+import android.util.Log;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
@@ -11,8 +12,13 @@ import java.lang.ref.WeakReference;
  */
 public class ZMeasureHelper {
 
-    public static final int AR_MATCH_PARENT = 0;
-    public static final int AR_MATCH_WIDTH = 1;
+    private static final String TAG = "ZMeasureHelper";
+
+    public static final int AR_FILL_PARENT = 0; //充满屏幕，可能拉伸
+    public static final int AR_MATCH_WIDTH = 1; //宽度充满，高度按比例放缩
+    public static final int AR_MATCH_HEIGHT = 2; //高度充满，宽度按比例放缩
+    public static final int AR_MATCH_PARENT = 3; //宽高均按比例放缩充满父容器，可能有丢失
+    public static final int AR_FILL_LOSS_10 = 4; //丢失在10%以内充满屏幕，否则按高度或者宽度适配
 
     private WeakReference<View> mWeakView;
 
@@ -26,7 +32,7 @@ public class ZMeasureHelper {
     private int mMeasuredWidth;
     private int mMeasuredHeight;
 
-    private int mCurrentAspectRatio = AR_MATCH_WIDTH;
+    private int mCurrentAspectRatio = AR_FILL_LOSS_10;
 
     public ZMeasureHelper(View view) {
         mWeakView = new WeakReference<View>(view);
@@ -41,6 +47,11 @@ public class ZMeasureHelper {
     public void setVideoSize(int videoWidth, int videoHeight) {
         mVideoWidth = videoWidth;
         mVideoHeight = videoHeight;
+
+        View view = getView();
+        if (view != null) {
+            view.requestLayout();
+        }
     }
 
     public void setVideoSampleAspectRatio(int videoSarNum, int videoSarDen) {
@@ -59,8 +70,9 @@ public class ZMeasureHelper {
      * @param heightMeasureSpec
      */
     public void doMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        //Log.i("@@@@", "onMeasure(" + MeasureSpec.toString(widthMeasureSpec) + ", "
-        //        + MeasureSpec.toString(heightMeasureSpec) + ")");
+        Log.d(TAG, "doMeasure mVideoWidth:" + mVideoWidth + " mVideoHeight:" + mVideoHeight);
+        Log.d(TAG, "onMeasure(" + View.MeasureSpec.toString(widthMeasureSpec) + ", "
+                + View.MeasureSpec.toString(heightMeasureSpec) + ")");
         if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270) {
             int tempSpec = widthMeasureSpec;
             widthMeasureSpec = heightMeasureSpec;
@@ -69,6 +81,8 @@ public class ZMeasureHelper {
 
         int width = View.getDefaultSize(mVideoWidth, widthMeasureSpec);
         int height = View.getDefaultSize(mVideoHeight, heightMeasureSpec);
+
+        Log.d(TAG, "doMeasure,default width:" + width + " height:" + height);
         if (mCurrentAspectRatio == AR_MATCH_PARENT) {
             width = widthMeasureSpec;
             height = heightMeasureSpec;
@@ -78,26 +92,28 @@ public class ZMeasureHelper {
             int heightSpecMode = View.MeasureSpec.getMode(heightMeasureSpec);
             int heightSpecSize = View.MeasureSpec.getSize(heightMeasureSpec);
 
-            if (mCurrentAspectRatio == AR_MATCH_WIDTH) {
+            Log.d(TAG, "doMeasure widthSpecSize:" + widthSpecSize + " heightSpecSize:" + heightSpecSize);
+            if (mCurrentAspectRatio == AR_FILL_PARENT) {
                 width = widthSpecSize;
                 height = (int) (width * 1.0 * mVideoHeight / mVideoWidth);
-            }  else if (widthSpecMode == View.MeasureSpec.AT_MOST && heightSpecMode == View.MeasureSpec.AT_MOST) {
+            } else if (widthSpecMode == View.MeasureSpec.AT_MOST && heightSpecMode == View.MeasureSpec.AT_MOST) {
                 float specAspectRatio = (float) widthSpecSize / (float) heightSpecSize;
                 float displayAspectRatio;
                 switch (mCurrentAspectRatio) {
-//                    case IRenderView.AR_16_9_FIT_PARENT:
+//                    case AR_MATCH_WIDTH:
 //                        displayAspectRatio = 16.0f / 9.0f;
 //                        if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270)
 //                            displayAspectRatio = 1.0f / displayAspectRatio;
 //                        break;
-//                    case IRenderView.AR_4_3_FIT_PARENT:
+//                    case AR_MATCH_HEIGHT:
 //                        displayAspectRatio = 4.0f / 3.0f;
 //                        if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270)
 //                            displayAspectRatio = 1.0f / displayAspectRatio;
 //                        break;
-//                    case IRenderView.AR_ASPECT_FIT_PARENT:
-//                    case IRenderView.AR_ASPECT_FILL_PARENT:
-//                    case IRenderView.AR_ASPECT_WRAP_CONTENT:
+//                    case AR_MATCH_PARENT:
+//                        break;
+//                    case AR_FILL_LOSS_10:
+//                        break;
                     default:
                         displayAspectRatio = (float) mVideoWidth / (float) mVideoHeight;
                         if (mVideoSarNum > 0 && mVideoSarDen > 0)
@@ -106,32 +122,42 @@ public class ZMeasureHelper {
                 }
                 boolean shouldBeWider = displayAspectRatio > specAspectRatio;
 
+                Log.d(TAG, "doMeasure displayAspectRatio:" + displayAspectRatio + ", specAspectRatio" + specAspectRatio);
                 switch (mCurrentAspectRatio) {
-//                    case IRenderView.AR_ASPECT_FIT_PARENT:
-//                    case IRenderView.AR_16_9_FIT_PARENT:
-//                    case IRenderView.AR_4_3_FIT_PARENT:
-//                        if (shouldBeWider) {
-//                            // too wide, fix width
-//                            width = widthSpecSize;
-//                            height = (int) (width / displayAspectRatio);
-//                        } else {
-//                            // too high, fix height
-//                            height = heightSpecSize;
-//                            width = (int) (height * displayAspectRatio);
-//                        }
-//                        break;
-//                    case IRenderView.AR_ASPECT_FILL_PARENT:
-//                        if (shouldBeWider) {
-//                            // not high enough, fix height
-//                            height = heightSpecSize;
-//                            width = (int) (height * displayAspectRatio);
-//                        } else {
-//                            // not wide enough, fix width
-//                            width = widthSpecSize;
-//                            height = (int) (width / displayAspectRatio);
-//                        }
-//                        break;
-//                    case IRenderView.AR_ASPECT_WRAP_CONTENT:
+                    case AR_MATCH_WIDTH:
+                        width = widthSpecSize;
+                        height = (int) (width * 1.0 * mVideoHeight / mVideoWidth);
+                        break;
+                    case AR_MATCH_HEIGHT:
+                        height = heightSpecSize;
+                        width = (int) (height * 1.0 * mVideoWidth / mVideoHeight);
+                        break;
+                    case AR_MATCH_PARENT:
+                        if (specAspectRatio < displayAspectRatio) {
+                            height = heightSpecSize;
+                            width = (int) (height * 1.0 * mVideoWidth / mVideoHeight);
+                        } else {
+                            width = widthSpecSize;
+                            height = (int) (width * 1.0 * mVideoHeight / mVideoWidth);
+                        }
+                        break;
+                    case AR_FILL_LOSS_10:
+                        if (specAspectRatio / displayAspectRatio < 1.1f && specAspectRatio / displayAspectRatio > 0.9) {
+                            if (specAspectRatio < displayAspectRatio) {
+                                height = heightSpecSize;
+                                width = (int) (height * 1.0 * mVideoWidth / mVideoHeight);
+                            } else {
+                                width = widthSpecSize;
+                                height = (int) (width * 1.0 * mVideoHeight / mVideoWidth);
+                            }
+                        } else if (specAspectRatio / displayAspectRatio >= 1.1f){
+                            height = heightSpecSize;
+                            width = (int) (height * 1.0 * mVideoWidth / mVideoHeight);
+                        } else {
+                            width = widthSpecSize;
+                            height = (int) (width * 1.0 * mVideoHeight / mVideoWidth);
+                        }
+                        break;
                     default:
                         if (shouldBeWider) {
                             // too wide, fix width

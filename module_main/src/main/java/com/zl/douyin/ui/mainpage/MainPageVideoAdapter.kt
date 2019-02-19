@@ -58,14 +58,17 @@ class MainPageVideoAdapter(private var list: MutableList<FeedItem>) : RecyclerVi
         feedItem.video?.apply {
 
             Log.i(TAG, "data:width=$width, height=$height")
+            holder.itemView.videoView.setVideoSize(width ?: 0, height ?: 0)
 
         }?.origin_cover?.url_list?.let {
-            GlideUtils.load(it, holder.itemView.previewImg)
+            GlideUtils.load(it, holder.itemView.videoView.previewImage)
         }
 
         if (!feedItem.region.isNullOrEmpty()) {
             holder.itemView.regionText.text = feedItem.region
         }
+
+        holder.itemView.videoView.isLoop = true
     }
 
     fun registerViewClick(viewClick: ((ViewHolder) -> Unit)) {
