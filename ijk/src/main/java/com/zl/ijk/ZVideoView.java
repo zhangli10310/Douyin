@@ -41,7 +41,8 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
     private static final int STATE_PREPARED = 2;
     private static final int STATE_PLAYING = 3;
     private static final int STATE_PAUSED = 4;
-    private static final int STATE_PLAYBACK_COMPLETED = 5;
+    private static final int STATE_STOPPED = 5;
+    private static final int STATE_PLAYBACK_COMPLETED = 6;
 
     private int mCurrentState = STATE_IDLE;
     private int mTargetState = STATE_IDLE;
@@ -82,7 +83,6 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
     private long mSeekEndTime = 0;
 
     private boolean mLoop = false;
-    private boolean renderVideoStart = false; //是否  到IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
 
     private ZMeasureHelper mMeasureHelper;
 
@@ -158,9 +158,6 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
                     if (mOnCompletionListener != null) {
                         mOnCompletionListener.onCompletion(mMediaPlayer);
                     }
-                    if (mLoop) {
-                        start();
-                    }
                 }
             };
 
@@ -173,7 +170,7 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
                             break;
                         case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
                             Log.d(TAG, "MEDIA_INFO_VIDEO_RENDERING_START:");
-                            renderVideoStart = true;
+                            mPreviewImage.setVisibility(INVISIBLE);
                             break;
                         case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
                             Log.d(TAG, "MEDIA_INFO_BUFFERING_START:");
@@ -249,6 +246,7 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
                     }
                     if (mCurrentUriIndex < mUriHeaders.size() - 1) {
                         mCurrentUriIndex++;
+                        openVideo();
                     }
                     return true;
                 }
@@ -259,14 +257,6 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
                 public void onBufferingUpdate(IMediaPlayer mp, int percent) {
                     Log.d(TAG, "onBufferingUpdate: " + percent);
                     mCurrentBufferPercentage = percent;
-                    if (mPreviewImage.getVisibility() == VISIBLE && renderVideoStart) {
-                        mPreviewImage.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mPreviewImage.setVisibility(INVISIBLE);
-                            }
-                        });
-                    }
                 }
             };
 
@@ -295,8 +285,8 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
 
             if (mMediaPlayer != null)
                 bindSurfaceHolder(mMediaPlayer, holder);
-            else
-                openVideo();
+//            else
+//                openVideo();
 
         }
 
@@ -325,7 +315,7 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
                 if (mSeekWhenPrepared != 0) {
                     seekTo(mSeekWhenPrepared);
                 }
-                start();
+//                start();
             }
 
         }
@@ -375,13 +365,13 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
 
     private IMediaPlayer createDefaultIjkMediaPlayer() {
         IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
-        ijkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
+        IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_INFO);
 
 //        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1); //使用硬解码
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 0); //使用软解码
 
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);  //自动旋转屏幕
-//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 0);
+//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);  //自动旋转屏幕
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 0);
 
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1);//处理分辨率变化
 //        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 0);
@@ -458,6 +448,7 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
             mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             mMediaPlayer.setOnSeekCompleteListener(mSeekCompleteListener);
             mMediaPlayer.setOnTimedTextListener(mOnTimedTextListener);
+            mMediaPlayer.setLooping(mLoop);
 
             mCurrentBufferPercentage = 0;
 
@@ -472,7 +463,7 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
             } else {
                 mMediaPlayer.setDataSource(uriHeader.uri.toString());
             }
-            bindSurfaceHolder(mMediaPlayer, mSurfaceView.getHolder());
+            bindSurfaceHolder(mMediaPlayer, mSurfaceHolder);
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mMediaPlayer.setScreenOnWhilePlaying(true);
             mMediaPlayer.prepareAsync();
@@ -503,12 +494,7 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
             if (cleartargetstate) {
                 mTargetState = STATE_IDLE;
             }
-            mCurrentUriIndex = 0;
-            renderVideoStart = false;
-            AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
-            if (am != null) {
-                am.abandonAudioFocus(null);
-            }
+            abandonAudioFocus();
         }
         mPreviewImage.setVisibility(VISIBLE);
     }
@@ -517,6 +503,7 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
         return (mMediaPlayer != null &&
                 mCurrentState != STATE_ERROR &&
                 mCurrentState != STATE_IDLE &&
+                mCurrentState != STATE_STOPPED &&
                 mCurrentState != STATE_PREPARING);
     }
 
@@ -553,10 +540,26 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
 //            mCurrentUriIndex = 0;
 //            mCurrentState = STATE_IDLE;
 //            mTargetState = STATE_IDLE;
-//            AudioManager am = (AudioManager) getContext().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-//            am.abandonAudioFocus(null);
+//        abandonAudioFocus();
 //        }
         release(true);
+    }
+
+    public void stopAndPrepare() {
+        mTargetState = STATE_PREPARED;
+        if (isInPlaybackState()) {
+            mMediaPlayer.stop();
+            mCurrentState = STATE_STOPPED;
+            mMediaPlayer.prepareAsync();
+        }
+        mPreviewImage.setVisibility(VISIBLE);
+    }
+
+    public void abandonAudioFocus(){
+        AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        if (am != null) {
+            am.abandonAudioFocus(null);
+        }
     }
 
     @Override
@@ -689,6 +692,9 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
 
     public void setLoop(boolean loop) {
         mLoop = loop;
+        if (mMediaPlayer != null) {
+            mMediaPlayer.setLooping(loop);
+        }
     }
 
     public ImageView getPreviewImage() {

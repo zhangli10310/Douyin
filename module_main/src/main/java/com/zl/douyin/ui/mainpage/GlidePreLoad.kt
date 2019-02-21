@@ -1,11 +1,26 @@
 package com.zl.douyin.ui.mainpage
 
-/**
- *
- *<p></p>
- *
- * Created by zhangli on 2019/2/20 14:44.<br/>
- * Copyright (c) 2015年 Beijing Yunshan Information Technology Co., Ltd. All rights reserved.<br/>
- */
-class GlidePreLoad {
+import android.content.Context
+import androidx.fragment.app.Fragment
+import com.bumptech.glide.ListPreloader
+import com.bumptech.glide.RequestBuilder
+import com.zl.core.GlideApp
+import com.zl.core.utils.GlideUtils
+
+
+class MyPreloadModelProvider(private val context: Fragment, private val list: MutableList<FeedItem>): ListPreloader.PreloadModelProvider<FeedItem> {
+
+    override fun getPreloadRequestBuilder(item: FeedItem): RequestBuilder<*>? {
+        item.video?.origin_cover?.url_list?.let {
+            return GlideApp.with(context).load(it[0])
+        }
+        return null
+    }
+
+    override fun getPreloadItems(position: Int): MutableList<FeedItem> {
+        return list
+    }
+
+
+
 }

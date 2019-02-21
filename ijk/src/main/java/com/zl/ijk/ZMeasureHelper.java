@@ -45,12 +45,14 @@ public class ZMeasureHelper {
     }
 
     public void setVideoSize(int videoWidth, int videoHeight) {
-        mVideoWidth = videoWidth;
-        mVideoHeight = videoHeight;
+        if (mVideoWidth != videoWidth || mVideoHeight != videoHeight) {
+            mVideoWidth = videoWidth;
+            mVideoHeight = videoHeight;
 
-        View view = getView();
-        if (view != null) {
-            view.requestLayout();
+            View view = getView();
+            if (view != null) {
+                view.requestLayout();
+            }
         }
     }
 

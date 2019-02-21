@@ -18,6 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
+import com.bumptech.glide.util.FixedPreloadSizeProvider
+import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.zl.core.Router
 import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
@@ -135,7 +139,7 @@ class MainPageFragment : ModeFragment() {
             }
         }
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() { //加载更多，停止播放上一个视频并播放当前的
 
             var lastIndex = 0
 
@@ -160,12 +164,7 @@ class MainPageFragment : ModeFragment() {
 
                             stopLastVideo()
 
-                            list[index].video?.play_addr?.url_list?.let {
-                                if (it.isEmpty()) {
-                                    return
-                                }
-                                play(index, it)
-                            }
+                            play(index)
 
                             lastIndex = index
                         }
@@ -187,6 +186,11 @@ class MainPageFragment : ModeFragment() {
             }
         })
 
+//        val viewPreloadSizeProvider = ViewPreloadSizeProvider<FeedItem>()
+//        val preloader = RecyclerViewPreloader<FeedItem>(
+//                Glide.with(this), MyPreloadModelProvider(this, list), viewPreloadSizeProvider, 2 /*maxPreload*/)
+//        recyclerView.addOnScrollListener(preloader)
+
         searchImg.setOnClickListener {
             shareViewModel.gotoViewPagerPosition.postValue(0)
         }
@@ -202,23 +206,26 @@ class MainPageFragment : ModeFragment() {
 
     private fun stopLastVideo() {
         if (lastHolder != null) {
+            Log.d(TAG, "stopLastVideo: ")
             lastHolder!!.itemView.videoView.release(true)
         }
     }
 
     private var lastHolder: RecyclerView.ViewHolder? = null
 
-    private fun play(index: Int, urls: List<String>) {
+    private fun play(index: Int) {
         val holder = recyclerView.findViewHolderForAdapterPosition(index)
         if (holder == null) {
             Log.i(TAG, "play: holder null")
             return
         }
+        Log.i(TAG, "recycler child count: " + recyclerView.childCount)
         val uriList = mutableListOf<UriHeader>()
-        for (url in urls) {
+        for (url in list[index].video!!.play_addr!!.url_list!!) {
             uriList.add(UriHeader(Uri.parse(url)))
         }
         holder.itemView.videoView.setUriList(uriList)
+//        holder.itemView.videoView.start()
         holder.itemView.pauseImg.visibility = View.GONE
         lastHolder = holder
     }
@@ -324,9 +331,7 @@ class MainPageFragment : ModeFragment() {
                         shareViewModel.currentSelectUser.postValue(it)
                     }
                     recyclerView.post {
-                        list[0].video?.play_addr?.url_list?.let {
-                            play(0, it)
-                        }
+                        play(0)
                     }
                 }
             }

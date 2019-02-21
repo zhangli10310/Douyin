@@ -1,5 +1,6 @@
 package com.zl.douyin.ui.mainpage
 
+import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import com.zl.core.extend.inflate
 import com.zl.core.utils.CommonUtils
 import com.zl.core.utils.GlideUtils
 import com.zl.douyin.R
+import com.zl.ijk.UriHeader
 import kotlinx.android.synthetic.main.item_main_video.view.*
 
 /**
@@ -23,6 +25,7 @@ class MainPageVideoAdapter(private var list: MutableList<FeedItem>) : RecyclerVi
     private var viewClick: ((ViewHolder) -> Unit)? = null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.i(TAG, "onBindViewHolder: $position")
         viewClick?.invoke(holder)
 
         val feedItem = list[position]
@@ -60,6 +63,14 @@ class MainPageVideoAdapter(private var list: MutableList<FeedItem>) : RecyclerVi
             Log.i(TAG, "data:width=$width, height=$height")
             holder.itemView.videoView.setVideoSize(width ?: 0, height ?: 0)
 
+//            val uriList = mutableListOf<UriHeader>()
+//            play_addr?.url_list?.apply {
+//                for (url in this) {
+//                    uriList.add(UriHeader(Uri.parse(url)))
+//                }
+//            }
+//            holder.itemView.videoView.setUriList(uriList)
+
         }?.origin_cover?.url_list?.let {
             GlideUtils.load(it, holder.itemView.videoView.previewImage)
         }
@@ -83,4 +94,20 @@ class MainPageVideoAdapter(private var list: MutableList<FeedItem>) : RecyclerVi
     override fun getItemCount() = list.size
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+
+    override fun onViewRecycled(holder: ViewHolder) {
+        super.onViewRecycled(holder)
+        Log.i(TAG, "onViewRecycled: ")
+    }
+
+    override fun onViewAttachedToWindow(holder: ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        Log.i(TAG, "onViewAttachedToWindow: ")
+    }
+
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        Log.i(TAG, "onViewDetachedFromWindow: ")
+//        holder.itemView.videoView.release(true)
+    }
 }

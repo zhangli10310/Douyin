@@ -97,6 +97,9 @@ dependencies {
     api "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
     api "com.zlc.glide:webpdecoder:1.0.$glideVersion"
+    api ("com.github.bumptech.glide:recyclerview-integration:$glideVersion") {
+        transitive = false
+    }
 
     api "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     api "androidx.lifecycle:lifecycle-reactivestreams:$lifecycleVersion"

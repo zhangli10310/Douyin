@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.zl.core.GlideApp
 
 
@@ -101,5 +102,4 @@ object GlideUtils {
                 .fitCenter()
                 .into(view)
     }
-
 }
