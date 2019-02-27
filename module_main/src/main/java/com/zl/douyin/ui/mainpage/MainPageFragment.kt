@@ -14,14 +14,8 @@ import android.view.animation.AccelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.launcher.ARouter
-import com.bumptech.glide.Glide
-import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
-import com.bumptech.glide.util.FixedPreloadSizeProvider
-import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.zl.core.Router
 import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
@@ -30,10 +24,9 @@ import com.zl.douyin.R
 import com.zl.douyin.ui.comment.CommentDialogFragment
 import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.ijk.UriHeader
-import com.zl.ijk.media.IRenderView
+import com.zl.ijk.ZVideoView
 import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.item_main_video.view.*
-import tv.danmaku.ijk.media.player.IMediaPlayer
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
 
@@ -54,16 +47,14 @@ class MainPageFragment : ModeFragment() {
     private lateinit var viewModel: MainPageViewModel
 
     private var list: MutableList<FeedItem> = mutableListOf()
-    private lateinit var mAdapter: MainPageVideoAdapter
+    private lateinit var mAdapter: VideoPagerAdapter
 
     override fun layoutId() = R.layout.fragment_main_page
 
     override fun initView(savedInstanceState: Bundle?) {
 
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        PagerSnapHelper().attachToRecyclerView(recyclerView)
-        mAdapter = MainPageVideoAdapter(list)
-        recyclerView.adapter = mAdapter
+        mAdapter = VideoPagerAdapter(list)
+        recyclerViewPager.adapter = mAdapter
     }
 
     override fun setListener() {
@@ -88,11 +79,10 @@ class MainPageFragment : ModeFragment() {
 
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                 if (System.currentTimeMillis() - lastClickTime > 400) {
-                    val holder = viewHolder as MainPageVideoAdapter.ViewHolder
-                    if (holder.itemView.videoView.isPlaying) {
-                        pauseCurrent(holder)
+                    if (view!!.videoView.isPlaying) {
+                        pauseCurrent(view!!)
                     } else {
-                        playCurrent(holder)
+                        playCurrent(view!!)
                     }
                 } else {
                     showLikeHeart(e.x, e.y)
@@ -119,77 +109,62 @@ class MainPageFragment : ModeFragment() {
 
         })
 
-        mAdapter.registerViewClick {
-            it.itemView.setOnTouchListener { _, event ->
-                return@setOnTouchListener gestureDetector.onTouchEvent(event, it)
+        mAdapter.registerViewClick { v, pos ->
+            v.setOnTouchListener { _, event ->
+                return@setOnTouchListener gestureDetector.onTouchEvent(event, v)
             }
 
-            it.itemView.commentImg.setOnClickListener { _ ->
-                if (it.adapterPosition >= 0) {
-                    showComment(list[it.adapterPosition].aweme_id ?: 0)
+            v.commentImg.setOnClickListener { _ ->
+                if (pos >= 0) {
+                    showComment(list[pos].aweme_id ?: 0)
                 }
             }
 
-            it.itemView.headImg.setOnClickListener { _ ->
+            v.headImg.setOnClickListener { _ ->
                 shareViewModel.changeViewPagerPosition(2)
             }
 
-            it.itemView.likeImg.setOnClickListener { _ ->
+            v.likeImg.setOnClickListener { _ ->
 
             }
         }
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() { //加载更多，停止播放上一个视频并播放当前的
+        recyclerViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
             var lastIndex = 0
 
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                when (newState) {
-                    RecyclerView.SCROLL_STATE_IDLE -> { //当屏幕停止滚动
+            override fun onPageScrollStateChanged(state: Int) {
 
-                        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                        val first = layoutManager.findFirstVisibleItemPosition()
-                        val last = layoutManager.findLastVisibleItemPosition()
-                        val index = (first + last) / 2
-                        if (index >= 0 && index < list.size) {
+            }
 
-                            if (lastIndex == index) {
-                                return
-                            }
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
-                            list[index].author.let {
-                                shareViewModel.currentSelectUser.postValue(it)
-                            }
+            }
 
-                            stopLastVideo()
+            override fun onPageSelected(position: Int) {
+                shareViewModel.currentSelectUser.postValue(list[position].author)
+                if (position + 3 > list.size) {
+                    loadMore()
+                }
+                if (position >= 0 && position < list.size) {
 
-                            play(index)
-
-                            lastIndex = index
-                        }
-
-                        if ((last + 3) > list.size) {
-                            loadMore()
-                        }
+                    if (lastIndex == position) {
+                        return
                     }
 
-                    RecyclerView.SCROLL_STATE_DRAGGING -> {//当屏幕滚动且用户使用的触碰或手指还在屏幕上
-
+                    list[position].author.let {
+                        shareViewModel.currentSelectUser.postValue(it)
                     }
 
-                    RecyclerView.SCROLL_STATE_SETTLING -> {//由于用户的操作，屏幕产生惯性滑动
+                    stopLastVideo()
 
-                    }
+                    play(position)
 
+                    lastIndex = position
                 }
             }
-        })
 
-//        val viewPreloadSizeProvider = ViewPreloadSizeProvider<FeedItem>()
-//        val preloader = RecyclerViewPreloader<FeedItem>(
-//                Glide.with(this), MyPreloadModelProvider(this, list), viewPreloadSizeProvider, 2 /*maxPreload*/)
-//        recyclerView.addOnScrollListener(preloader)
+        })
 
         searchImg.setOnClickListener {
             shareViewModel.gotoViewPagerPosition.postValue(0)
@@ -204,30 +179,31 @@ class MainPageFragment : ModeFragment() {
         viewModel.loadMoreVideo()
     }
 
+
     private fun stopLastVideo() {
-        if (lastHolder != null) {
+        if (lastView != null) {
             Log.d(TAG, "stopLastVideo: ")
-            lastHolder!!.itemView.videoView.release(true)
+            lastView!!.videoView.release(true)
         }
+
     }
 
-    private var lastHolder: RecyclerView.ViewHolder? = null
-
+    private var lastView: View? = null
     private fun play(index: Int) {
-        val holder = recyclerView.findViewHolderForAdapterPosition(index)
-        if (holder == null) {
+        val v = recyclerViewPager.findViewWithTag<View>(index)
+
+        if (v == null) {
             Log.i(TAG, "play: holder null")
             return
         }
-        Log.i(TAG, "recycler child count: " + recyclerView.childCount)
+        Log.i(TAG, "recycler child count: " + recyclerViewPager.childCount)
         val uriList = mutableListOf<UriHeader>()
         for (url in list[index].video!!.play_addr!!.url_list!!) {
             uriList.add(UriHeader(Uri.parse(url)))
         }
-        holder.itemView.videoView.setUriList(uriList)
-//        holder.itemView.videoView.start()
-        holder.itemView.pauseImg.visibility = View.GONE
-        lastHolder = holder
+        v.videoView.setUriList(uriList)
+        v.pauseImg.visibility = View.GONE
+        lastView = v
     }
 
     private fun showComment(aweId: Long) {
@@ -330,7 +306,7 @@ class MainPageFragment : ModeFragment() {
                     list[0].author.let {
                         shareViewModel.currentSelectUser.postValue(it)
                     }
-                    recyclerView.post {
+                    recyclerViewPager.post {
                         play(0)
                     }
                 }
@@ -355,31 +331,31 @@ class MainPageFragment : ModeFragment() {
         })
 
         shareViewModel.onViewPagerChange.observe(this, Observer {
-            lastHolder?.let { holder ->
+            lastView?.let { v ->
                 if (it == 1) {
-                    playCurrent(holder as MainPageVideoAdapter.ViewHolder)
+                    playCurrent(v)
                 } else {
-                    pauseCurrent(holder as MainPageVideoAdapter.ViewHolder)
+                    pauseCurrent(v)
                 }
             }
 
         })
     }
 
-    fun pauseCurrent(viewHolder: MainPageVideoAdapter.ViewHolder) {
-        viewHolder.itemView.videoView.pause()
-        viewHolder.itemView.pauseImg.visibility = View.VISIBLE
+    fun pauseCurrent(v: View) {
+        v.videoView.pause()
+        v.pauseImg.visibility = View.VISIBLE
         val set = AnimatorSet()
         set.playTogether(
-                ObjectAnimator.ofFloat(viewHolder.itemView.pauseImg, View.SCALE_X, 1.2f, 1.0f),
-                ObjectAnimator.ofFloat(viewHolder.itemView.pauseImg, View.SCALE_Y, 1.2f, 1.0f)
+                ObjectAnimator.ofFloat(v.pauseImg, View.SCALE_X, 1.2f, 1.0f),
+                ObjectAnimator.ofFloat(v.pauseImg, View.SCALE_Y, 1.2f, 1.0f)
         )
         set.start()
     }
 
-    fun playCurrent(holder: MainPageVideoAdapter.ViewHolder) {
-        holder.itemView.videoView.start()
-        holder.itemView.pauseImg.visibility = View.GONE
+    fun playCurrent(v: View) {
+        v.videoView.start()
+        v.pauseImg.visibility = View.GONE
     }
 
     override fun loadingProgressBarId() = R.id.loadingBar

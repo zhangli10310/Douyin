@@ -102,7 +102,7 @@ class UserFragment : ModeFragment() {
                         val first = layoutManager.findFirstVisibleItemPosition()
                         val last = layoutManager.findLastVisibleItemPosition()
 
-                        if ((last + layoutManager.spanCount + 3) > list.size && hasMoreAwe && userViewModel.isLoading.value != true) {
+                        if ((last + layoutManager.spanCount + 3) > list.size && hasMoreAwe && userViewModel.loadingAwe.value != true) {
                             userEntity?.uid?.let {
                                 userViewModel.queryAwe(it, maxAweCursor)
                             }
@@ -149,7 +149,7 @@ class UserFragment : ModeFragment() {
                         val layoutManager = layoutManager as GridLayoutManager
                         val last = layoutManager.findLastVisibleItemPosition()
 
-                        if ((last + layoutManager.spanCount + 3) > list.size && hasMoreFavorite && userViewModel.isLoading.value != true) {
+                        if ((last + layoutManager.spanCount + 3) > list.size && hasMoreFavorite && userViewModel.loadingFavorite.value != true) {
                             userEntity?.uid?.let {
                                 userViewModel.queryFavorite(it, maxFavoriteCursor)
                             }

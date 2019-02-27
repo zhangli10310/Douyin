@@ -10,17 +10,20 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.MediaController;
 
 import com.zl.ijk.media.FileMediaDataSource;
 import com.zl.ijk.media.IMediaController;
+import com.zl.ijk.media.IRenderView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
@@ -48,8 +51,8 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
     private int mTargetState = STATE_IDLE;
 
     private ZImageView mPreviewImage;
-    private ZSurfaceView mSurfaceView;
-    private SurfaceHolder mSurfaceHolder;
+    private RenderView mRenderView;
+    private RenderView.ISurfaceHolder mSurfaceHolder;
 
     private IMediaPlayer mMediaPlayer = null;
 
@@ -114,9 +117,8 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
             }
             if (mVideoWidth != 0 && mVideoHeight != 0) {
                 if (mSurfaceHolder != null) {
-//                    mRenderView.setVideoSize(mVideoWidth, mVideoHeight);
-//                    mRenderView.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
-                    mSurfaceHolder.setFixedSize(mVideoWidth, mVideoHeight);
+                    mRenderView.setVideoSize(mVideoWidth, mVideoHeight);
+                    mRenderView.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
                     mMeasureHelper.setVideoSize(mVideoWidth, mVideoHeight);
                     if (mSurfaceWidth == mVideoWidth && mSurfaceHeight == mVideoHeight) {
                         // We didn't actually change the size (it was already at the size
@@ -276,34 +278,19 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
         }
     };
 
-    private SurfaceHolder.Callback mSurfaceCallback = new SurfaceHolder.Callback() {
+    private RenderView.IRenderCallback mSurfaceRenderCallback = new RenderView.IRenderCallback() {
 
         @Override
-        public void surfaceCreated(SurfaceHolder holder) {
+        public void onSurfaceCreated(@NonNull RenderView.ISurfaceHolder holder, int width, int height) {
             Log.d(TAG, "surfaceCreated: ");
             mSurfaceHolder = holder;
 
             if (mMediaPlayer != null)
                 bindSurfaceHolder(mMediaPlayer, holder);
-//            else
-//                openVideo();
-
         }
 
         @Override
-        public void surfaceDestroyed(SurfaceHolder holder) {
-            Log.d(TAG, "surfaceDestroyed: ");
-
-            // after we return from this we can't use the surface any more
-            mSurfaceHolder = null;
-            // REMOVED: if (mMediaController != null) mMediaController.hide();
-            // REMOVED: release(true);
-            releaseWithoutStop();
-        }
-
-        @Override
-        public void surfaceChanged(SurfaceHolder holder, int format,
-                                   int width, int height) {
+        public void onSurfaceChanged(@NonNull RenderView.ISurfaceHolder holder, int format, int width, int height) {
             Log.d(TAG, "surfaceChanged: ");
             mSurfaceHolder = holder;
 
@@ -317,8 +304,19 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
                 }
 //                start();
             }
-
         }
+
+        @Override
+        public void onSurfaceDestroyed(@NonNull RenderView.ISurfaceHolder holder) {
+            Log.d(TAG, "surfaceDestroyed: ");
+
+            // after we return from this we can't use the surface any more
+            mSurfaceHolder = null;
+            // REMOVED: if (mMediaController != null) mMediaController.hide();
+            // REMOVED: release(true);
+            releaseWithoutStop();
+        }
+
     };
 
     public ZVideoView(Context context) {
@@ -346,13 +344,16 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
                 Gravity.CENTER);
 
         mMeasureHelper = new ZMeasureHelper(this);
-        mSurfaceView = new ZSurfaceView(getContext());
-        mSurfaceView.setMeasureHelper(mMeasureHelper);
-        mSurfaceView.getHolder().addCallback(mSurfaceCallback);
+
+        mRenderView = new ZTextureRenderView(getContext());
+
+
+        mRenderView.setMeasureHelper(mMeasureHelper);
+        mRenderView.addRenderCallback(mSurfaceRenderCallback);
         mPreviewImage = new ZImageView(getContext());
         mPreviewImage.setMeasureHelper(mMeasureHelper);
 
-        addView(mSurfaceView, lp);
+        addView(mRenderView.getView(), lp);
         addView(mPreviewImage, lp);
 
         setFocusable(true);
@@ -396,11 +397,16 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
         return ijkMediaPlayer;
     }
 
-    private void bindSurfaceHolder(IMediaPlayer mp, SurfaceHolder holder) {
+    private void bindSurfaceHolder(IMediaPlayer mp, RenderView.ISurfaceHolder holder) {
         if (mp == null)
             return;
 
-        mp.setDisplay(holder);
+        if (holder == null) {
+            mp.setDisplay(null);
+            return;
+        }
+
+        holder.bindToMediaPlayer(mp);
     }
 
     public void setVideoURI(Uri uri) {

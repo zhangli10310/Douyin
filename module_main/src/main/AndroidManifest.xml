@@ -9,8 +9,6 @@
     <application
         android:theme="@style/AppTheme">
 
-        <service android:name=".update.BackgroundDownloadService" />
-
         <activity
             android:name=".ui.main.MainActivity"
             android:hardwareAccelerated="true"

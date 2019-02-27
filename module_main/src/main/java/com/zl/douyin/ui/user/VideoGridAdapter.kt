@@ -2,6 +2,7 @@ package com.zl.douyin.ui.user
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.zl.core.GlideApp
 import com.zl.core.extend.inflate
 import com.zl.core.utils.GlideUtils
 import com.zl.douyin.R
@@ -19,11 +20,13 @@ class VideoGridAdapter(var list: MutableList<FeedItem>, var onItemClick: ((Recyc
     override fun getItemCount() = list.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        list[position].video?.dynamic_cover?.url_list?.let {
+        list[position].video?.dynamic_cover?.url_list?.let { urls ->
 
             val list = mutableListOf<String>()
-            it.forEach {
-                list.add("$it.webp")
+            urls.forEach {
+                if (!it.endsWith("jpeg")) {
+                    list.add("$it.webp")
+                }
             }
             GlideUtils.loadWebp(list, holder.itemView.dynamicCoverImg)
         }

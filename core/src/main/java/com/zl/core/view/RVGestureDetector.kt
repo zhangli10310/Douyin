@@ -3,6 +3,7 @@ package com.zl.core.view
 import android.content.Context
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 /**
@@ -13,12 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class RVGestureDetector(context: Context, private var listener: RVOnGestureListener) : GestureDetector(context, listener) {
 
-    fun onTouchEvent(ev: MotionEvent, viewHolder: RecyclerView.ViewHolder?): Boolean {
-        listener.viewHolder = viewHolder
+    fun onTouchEvent(ev: MotionEvent, view: View): Boolean {
+        listener.view = view
         return super.onTouchEvent(ev)
     }
 
     open class RVOnGestureListener : GestureDetector.SimpleOnGestureListener() {
-        var viewHolder: RecyclerView.ViewHolder? = null
+        var view: View? = null
     }
 }
