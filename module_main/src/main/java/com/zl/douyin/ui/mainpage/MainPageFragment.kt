@@ -167,10 +167,10 @@ class MainPageFragment : ModeFragment() {
         })
 
         searchImg.setOnClickListener {
-            shareViewModel.gotoViewPagerPosition.postValue(0)
+
         }
 
-        doublePointImg.setOnClickListener {
+        liveImg.setOnClickListener {
             ARouter.getInstance().build(Router.LIVE_ACTIVITY).navigation()
         }
     }

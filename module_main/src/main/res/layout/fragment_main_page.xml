@@ -92,18 +92,18 @@
         android:id="@+id/searchImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:padding="5dp"
         android:src="@mipmap/ic_search"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/topGuideline" />
 
     <ImageView
-        android:id="@+id/doublePointImg"
+        android:id="@+id/liveImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:padding="10dp"
         android:src="@mipmap/ic_double_point"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/searchImg"
         app:layout_constraintTop_toTopOf="@+id/topGuideline" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
