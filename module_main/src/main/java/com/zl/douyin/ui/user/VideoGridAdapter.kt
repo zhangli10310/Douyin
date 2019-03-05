@@ -20,15 +20,18 @@ class VideoGridAdapter(var list: MutableList<FeedItem>, var onItemClick: ((Recyc
     override fun getItemCount() = list.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        list[position].video?.dynamic_cover?.url_list?.let { urls ->
-
-            val list = mutableListOf<String>()
-            urls.forEach {
-                if (!it.endsWith("jpeg")) {
-                    list.add("$it.webp")
-                }
-            }
-            GlideUtils.loadWebp(list, holder.itemView.dynamicCoverImg)
+//        list[position].video?.dynamic_cover?.url_list?.let { urls ->
+//
+//            val list = mutableListOf<String>()
+//            urls.forEach {
+//                if (!it.endsWith("jpeg")) {
+//                    list.add("$it.webp")
+//                }
+//            }
+//            GlideUtils.loadWebp(list, holder.itemView.dynamicCoverImg)
+//        }
+        list[position].video?.cover?.url_list?.let { urls ->
+            GlideUtils.load(urls, holder.itemView.dynamicCoverImg)
         }
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(holder)

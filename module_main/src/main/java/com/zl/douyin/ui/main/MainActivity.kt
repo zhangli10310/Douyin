@@ -33,45 +33,38 @@ class MainActivity : ModeActivity(), MainFragment.OnFragmentChangeListener {
         viewPager.adapter = mAdapter
         viewPager.currentItem = 1
 
-//        viewPager.setPageTransformer(true) { page, position ->
-//
-//            if (!(page === littleFilmFragment.view)) {
-//                return@setPageTransformer
-//            }
-//            val width = page.width
-//            when {
-//                position < -1 -> {
-//                    page.alpha = 0f
-//                }
-//                position < 0 -> {
-//                    page.alpha = 1f
-//                    page.translationX = -position * width
-//                    page.scaleX = (1 + position / 10)
-//                    page.scaleY = (1 + position / 10)
-//                }
-//                position < 1 -> {
-//                    page.alpha = 1f
-//                    page.translationX = 0f
-//                }
-//                else -> {
-//                    page.alpha = 0f
-//                }
-//            }
-//        }
+        viewPager.setPageTransformer(false) { page, position ->
+
+            if (!(page === littleFilmFragment.view)) {
+                return@setPageTransformer
+            }
+            val width = page.width
+            when {
+                position < -1 -> {
+                    page.alpha = 0f
+                }
+                position < 0 -> {
+                    page.alpha = 1f
+                    page.translationX = -position * width
+                    page.scaleX = (1 + position / 10)
+                    page.scaleY = (1 + position / 10)
+                }
+                position < 1 -> {
+                    page.alpha = 1f
+                    page.translationX = 0f
+                }
+                else -> {
+                    page.alpha = 0f
+                }
+            }
+        }
 
         checkViewPagerScroll()
     }
 
     override fun setListener() {
 
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
+        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
 
             override fun onPageSelected(position: Int) {
                 checkViewPagerScroll()
