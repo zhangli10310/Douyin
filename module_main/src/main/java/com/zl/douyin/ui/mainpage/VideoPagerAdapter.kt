@@ -3,10 +3,10 @@ package com.zl.douyin.ui.mainpage
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager.widget.PagerAdapter
 import com.zl.core.extend.inflate
 import com.zl.core.utils.CommonUtils
 import com.zl.core.utils.GlideUtils
+import com.zl.core.view.PagerAdapter
 import com.zl.douyin.R
 import kotlinx.android.synthetic.main.item_main_video.view.*
 import java.util.*

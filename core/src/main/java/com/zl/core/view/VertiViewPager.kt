@@ -2,10 +2,9 @@ package com.zl.core.view
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.viewpager.widget.ViewPager
 import android.view.MotionEvent
-import android.view.View
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.viewpager.widget.ViewPager
 
 
 /**
@@ -14,7 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
  *
  * Created by zhangli on 2019/2/26 11:51.<br/>
  */
-class VerticalViewPager : ViewPager {
+class VertiViewPager : ViewPager {
 
     constructor(context: Context) : super(context) {
         init()
@@ -44,14 +43,7 @@ class VerticalViewPager : ViewPager {
         }
         overScrollMode = OVER_SCROLL_NEVER
 
-        addOnPageChangeListener(object :OnPageChangeListener{
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
+        addOnPageChangeListener(object :SimpleOnPageChangeListener(){
 
             override fun onPageSelected(position: Int) {
                 val parent = parent

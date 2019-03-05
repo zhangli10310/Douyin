@@ -14,17 +14,16 @@ import android.view.animation.AccelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.zl.core.Router
 import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
 import com.zl.core.view.RVGestureDetector
+import com.zl.core.view.VerticalViewPager
 import com.zl.douyin.R
 import com.zl.douyin.ui.comment.CommentDialogFragment
 import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.ijk.UriHeader
-import com.zl.ijk.ZVideoView
 import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.item_main_video.view.*
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
@@ -129,17 +128,9 @@ class MainPageFragment : ModeFragment() {
             }
         }
 
-        recyclerViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        recyclerViewPager.addOnPageChangeListener(object : VerticalViewPager.SimpleOnPageChangeListener() {
 
             var lastIndex = 0
-
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
 
             override fun onPageSelected(position: Int) {
                 shareViewModel.currentSelectUser.postValue(list[position].author)
