@@ -11,6 +11,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.LinearInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -175,6 +178,7 @@ class MainPageFragment : ModeFragment() {
         if (lastView != null) {
             Log.d(TAG, "stopLastVideo: ")
             lastView!!.videoView.release(true)
+            lastView!!.musicRoundImg.clearAnimation()
         }
 
     }
@@ -194,6 +198,7 @@ class MainPageFragment : ModeFragment() {
         }
         v.videoView.setUriList(uriList)
         v.pauseImg.visibility = View.GONE
+        v.musicRoundImg.startAnimation(getRotateAnimation())
         lastView = v
     }
 
@@ -342,11 +347,20 @@ class MainPageFragment : ModeFragment() {
                 ObjectAnimator.ofFloat(v.pauseImg, View.SCALE_Y, 1.2f, 1.0f)
         )
         set.start()
+        v.musicRoundImg.clearAnimation()
     }
 
     fun playCurrent(v: View) {
         v.videoView.start()
         v.pauseImg.visibility = View.GONE
+
+        v.musicRoundImg.startAnimation(getRotateAnimation())
+    }
+
+    private fun getRotateAnimation(): Animation {
+        val animation = AnimationUtils.loadAnimation(activity!!, com.zl.core.R.anim.rotate_anim)
+        animation.interpolator = LinearInterpolator()
+        return animation
     }
 
     override fun loadingProgressBarId() = R.id.loadingBar
@@ -357,13 +371,13 @@ class MainPageFragment : ModeFragment() {
 
     override fun onStart() {
         super.onStart()
-        IjkMediaPlayer.native_profileBegin("libijkplayer.so")
+//        IjkMediaPlayer.native_profileBegin("libijkplayer.so")
     }
 
     override fun onStop() {
         super.onStop()
         stopLastVideo()
-        IjkMediaPlayer.native_profileEnd()
+//        IjkMediaPlayer.native_profileEnd()
     }
 
     fun refresh() {

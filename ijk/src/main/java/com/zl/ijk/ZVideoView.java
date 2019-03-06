@@ -368,8 +368,8 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
         IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
         IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_INFO);
 
-//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1); //使用硬解码
-        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 0); //使用软解码
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1); //使用硬解码
+//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 0); //使用软解码
 
 //        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);  //自动旋转屏幕
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 0);

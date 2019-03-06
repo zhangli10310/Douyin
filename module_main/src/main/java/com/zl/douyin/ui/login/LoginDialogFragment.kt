@@ -101,6 +101,7 @@ class LoginDialogFragment : DialogFragment() {
             thread {
                 MainApp.instance.user = User(0)
                 activity!!.runOnUiThread {
+                    Toast.makeText(activity, "假装登录成功", Toast.LENGTH_SHORT).show()
                     dismiss()
                 }
             }

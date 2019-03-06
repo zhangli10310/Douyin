@@ -25,6 +25,9 @@ class MainFragment : ModeFragment() {
 
     private var currentFragment: BaseFragment? = null
     private var mainPageFragment: BaseFragment? = null
+    private var followFragment: BaseFragment? = null
+    private var messageFragment: BaseFragment? = null
+    private var mimeFragment: BaseFragment? = null
 
     private var loginFragment: LoginDialogFragment? = null
 
@@ -138,6 +141,10 @@ class MainFragment : ModeFragment() {
             showLoginFragment()
         } else {
             changeSelectItem(2)
+            if (followFragment == null) {
+                followFragment = BaseFragment()
+            }
+            showFragment(followFragment!!)
         }
     }
 
@@ -155,6 +162,10 @@ class MainFragment : ModeFragment() {
             showLoginFragment()
         } else {
             changeSelectItem(3)
+            if (messageFragment == null) {
+                messageFragment = BaseFragment()
+            }
+            showFragment(messageFragment!!)
         }
 
     }
@@ -165,6 +176,10 @@ class MainFragment : ModeFragment() {
             showLoginFragment()
         } else {
             changeSelectItem(4)
+            if (mimeFragment == null) {
+                mimeFragment = BaseFragment()
+            }
+            showFragment(mimeFragment!!)
         }
 
     }

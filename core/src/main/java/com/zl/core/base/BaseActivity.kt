@@ -152,7 +152,7 @@ open class BaseActivity : AppCompatActivity() {
         progressBar.visibility = View.GONE
     }
 
-    protected fun requestPermission(permissions: Array<String>, permissionReturn: ((Boolean) -> Unit)? = null) {
+    fun requestPermission(permissions: Array<String>, permissionReturn: ((Boolean) -> Unit)? = null) {
         mPermissionReturn = permissionReturn
 
         var grant = true
@@ -165,9 +165,9 @@ open class BaseActivity : AppCompatActivity() {
         if (!grant) {
             val dialog = AlertDialog.Builder(this)
                     .setMessage("请授予权限")
-                    .setPositiveButton("确定", { _, _ ->
+                    .setPositiveButton("确定") { _, _ ->
                         ActivityCompat.requestPermissions(this, permissions, PERMISSION_REQUEST_CODE)
-                    })
+                    }
                     .create()
             mDialogSet.add(dialog)
             dialog.show()
