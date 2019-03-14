@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.zl.camera" >
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="com.android.hardware.camera2.full"/>
+</manifest>

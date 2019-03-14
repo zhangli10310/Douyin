@@ -74,5 +74,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     implementation project(':core')
+    implementation project(':camera')
     kapt "com.alibaba:arouter-compiler:$arouterCompiler"
 }

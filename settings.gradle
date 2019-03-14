@@ -1,2 +1,2 @@
-include ':module_main', ':core', ':ijk', ':app', ':module_live', ':module_update'
+include ':module_main', ':core', ':ijk', ':app', ':module_live', ':module_update', ':camera'
 //include ':cpp'
