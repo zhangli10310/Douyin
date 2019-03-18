@@ -10,6 +10,7 @@ import android.view.TextureView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.zl.camera.Camera2Helper
+import com.zl.camera.CameraHelper
 import com.zl.camera.ICameraHelper
 import com.zl.core.base.ModeFragment
 import com.zl.douyin.R
@@ -22,7 +23,6 @@ import kotlinx.android.synthetic.main.fragment_little_film.*
  *
  * Created by zhangli on 2019/3/4 15:26.<br/>
  */
-@SuppressLint("NewApi")
 class LittleFilmFragment : ModeFragment(), TextureView.SurfaceTextureListener {
 
     private val TAG = LittleFilmFragment::class.java.simpleName
@@ -30,7 +30,7 @@ class LittleFilmFragment : ModeFragment(), TextureView.SurfaceTextureListener {
 
     private var preview = false
     private var permissionOk = false
-    private lateinit var mCameraHelper: Camera2Helper
+    private lateinit var mCameraHelper: ICameraHelper
     private var mSurfaceTexture: SurfaceTexture? = null
     private var mWidth: Int = 0
     private var mHeight: Int = 0
@@ -41,7 +41,7 @@ class LittleFilmFragment : ModeFragment(), TextureView.SurfaceTextureListener {
     override fun initView(savedInstanceState: Bundle?) {
         cameraView.surfaceTextureListener = this
 
-        mCameraHelper = Camera2Helper(activity!!)
+        mCameraHelper = CameraHelper(activity!!)
     }
 
     override fun setListener() {
@@ -82,7 +82,7 @@ class LittleFilmFragment : ModeFragment(), TextureView.SurfaceTextureListener {
         preview = true
 
         mCameraHelper.open(mWidth, mHeight, Camera2Helper.CAMERA_BACK, object : ICameraHelper.StateCallBack {
-            override fun onOpened(size: Size) {
+            override fun onOpened(size: ICameraHelper.Size) {
                 Log.i(TAG, "onOpened: ")
                 mSurfaceTexture?.setDefaultBufferSize(size.width, size.height)
                 mCameraHelper.setPreviewSurface(mSurfaceTexture)

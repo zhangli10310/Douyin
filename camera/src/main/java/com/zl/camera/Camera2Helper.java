@@ -21,7 +21,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
-import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.OrientationEventListener;
 import android.view.Surface;
@@ -111,7 +110,7 @@ public class Camera2Helper extends ICameraHelper {
                     cid = s;
                     //获取StreamConfigurationMap，它是管理摄像头支持的所有输出格式和尺寸
                     mConfigurationMap = mCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-                    Size largest = Collections.max(Arrays.asList(mConfigurationMap.getOutputSizes(ImageFormat.JPEG)), new
+                    android.util.Size largest = Collections.max(Arrays.asList(mConfigurationMap.getOutputSizes(ImageFormat.JPEG)), new
                             CompareSizesByArea());
                     mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(), ImageFormat.JPEG, 2);
                     mPreviewSize = chooseOptimalSize(mConfigurationMap.getOutputSizes(SurfaceTexture.class), width, height, largest);
@@ -312,7 +311,7 @@ public class Camera2Helper extends ICameraHelper {
 //        openCamera(width, height);
     }
 
-    private Size chooseOptimalSize(Size[] sizes, int viewWidth, int viewHeight, Size pictureSize) {
+    private Size chooseOptimalSize(android.util.Size[] sizes, int viewWidth, int viewHeight, android.util.Size pictureSize) {
         int totalRotation = getRotation();
         boolean swapRotation = totalRotation == 90 || totalRotation == 270;
         int width = swapRotation ? viewHeight : viewWidth;
@@ -341,18 +340,18 @@ public class Camera2Helper extends ICameraHelper {
         return mDisplayRotate;
     }
 
-    private Size getSuitableSize(Size[] sizes, int width, int height, Size pictureSize) {
+    private Size getSuitableSize(android.util.Size[] sizes, int width, int height, android.util.Size pictureSize) {
         int minDelta = Integer.MAX_VALUE; // 最小的差值，初始值应该设置大点保证之后的计算中会被重置
         int index = 0; // 最小的差值对应的索引坐标
         float aspectRatio = pictureSize.getHeight() * 1.0f / pictureSize.getWidth();
         Log.d(TAG, "getSuitableSize. aspectRatio: " + aspectRatio);
         for (int i = 0; i < sizes.length; i++) {
-            Size size = sizes[i];
+            android.util.Size size = sizes[i];
             // 先判断比例是否相等
             if (size.getWidth() * aspectRatio == size.getHeight()) {
                 int delta = Math.abs(width - size.getWidth());
                 if (delta == 0) {
-                    return size;
+                    return new Size(size.getWidth(), size.getHeight());
                 }
                 if (minDelta > delta) {
                     minDelta = delta;
@@ -360,7 +359,7 @@ public class Camera2Helper extends ICameraHelper {
                 }
             }
         }
-        return sizes[index];
+        return new Size(sizes[index].getWidth(), sizes[index].getHeight());
     }
 
     public void handleZoom(boolean isZoomIn) {
@@ -467,9 +466,9 @@ public class Camera2Helper extends ICameraHelper {
         }
     }
 
-    static class CompareSizesByArea implements Comparator<Size> {
+    static class CompareSizesByArea implements Comparator<android.util.Size> {
         @Override
-        public int compare(Size lhs, Size rhs) {
+        public int compare(android.util.Size lhs, android.util.Size rhs) {
             // We cast here to ensure the multiplications won't overflow
             return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
                     (long) rhs.getWidth() * rhs.getHeight());

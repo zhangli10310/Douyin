@@ -1,7 +1,6 @@
 package com.zl.camera;
 
 import android.graphics.SurfaceTexture;
-import android.util.Size;
 import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
@@ -30,12 +29,38 @@ public abstract class ICameraHelper {
     public abstract void release();
 
     public interface StateCallBack {
-        void onOpened(Size preSize);
+        void onOpened(Size size);
 
         void onDisconnected();
 
         void onError(int error);
 
         void onClosed();
+    }
+
+    public static class Size {
+        private int width;
+        private int height;
+
+        public Size(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public void setWidth(int width) {
+            this.width = width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public void setHeight(int height) {
+            this.height = height;
+        }
     }
 }
