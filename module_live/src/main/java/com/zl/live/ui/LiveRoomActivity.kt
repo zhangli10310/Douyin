@@ -30,7 +30,5 @@ class LiveRoomActivity : ModeActivity(){
 
     override fun afterView() {
 
-        videoView.setVideoURI(Uri.parse("https://api.amemv.com/aweme/v1/play/?video_id=v0200f530000bdt78p3pqv6acajvuebg&line=1&ratio=720p&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"))
-        videoView.start()
     }
 }

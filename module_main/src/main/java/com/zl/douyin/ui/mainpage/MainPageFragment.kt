@@ -371,12 +371,18 @@ class MainPageFragment : ModeFragment() {
 
     override fun onStart() {
         super.onStart()
+        lastView?.let {
+            playCurrent(it)
+        }
 //        IjkMediaPlayer.native_profileBegin("libijkplayer.so")
     }
 
     override fun onStop() {
         super.onStop()
-        stopLastVideo()
+        lastView?.let {
+            pauseCurrent(it)
+        }
+//        stopLastVideo()
 //        IjkMediaPlayer.native_profileEnd()
     }
 
