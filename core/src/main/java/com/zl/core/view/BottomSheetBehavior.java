@@ -18,8 +18,6 @@ package com.zl.core.view;
 
 import com.google.android.material.R;
 
-import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
-
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
@@ -31,11 +29,12 @@ import android.os.Parcelable;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RestrictTo;
+import androidx.annotation.StyleableRes;
 import androidx.annotation.VisibleForTesting;
-import com.google.android.material.resources.MaterialResources;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
+
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.math.MathUtils;
 import androidx.customview.view.AbsSavedState;
@@ -57,6 +56,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ *
+ * 这个类只是改了 {@link #HIDE_FRICTION} 的值，使短距离快速下滑可以收起bottomsheet
+ *
  * An interaction behavior plugin for a child view of {@link CoordinatorLayout} to make it work as a
  * bottom sheet.
  */
@@ -104,8 +106,6 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
   /** The bottom sheet is half-expanded (used when mFitToContents is false). */
   public static final int STATE_HALF_EXPANDED = 6;
 
-  /** @hide */
-  @RestrictTo(LIBRARY_GROUP)
   @IntDef({
     STATE_EXPANDED,
     STATE_COLLAPSED,
@@ -127,7 +127,7 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
 
   private static final float HIDE_THRESHOLD = 0.5f;
 
-  private static final float HIDE_FRICTION = 0.1f;
+  private static final float HIDE_FRICTION = 0.5f;  //改变 HIDE_FRICTION ，使短距离快速下滑可以收起bottomsheet
 
   private static final int CORNER_ANIMATION_DURATION = 500;
 
@@ -206,7 +206,7 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
     boolean hasBackgroundTint = a.hasValue(R.styleable.BottomSheetBehavior_Layout_backgroundTint);
     if (hasBackgroundTint) {
       ColorStateList bottomSheetColor =
-          MaterialResources.getColorStateList(
+          getColorStateList(
               context, a, R.styleable.BottomSheetBehavior_Layout_backgroundTint);
       createMaterialShapeDrawable(context, attrs, hasBackgroundTint, bottomSheetColor);
     } else {
@@ -232,13 +232,37 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
     maximumVelocity = configuration.getScaledMaximumFlingVelocity();
   }
 
+  private ColorStateList getColorStateList(
+          Context context, TypedArray attributes, @StyleableRes int index) {
+    if (attributes.hasValue(index)) {
+      int resourceId = attributes.getResourceId(index, 0);
+      if (resourceId != 0) {
+        ColorStateList value = AppCompatResources.getColorStateList(context, resourceId);
+        if (value != null) {
+          return value;
+        }
+      }
+    }
+
+    // Reading a single color with getColorStateList() on API 15 and below doesn't always correctly
+    // read the value. Instead we'll first try to read the color directly here.
+    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+      int color = attributes.getColor(index, -1);
+      if (color != -1) {
+        return ColorStateList.valueOf(color);
+      }
+    }
+
+    return attributes.getColorStateList(index);
+  }
+
   @Override
-  public Parcelable onSaveInstanceState(CoordinatorLayout parent, V child) {
+  public Parcelable onSaveInstanceState(@NonNull CoordinatorLayout parent, @NonNull V child) {
     return new SavedState(super.onSaveInstanceState(parent, child), state);
   }
 
   @Override
-  public void onRestoreInstanceState(CoordinatorLayout parent, V child, Parcelable state) {
+  public void onRestoreInstanceState(@NonNull CoordinatorLayout parent, @NonNull V child, @NonNull Parcelable state) {
     SavedState ss = (SavedState) state;
     super.onRestoreInstanceState(parent, child, ss.getSuperState());
     // Intermediate states are restored as collapsed state
@@ -250,7 +274,7 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
   }
 
   @Override
-  public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
+  public boolean onLayoutChild(@NonNull CoordinatorLayout parent, @NonNull V child, int layoutDirection) {
     if (ViewCompat.getFitsSystemWindows(parent) && !ViewCompat.getFitsSystemWindows(child)) {
       child.setFitsSystemWindows(true);
     }
@@ -300,7 +324,7 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
   }
 
   @Override
-  public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEvent event) {
+  public boolean onInterceptTouchEvent(@NonNull CoordinatorLayout parent, @NonNull V child, @NonNull MotionEvent event) {
     if (!child.isShown()) {
       ignoreEvents = true;
       return false;
@@ -362,7 +386,7 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
   }
 
   @Override
-  public boolean onTouchEvent(CoordinatorLayout parent, V child, MotionEvent event) {
+  public boolean onTouchEvent(@NonNull CoordinatorLayout parent, @NonNull V child, @NonNull MotionEvent event) {
     if (!child.isShown()) {
       return false;
     }

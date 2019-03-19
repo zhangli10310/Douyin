@@ -18,6 +18,6 @@
         android:layout_gravity="center_horizontal|top"
         android:clickable="true"
         app:behavior_peekHeight="800dp"
-        app:layout_behavior="@string/bottom_sheet_behavior" />
+        app:layout_behavior="com.zl.core.view.BottomSheetBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
