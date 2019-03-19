@@ -4,9 +4,13 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +25,6 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.zl.core.Router
 import com.zl.core.base.ModeFragment
 import com.zl.core.utils.DisplayUtils
-import com.zl.core.view.RVGestureDetector
 import com.zl.core.view.VerticalViewPager
 import com.zl.douyin.R
 import com.zl.douyin.ui.comment.CommentDialogFragment
@@ -29,7 +32,6 @@ import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.ijk.UriHeader
 import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.item_main_video.view.*
-import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
 
 /**
@@ -65,7 +67,7 @@ class MainPageFragment : ModeFragment() {
             viewModel.loadRecommendVideo()
         }
 
-        val gestureDetector = RVGestureDetector(activity!!, object : RVGestureDetector.RVOnGestureListener() {
+        val gestureDetector = GestureDetector(activity!!, object : GestureDetector.SimpleOnGestureListener() {
 
             var lastClickTime = 0L
             var firstDoubleTap = true
@@ -81,10 +83,10 @@ class MainPageFragment : ModeFragment() {
 
             override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
                 if (System.currentTimeMillis() - lastClickTime > 400) {
-                    if (view!!.videoView.isPlaying) {
-                        pauseCurrent(view!!)
+                    if (lastView?.videoView?.isPlaying == true) {
+                        pauseCurrent()
                     } else {
-                        playCurrent(view!!)
+                        playCurrent()
                     }
                 } else {
                     showLikeHeart(e.x, e.y)
@@ -113,7 +115,7 @@ class MainPageFragment : ModeFragment() {
 
         mAdapter.registerViewClick { v, pos ->
             v.setOnTouchListener { _, event ->
-                return@setOnTouchListener gestureDetector.onTouchEvent(event, v)
+                return@setOnTouchListener gestureDetector.onTouchEvent(event)
             }
 
             v.commentImg.setOnClickListener { _ ->
@@ -128,6 +130,15 @@ class MainPageFragment : ModeFragment() {
 
             v.likeImg.setOnClickListener { _ ->
 
+            }
+
+            v.shareImg.setOnClickListener { _ ->
+                val clipboardManager = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+                clipboardManager?.let {
+                    val text = ClipData.newPlainText("" ,list[pos].share_url)
+                    it.primaryClip = text
+                    showToastSafe("已复制到剪切板")
+                }
             }
         }
 
@@ -327,34 +338,36 @@ class MainPageFragment : ModeFragment() {
         })
 
         shareViewModel.onViewPagerChange.observe(this, Observer {
-            lastView?.let { v ->
-                if (it == 1) {
-                    playCurrent(v)
-                } else {
-                    pauseCurrent(v)
-                }
+            if (it == 1) {
+                playCurrent()
+            } else {
+                pauseCurrent()
             }
 
         })
     }
 
-    fun pauseCurrent(v: View) {
-        v.videoView.pause()
-        v.pauseImg.visibility = View.VISIBLE
-        val set = AnimatorSet()
-        set.playTogether(
-                ObjectAnimator.ofFloat(v.pauseImg, View.SCALE_X, 1.2f, 1.0f),
-                ObjectAnimator.ofFloat(v.pauseImg, View.SCALE_Y, 1.2f, 1.0f)
-        )
-        set.start()
-        v.musicRoundImg.clearAnimation()
+    fun pauseCurrent() {
+        lastView?.let { v->
+            v.videoView.pause()
+            v.pauseImg.visibility = View.VISIBLE
+            val set = AnimatorSet()
+            set.playTogether(
+                    ObjectAnimator.ofFloat(v.pauseImg, View.SCALE_X, 1.2f, 1.0f),
+                    ObjectAnimator.ofFloat(v.pauseImg, View.SCALE_Y, 1.2f, 1.0f)
+            )
+            set.start()
+            v.musicRoundImg.clearAnimation()
+        }
     }
 
-    fun playCurrent(v: View) {
-        v.videoView.start()
-        v.pauseImg.visibility = View.GONE
+    fun playCurrent() {
+        lastView?.let {v->
+            v.videoView.start()
+            v.pauseImg.visibility = View.GONE
 
-        v.musicRoundImg.startAnimation(getRotateAnimation())
+            v.musicRoundImg.startAnimation(getRotateAnimation())
+        }
     }
 
     private fun getRotateAnimation(): Animation {
@@ -371,17 +384,13 @@ class MainPageFragment : ModeFragment() {
 
     override fun onStart() {
         super.onStart()
-        lastView?.let {
-            playCurrent(it)
-        }
+        playCurrent()
 //        IjkMediaPlayer.native_profileBegin("libijkplayer.so")
     }
 
     override fun onStop() {
         super.onStop()
-        lastView?.let {
-            pauseCurrent(it)
-        }
+        pauseCurrent()
 //        stopLastVideo()
 //        IjkMediaPlayer.native_profileEnd()
     }
@@ -389,6 +398,14 @@ class MainPageFragment : ModeFragment() {
     fun refresh() {
         swipeRefreshLayout.isRefreshing = true
         viewModel.loadRecommendVideo()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (hidden) {
+            pauseCurrent()
+        } else {
+            playCurrent()
+        }
     }
 
 }

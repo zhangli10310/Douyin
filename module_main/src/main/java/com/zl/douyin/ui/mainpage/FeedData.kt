@@ -18,6 +18,7 @@ class FeedData : BaseResult() {
 class FeedItem {
 
     var desc: String? = null
+    var share_url: String? = null
     var video: VideoItem? = null
     var music: MusicEntity? = null
     var author: UserEntity? = null
