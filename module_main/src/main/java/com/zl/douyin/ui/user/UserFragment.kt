@@ -23,7 +23,7 @@ import com.zl.core.view.GridSpacingItemDecoration
 import com.zl.douyin.R
 import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.douyin.ui.mainpage.FeedItem
-import kotlinx.android.synthetic.main.fragment_user_1.*
+import kotlinx.android.synthetic.main.fragment_user.*
 
 
 /**
