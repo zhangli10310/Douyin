@@ -178,6 +178,10 @@ class MainPageFragment : ModeFragment() {
         liveImg.setOnClickListener {
             ARouter.getInstance().build(Router.LIVE_ACTIVITY).navigation()
         }
+
+        takePhotoImg.setOnClickListener {
+            shareViewModel.changeViewPagerPosition(0)
+        }
     }
 
     private fun loadMore() {

@@ -4,6 +4,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -22,7 +23,7 @@ import com.zl.core.view.GridSpacingItemDecoration
 import com.zl.douyin.R
 import com.zl.douyin.ui.main.SharedViewModel
 import com.zl.douyin.ui.mainpage.FeedItem
-import kotlinx.android.synthetic.main.fragment_user.*
+import kotlinx.android.synthetic.main.fragment_user_1.*
 
 
 /**
@@ -99,7 +100,7 @@ class UserFragment : ModeFragment() {
                     RecyclerView.SCROLL_STATE_IDLE -> { //当屏幕停止滚动
 
                         val layoutManager = layoutManager as GridLayoutManager
-                        val first = layoutManager.findFirstVisibleItemPosition()
+//                        val first = layoutManager.findFirstVisibleItemPosition()
                         val last = layoutManager.findLastVisibleItemPosition()
 
                         if ((last + layoutManager.spanCount + 3) > list.size && hasMoreAwe && userViewModel.loadingAwe.value != true) {
@@ -108,6 +109,7 @@ class UserFragment : ModeFragment() {
                             }
                         }
 
+                        Log.i(TAG, "getAweView: "+ this.childCount)
 //                        val i = (first + last)/2
 //                        val holder = findViewHolderForAdapterPosition(i)
 //                        if (holder != null) {
@@ -250,9 +252,16 @@ class UserFragment : ModeFragment() {
         userViewModel.userInfo.observe(this, Observer {
             if (it != null) {
                 userEntity = it
-                it.avatar_thumb?.url_list?.let {
-                    GlideUtils.load(it, headImg)
-                    GlideUtils.load(it, headBlurImg)
+                it.avatar_thumb?.url_list?.let { list ->
+                    GlideUtils.load(list, headImg)
+//                    GlideUtils.load(list, headBlurImg)
+                }
+                it.cover_url?.let { l ->
+                    if (!l.isEmpty()) {
+                        l[0].url_list?.let { list ->
+                            GlideUtils.load(list, coverImg)
+                        }
+                    }
                 }
                 douyinCodeText.text = "抖音号:" + it.short_id
                 if (it.nickname.isNullOrBlank()) {
@@ -270,16 +279,26 @@ class UserFragment : ModeFragment() {
                 var gender = ""
                 val birthday = DateUtils.dateStringToTimeMillis(it.birthday + "")
                 if (it.gender == 1) {
-                    gender = "♂"
+                    gender = "<font color=blue>♂</font>"
                 } else if (it.gender == 2) {
-                    gender = "♀"
+                    gender = "<font color=red>♀</font>"
                 }
                 if (birthday > 0) {
-                    ageText.text = "$gender ${(System.currentTimeMillis() - birthday) / 1000 / 60 / 60 / 24 / 365}岁"
+                    ageText.visibility = View.VISIBLE
+                    starText.visibility = View.VISIBLE
+                    ageText.text = Html.fromHtml("$gender ${(System.currentTimeMillis() - birthday) / 1000 / 60 / 60 / 24 / 365}岁")
                     starText.text = DateUtils.getConstellation(birthday)
+                } else {
+                    ageText.visibility = View.GONE
+                    starText.visibility = View.INVISIBLE
                 }
 
-                cityText.text = it.location
+                if (it.location.isNullOrBlank()) {
+                    cityText.visibility = View.GONE
+                } else {
+                    cityText.visibility = View.VISIBLE
+                    cityText.text = it.location
+                }
 
                 it.total_favorited.let {
                     likeText.text = CommonUtils.formatCount(it) + "获赞"

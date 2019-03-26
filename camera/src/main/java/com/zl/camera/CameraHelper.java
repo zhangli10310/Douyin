@@ -3,6 +3,7 @@ package com.zl.camera;
 import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -37,6 +38,7 @@ public class CameraHelper extends ICameraHelper {
     private int mDisplayRotate;
 
     private Size mPreviewSize;
+
 
     public CameraHelper(Activity activity) {
 
@@ -73,29 +75,34 @@ public class CameraHelper extends ICameraHelper {
     }
 
     @Override
-    public void open(int width, int height, int id, @NonNull StateCallBack callBack) {
+    public void open(final int width, final int height, final int id, final @NonNull StateCallBack callBack) {
         mStateCallBack = callBack;
         try {
-            int count = Camera.getNumberOfCameras();
-            Camera.CameraInfo info = new Camera.CameraInfo();
-            int cid = -1;
-            for (int i = 0; i < count; i++) {
-                Camera.getCameraInfo(i, info);
-                if (info.facing == mIdMap.get(id, -1)) {
-                    cid = i;
-                    break;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int count = Camera.getNumberOfCameras();
+                    Camera.CameraInfo info = new Camera.CameraInfo();
+                    int cid = -1;
+                    for (int i = 0; i < count; i++) {
+                        Camera.getCameraInfo(i, info);
+                        if (info.facing == mIdMap.get(id, -1)) {
+                            cid = i;
+                            break;
+                        }
+                    }
+                    if (cid == -1) {
+                        mStateCallBack.onError(NO_CAMERA_ID);
+                        return;
+                    }
+                    mCamera = Camera.open(cid);
+                    mCurrentOpen = id;
+                    List<Camera.Size> supportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
+                    Camera.Size pictureSize = mCamera.getParameters().getPictureSize();
+                    mPreviewSize = chooseOptimalSize(supportedPreviewSizes, width, height, pictureSize);
+                    mStateCallBack.onOpened(mPreviewSize);
                 }
-            }
-            if (cid == -1) {
-                mStateCallBack.onError(NO_CAMERA_ID);
-                return;
-            }
-            mCamera = Camera.open(cid);
-            mCurrentOpen = id;
-            List<Camera.Size> supportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
-            Camera.Size pictureSize = mCamera.getParameters().getPictureSize();
-            mPreviewSize = chooseOptimalSize(supportedPreviewSizes, width, height, pictureSize);
-            mStateCallBack.onOpened(mPreviewSize);
+            }).start();
         } catch (Exception e) {
             Log.e(TAG, "open: ", e);
             mCurrentOpen = -1;

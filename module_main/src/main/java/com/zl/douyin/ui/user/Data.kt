@@ -29,6 +29,8 @@ class UserEntity {
     var total_favorited: Long? = null
     var following_count: Long? = null
     var follower_count: Long? = null
+
+    var cover_url: List<PlayEntity>? = null
 }
 
 data class TitleView(var title: String, var view: View)

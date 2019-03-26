@@ -24,6 +24,8 @@ class InterceptTouchViewPager : ViewPager {
 
     private var mDownX: Float = 0f
     private var mDownY: Float = 0f
+    private var xLast: Float = 0f
+    private var yLast: Float = 0f
 
     private var mTouchSlop: Int
 
@@ -43,64 +45,64 @@ class InterceptTouchViewPager : ViewPager {
 //        return isIntercept?.invoke(ev) ?: true && super.onTouchEvent(ev)
 //    }
 
-//    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-//
-//
-//        when (ev.action) {
-//            MotionEvent.ACTION_DOWN -> {
-//                xLast = ev.x
-//                yLast = ev.y
-//            }
-//            MotionEvent.ACTION_MOVE -> {
-//                if (Math.abs(xLast - ev.x) > Math.abs(yLast - ev.y)) {
-//                    if (xLast > ev.x) {
-//                        if (forbidToRight) {
-//                            return false
-//                        }
-//                    } else {
-//                        if (forbidToLeft) {
-//                            return false
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        xLast = ev.x
-//        yLast = ev.y
-//        return super.onInterceptTouchEvent(ev)
-//    }
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
 
-    override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
-        var intercept = super.onInterceptTouchEvent(event)
-        val x = event.x
-        val y = event.y
-        when (event.action) {
+
+        when (ev.action) {
             MotionEvent.ACTION_DOWN -> {
-                mDownX = x
-                mDownY = y
+                xLast = ev.x
+                yLast = ev.y
             }
             MotionEvent.ACTION_MOVE -> {
-                val dx = Math.abs(x - mDownX)
-                val dy = Math.abs(y - mDownY)
-                if (!intercept && dx > mTouchSlop && dx * 0.5f > dy) {
-                    intercept = true
-                }
-                if (Math.abs(mDownX - event.x) > Math.abs(mDownY - event.y)) {
-                    if (mDownX > event.x) {
+                if (Math.abs(xLast - ev.x) > Math.abs(yLast - ev.y)) {
+                    if (xLast > ev.x) {
                         if (forbidToRight) {
-                            intercept = false
+                            return false
                         }
                     } else {
                         if (forbidToLeft) {
-                            intercept = false
+                            return false
                         }
                     }
                 }
             }
-            else -> {
-            }
         }
-        return intercept
+        xLast = ev.x
+        yLast = ev.y
+        return super.onInterceptTouchEvent(ev)
     }
+
+//    override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
+//        var intercept = super.onInterceptTouchEvent(event)
+//        val x = event.x
+//        val y = event.y
+//        when (event.action) {
+//            MotionEvent.ACTION_DOWN -> {
+//                mDownX = x
+//                mDownY = y
+//            }
+//            MotionEvent.ACTION_MOVE -> {
+//                val dx = Math.abs(x - mDownX)
+//                val dy = Math.abs(y - mDownY)
+//                if (!intercept && dx > mTouchSlop && dx * 0.5f > dy) {
+//                    intercept = true
+//                }
+//                if (Math.abs(mDownX - event.x) > Math.abs(mDownY - event.y)) {
+//                    if (mDownX > event.x) {
+//                        if (forbidToRight) {
+//                            intercept = false
+//                        }
+//                    } else {
+//                        if (forbidToLeft) {
+//                            intercept = false
+//                        }
+//                    }
+//                }
+//            }
+//            else -> {
+//            }
+//        }
+//        return intercept
+//    }
 
 }

@@ -124,7 +124,8 @@ class LittleFilmFragment : ModeFragment(), TextureView.SurfaceTextureListener {
 
     override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
         stopPreview()
-        return false
+        mSurfaceTexture = null
+        return true
     }
 
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {

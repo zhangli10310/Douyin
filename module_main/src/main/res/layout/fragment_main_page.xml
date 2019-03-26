@@ -102,8 +102,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:src="@mipmap/ic_double_point"
+        android:src="@mipmap/ic_camera"
         app:layout_constraintRight_toLeftOf="@+id/searchImg"
         app:layout_constraintTop_toTopOf="@+id/topGuideline" />
+
+    <ImageView
+        android:id="@+id/takePhotoImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:src="@mipmap/ic_camera_add"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/topGuideline" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
