@@ -3,9 +3,7 @@ package com.zl.camera;
 import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
-import android.os.HandlerThread;
 import android.util.Log;
-import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -77,10 +75,10 @@ public class CameraHelper extends ICameraHelper {
     @Override
     public void open(final int width, final int height, final int id, final @NonNull StateCallBack callBack) {
         mStateCallBack = callBack;
-        try {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
                     int count = Camera.getNumberOfCameras();
                     Camera.CameraInfo info = new Camera.CameraInfo();
                     int cid = -1;
@@ -101,13 +99,14 @@ public class CameraHelper extends ICameraHelper {
                     Camera.Size pictureSize = mCamera.getParameters().getPictureSize();
                     mPreviewSize = chooseOptimalSize(supportedPreviewSizes, width, height, pictureSize);
                     mStateCallBack.onOpened(mPreviewSize);
+                } catch (Exception e) {
+                    Log.e(TAG, "open: ", e);
+                    mCurrentOpen = -1;
+                    mStateCallBack.onError(-1);
                 }
-            }).start();
-        } catch (Exception e) {
-            Log.e(TAG, "open: ", e);
-            mCurrentOpen = -1;
-            mStateCallBack.onError(-1);
-        }
+
+            }
+        }).start();
 
     }
 

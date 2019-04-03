@@ -2,11 +2,10 @@ package com.zl.core.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
+import android.view.ViewConfiguration
 import androidx.viewpager.widget.ViewPager
 import com.zl.core.R
-import android.view.ViewConfiguration
 
 
 /**
@@ -48,7 +47,7 @@ class InterceptTouchViewPager : ViewPager {
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
 
 
-        when (ev.action) {
+        when (ev.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 xLast = ev.x
                 yLast = ev.y
@@ -70,6 +69,31 @@ class InterceptTouchViewPager : ViewPager {
         xLast = ev.x
         yLast = ev.y
         return super.onInterceptTouchEvent(ev)
+    }
+
+    override fun onTouchEvent(ev: MotionEvent): Boolean {
+        when (ev.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                xLast = ev.x
+                yLast = ev.y
+            }
+            MotionEvent.ACTION_MOVE -> {
+                if (Math.abs(xLast - ev.x) > Math.abs(yLast - ev.y)) {
+                    if (xLast > ev.x) {
+                        if (forbidToRight) {
+                            return false
+                        }
+                    } else {
+                        if (forbidToLeft) {
+                            return false
+                        }
+                    }
+                }
+            }
+        }
+        xLast = ev.x
+        yLast = ev.y
+        return super.onTouchEvent(ev)
     }
 
 //    override fun onInterceptTouchEvent(event: MotionEvent): Boolean {

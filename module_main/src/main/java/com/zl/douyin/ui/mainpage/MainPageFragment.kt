@@ -129,7 +129,11 @@ class MainPageFragment : ModeFragment() {
             }
 
             v.likeImg.setOnClickListener { _ ->
+                showToast("todo")
+            }
 
+            v.musicRoundImg.setOnClickListener {
+                showToast("todo")
             }
 
             v.shareImg.setOnClickListener { _ ->
@@ -172,7 +176,7 @@ class MainPageFragment : ModeFragment() {
         })
 
         searchImg.setOnClickListener {
-
+            showToast("todo")
         }
 
         liveImg.setOnClickListener {

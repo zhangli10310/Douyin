@@ -1,13 +1,13 @@
 package com.zl.douyin.ui.user
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -62,14 +62,7 @@ class UserFragment : ModeFragment() {
         viewPager.adapter = mUserVideoAdapter
         tabLayout.setupWithViewPager(viewPager)
 
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
+        viewPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
 
             override fun onPageSelected(position: Int) {
                 Log.i(TAG, "onPageSelected: $position")
@@ -87,7 +80,7 @@ class UserFragment : ModeFragment() {
     private fun getAweView(): View {
 
         aweAdapter = VideoGridAdapter(aweList) {
-
+            showToast("todo")
         }
 
         return RecyclerView(activity!!).apply {
