@@ -8,16 +8,12 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.MediaController;
 
 import com.zl.ijk.media.FileMediaDataSource;
 import com.zl.ijk.media.IMediaController;
-import com.zl.ijk.media.IRenderView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -493,9 +489,15 @@ public class ZVideoView extends FrameLayout implements MediaController.MediaPlay
      */
     public void release(boolean cleartargetstate) {
         if (mMediaPlayer != null) {
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
+            // FIXME: 2019/4/12  这个地方直接开线程不好，但是可以解决卡顿，有待优化
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mMediaPlayer.reset();
+                    mMediaPlayer.release();
+                    mMediaPlayer = null;
+                }
+            }).start();
             mCurrentState = STATE_IDLE;
             if (cleartargetstate) {
                 mTargetState = STATE_IDLE;

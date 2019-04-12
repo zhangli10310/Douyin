@@ -47,7 +47,7 @@ class VideoPagerAdapter(private var list: MutableList<FeedItem>) : PagerAdapter(
         val feedItem = list[position]
 
         feedItem.music?.let {
-            view.musicText.text = it.title + "-" + it.owner_nickname
+            view.musicText.text = "${it.title}-${it.owner_nickname}"
         }
 
         view.descText.text = feedItem.desc
@@ -79,21 +79,11 @@ class VideoPagerAdapter(private var list: MutableList<FeedItem>) : PagerAdapter(
             Log.i(TAG, "data:width=$width, height=$height")
             view.videoView.setVideoSize(width ?: 0, height ?: 0)
 
-//            val uriList = mutableListOf<UriHeader>()
-//            play_addr?.url_list?.apply {
-//                for (url in this) {
-//                    uriList.add(UriHeader(Uri.parse(url)))
-//                }
-//            }
-//            view.videoView.setUriList(uriList)
-
         }?.origin_cover?.url_list?.let {
             GlideUtils.load(it, view.videoView.previewImage)
         }
 
-        if (!feedItem.region.isNullOrEmpty()) {
-            view.regionText.text = feedItem.region
-        }
+        view.regionText.text = feedItem.region
 
         view.videoView.isLoop = true
 

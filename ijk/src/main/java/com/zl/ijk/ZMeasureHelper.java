@@ -235,4 +235,12 @@ public class ZMeasureHelper {
     public void setAspectRatio(int aspectRatio) {
         mCurrentAspectRatio = aspectRatio;
     }
+
+    public void reset() {
+        mVideoHeight = 0;
+        mVideoWidth = 0;
+        mVideoRotationDegree = 0;
+        mVideoSarDen = 0;
+        mVideoSarNum = 0;
+    }
 }
